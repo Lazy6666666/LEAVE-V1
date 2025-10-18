@@ -3,9 +3,9 @@
  * Get all active leave types
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 
 /**
  * GET /api/leave-types - Get all active leave types
@@ -20,10 +20,7 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Fetch all active leave types
@@ -32,7 +29,7 @@ export async function GET(request: NextRequest) {
         active: true,
       },
       orderBy: {
-        name: 'asc',
+        name: "asc",
       },
       select: {
         id: true,
@@ -47,9 +44,9 @@ export async function GET(request: NextRequest) {
       total: leaveTypes.length,
     });
   } catch (error) {
-    console.error('Error fetching leave types:', error);
+    console.error("Error fetching leave types:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

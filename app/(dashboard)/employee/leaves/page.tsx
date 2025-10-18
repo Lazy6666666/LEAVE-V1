@@ -1,26 +1,39 @@
-'use client';
+"use client";
 
 /**
  * Employee Leave Dashboard
  * T-014: Employee status tracking dashboard
  */
 
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { LeaveStatusBadge } from '@/components/employee/LeaveStatusBadge';
-import { CancelLeaveDialog } from '@/components/employee/CancelLeaveDialog';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Calendar, FileText, User, XCircle, PlusCircle } from 'lucide-react';
-import Link from 'next/link';
+} from "@/components/ui/select";
+import { LeaveStatusBadge } from "@/components/employee/LeaveStatusBadge";
+import { CancelLeaveDialog } from "@/components/employee/CancelLeaveDialog";
+import { Badge } from "@/components/ui/badge";
+import {
+  Loader2,
+  Calendar,
+  FileText,
+  User,
+  XCircle,
+  PlusCircle,
+} from "lucide-react";
+import Link from "next/link";
 
 interface Leave {
   id: string;
@@ -31,7 +44,7 @@ interface Leave {
   end_date: string;
   days_count: number;
   reason?: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
   manager_comment?: string;
   approved_at?: string;
   created_at: string;
@@ -40,7 +53,7 @@ interface Leave {
 export default function EmployeeLeavesPage() {
   const [leaves, setLeaves] = useState<Leave[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState<Leave | null>(null);
 
@@ -48,8 +61,8 @@ export default function EmployeeLeavesPage() {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
-      if (filterStatus && filterStatus !== 'all') {
-        params.append('status', filterStatus.toUpperCase());
+      if (filterStatus && filterStatus !== "all") {
+        params.append("status", filterStatus.toUpperCase());
       }
 
       const response = await fetch(`/api/leaves?${params.toString()}`);
@@ -58,7 +71,7 @@ export default function EmployeeLeavesPage() {
         setLeaves(data.leaves || []);
       }
     } catch (error) {
-      console.error('Error fetching leaves:', error);
+      console.error("Error fetching leaves:", error);
     } finally {
       setIsLoading(false);
     }
@@ -71,27 +84,27 @@ export default function EmployeeLeavesPage() {
   const handleCancelLeave = async (leaveId: string, reason?: string) => {
     try {
       const response = await fetch(`/api/leaves/${leaveId}/cancel`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ cancellation_reason: reason }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to cancel leave');
+        throw new Error(error.error || "Failed to cancel leave");
       }
 
       await fetchLeaves();
     } catch (error) {
-      console.error('Error cancelling leave:', error);
+      console.error("Error cancelling leave:", error);
       throw error;
     }
   };
 
   const canCancelLeave = (leave: Leave) => {
-    if (leave.status === 'CANCELLED' || leave.status === 'REJECTED') {
+    if (leave.status === "CANCELLED" || leave.status === "REJECTED") {
       return false;
     }
     const today = new Date();
@@ -149,7 +162,7 @@ export default function EmployeeLeavesPage() {
             <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-lg font-medium mb-2">No leave requests found</p>
             <p className="text-sm text-muted-foreground mb-4">
-              {filterStatus === 'all'
+              {filterStatus === "all"
                 ? "You haven't submitted any leave requests yet"
                 : `No ${filterStatus} requests found`}
             </p>
@@ -164,20 +177,26 @@ export default function EmployeeLeavesPage() {
       ) : (
         <div className="grid gap-4">
           {leaves.map((leave) => (
-            <Card key={leave.id} className="glass-card hover:shadow-lg transition-shadow">
+            <Card
+              key={leave.id}
+              className="glass-card hover:shadow-lg transition-shadow"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <CardTitle className="flex items-center gap-2">
                       {leave.leave_type.name}
                       <Badge variant="outline">
-                        {leave.days_count} {leave.days_count === 1 ? 'day' : 'days'}
+                        {leave.days_count}{" "}
+                        {leave.days_count === 1 ? "day" : "days"}
                       </Badge>
                     </CardTitle>
                     <CardDescription className="flex items-center gap-2">
                       <Calendar className="h-3 w-3" />
-                      {format(new Date(leave.start_date), 'MMM dd, yyyy')} -{' '}
-                      {format(new Date(leave.end_date), 'MMM dd, yyyy')}
+                      {format(
+                        new Date(leave.start_date),
+                        "MMM dd, yyyy"
+                      )} - {format(new Date(leave.end_date), "MMM dd, yyyy")}
                     </CardDescription>
                   </div>
                   <LeaveStatusBadge status={leave.status} />
@@ -205,11 +224,13 @@ export default function EmployeeLeavesPage() {
                       <User className="h-4 w-4" />
                       <span>Manager Comment</span>
                     </div>
-                    <p className={`text-sm rounded-lg p-3 ${
-                      leave.status === 'REJECTED'
-                        ? 'bg-destructive/10 text-destructive'
-                        : 'bg-muted/50'
-                    }`}>
+                    <p
+                      className={`text-sm rounded-lg p-3 ${
+                        leave.status === "REJECTED"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-muted/50"
+                      }`}
+                    >
                       {leave.manager_comment}
                     </p>
                   </div>
@@ -218,12 +239,13 @@ export default function EmployeeLeavesPage() {
                 {/* Timestamps */}
                 <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
                   <span>
-                    Requested on {format(new Date(leave.created_at), 'MMM dd, yyyy')}
+                    Requested on{" "}
+                    {format(new Date(leave.created_at), "MMM dd, yyyy")}
                   </span>
                   {leave.approved_at && (
                     <span>
-                      {leave.status === 'APPROVED' ? 'Approved' : 'Rejected'} on{' '}
-                      {format(new Date(leave.approved_at), 'MMM dd, yyyy')}
+                      {leave.status === "APPROVED" ? "Approved" : "Rejected"} on{" "}
+                      {format(new Date(leave.approved_at), "MMM dd, yyyy")}
                     </span>
                   )}
                 </div>
@@ -257,8 +279,11 @@ export default function EmployeeLeavesPage() {
           onConfirm={(reason) => handleCancelLeave(selectedLeave.id, reason)}
           leaveDetails={{
             leaveType: selectedLeave.leave_type.name,
-            startDate: format(new Date(selectedLeave.start_date), 'MMM dd, yyyy'),
-            endDate: format(new Date(selectedLeave.end_date), 'MMM dd, yyyy'),
+            startDate: format(
+              new Date(selectedLeave.start_date),
+              "MMM dd, yyyy"
+            ),
+            endDate: format(new Date(selectedLeave.end_date), "MMM dd, yyyy"),
             status: selectedLeave.status,
           }}
         />

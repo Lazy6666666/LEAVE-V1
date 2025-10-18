@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
 /**
  * New Leave Request Page
  * Uses the LeaveRequestForm component
  */
 
-import { LeaveRequestForm } from '@/components/forms/LeaveRequestForm';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { LeaveRequestForm } from "@/components/forms/LeaveRequestForm";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function NewLeaveRequestPage() {
   const router = useRouter();
 
   const handleSuccess = () => {
-    router.push('/employee/leaves');
+    router.push("/employee/leaves");
   };
 
   const handleCancel = () => {
@@ -34,10 +34,7 @@ export default function NewLeaveRequestPage() {
       </div>
 
       <div className="flex justify-center">
-        <LeaveRequestForm
-          onSuccess={handleSuccess}
-          onCancel={handleCancel}
-        />
+        <LeaveRequestForm onSuccess={handleSuccess} onCancel={handleCancel} />
       </div>
     </div>
   );

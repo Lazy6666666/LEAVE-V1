@@ -3,10 +3,10 @@
  * T-015: Cancel leave requests
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { prisma } from '@/lib/prisma';
-import { leaveCancellationSchema } from '@/lib/validations/leave';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { leaveCancellationSchema } from "@/lib/validations/leave";
 
 export async function POST(
   request: NextRequest,
@@ -21,7 +21,7 @@ export async function POST(
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Parse request body
@@ -30,7 +30,7 @@ export async function POST(
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: 'Validation failed', details: validation.error.errors },
+        { error: "Validation failed", details: validation.error.errors },
         { status: 400 }
       );
     }
@@ -52,28 +52,28 @@ export async function POST(
     });
 
     if (!leave) {
-      return NextResponse.json({ error: 'Leave not found' }, { status: 404 });
+      return NextResponse.json({ error: "Leave not found" }, { status: 404 });
     }
 
     // Check if user owns this leave request
     if (leave.user_id !== user.id) {
       return NextResponse.json(
-        { error: 'You can only cancel your own leave requests' },
+        { error: "You can only cancel your own leave requests" },
         { status: 403 }
       );
     }
 
     // Check if leave can be cancelled (only PENDING or future APPROVED leaves)
-    if (leave.status === 'CANCELLED') {
+    if (leave.status === "CANCELLED") {
       return NextResponse.json(
-        { error: 'Leave request is already cancelled' },
+        { error: "Leave request is already cancelled" },
         { status: 400 }
       );
     }
 
-    if (leave.status === 'REJECTED') {
+    if (leave.status === "REJECTED") {
       return NextResponse.json(
-        { error: 'Cannot cancel a rejected leave request' },
+        { error: "Cannot cancel a rejected leave request" },
         { status: 400 }
       );
     }
@@ -84,7 +84,7 @@ export async function POST(
 
     if (leave.start_date < today) {
       return NextResponse.json(
-        { error: 'Cannot cancel a leave that has already started' },
+        { error: "Cannot cancel a leave that has already started" },
         { status: 400 }
       );
     }
@@ -93,10 +93,10 @@ export async function POST(
     const updatedLeave = await prisma.leave.update({
       where: { id: leaveId },
       data: {
-        status: 'CANCELLED',
+        status: "CANCELLED",
         manager_comment: data.cancellation_reason
           ? `Cancelled by employee: ${data.cancellation_reason}`
-          : 'Cancelled by employee',
+          : "Cancelled by employee",
       },
       include: {
         leave_type: true,
@@ -112,21 +112,21 @@ export async function POST(
     await prisma.notificationLog.create({
       data: {
         user_id: user.id,
-        type: 'LEAVE_CANCELLED',
-        title: 'Leave Request Cancelled',
-        message: `Your ${leave.leave_type.name} request from ${leave.start_date.toISOString().split('T')[0]} to ${leave.end_date.toISOString().split('T')[0]} has been cancelled`,
+        type: "LEAVE_CANCELLED",
+        title: "Leave Request Cancelled",
+        message: `Your ${leave.leave_type.name} request from ${leave.start_date.toISOString().split("T")[0]} to ${leave.end_date.toISOString().split("T")[0]} has been cancelled`,
         link: `/employee/leaves/${leaveId}`,
         read: false,
       },
     });
 
     // If leave was approved, notify manager
-    if (leave.status === 'APPROVED' && leave.approved_by) {
+    if (leave.status === "APPROVED" && leave.approved_by) {
       await prisma.notificationLog.create({
         data: {
           user_id: leave.approved_by,
-          type: 'LEAVE_CANCELLED',
-          title: 'Approved Leave Cancelled',
+          type: "LEAVE_CANCELLED",
+          title: "Approved Leave Cancelled",
           message: `${leave.user.profile?.full_name} cancelled their approved ${leave.leave_type.name} request`,
           link: `/manager/approvals`,
           read: false,
@@ -138,8 +138,8 @@ export async function POST(
     await prisma.auditLog.create({
       data: {
         user_id: user.id,
-        action: 'LEAVE_CANCELLED',
-        entity_type: 'LEAVE',
+        action: "LEAVE_CANCELLED",
+        entity_type: "LEAVE",
         entity_id: leaveId,
         details: {
           leave_type: leave.leave_type.name,
@@ -151,13 +151,13 @@ export async function POST(
     });
 
     return NextResponse.json({
-      message: 'Leave cancelled successfully',
+      message: "Leave cancelled successfully",
       leave: updatedLeave,
     });
   } catch (error) {
-    console.error('Error cancelling leave:', error);
+    console.error("Error cancelling leave:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

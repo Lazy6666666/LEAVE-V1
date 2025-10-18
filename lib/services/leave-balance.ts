@@ -3,7 +3,7 @@
  * T-010: Leave Balance Management
  */
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from "@/lib/prisma";
 
 export interface LeaveBalance {
   leaveTypeId: string;
@@ -42,7 +42,7 @@ export async function calculateUserLeaveBalance(
       where: {
         user_id: userId,
         leave_type_id: leaveTypeId,
-        status: 'APPROVED',
+        status: "APPROVED",
         start_date: {
           gte: new Date(`${year}-01-01`),
           lte: new Date(`${year}-12-31`),
@@ -63,8 +63,8 @@ export async function calculateUserLeaveBalance(
       availableDays: leaveType.annual_quota - usedDays,
     };
   } catch (error) {
-    console.error('Error calculating leave balance:', error);
-    throw new Error('Failed to calculate leave balance');
+    console.error("Error calculating leave balance:", error);
+    throw new Error("Failed to calculate leave balance");
   }
 }
 
@@ -83,14 +83,14 @@ export async function validateLeaveRequest(
     if (!balance) {
       return {
         isValid: false,
-        message: 'Invalid leave type or leave type is not active',
+        message: "Invalid leave type or leave type is not active",
       };
     }
 
     if (daysCount <= 0) {
       return {
         isValid: false,
-        message: 'Leave duration must be greater than 0 days',
+        message: "Leave duration must be greater than 0 days",
       };
     }
 
@@ -107,10 +107,10 @@ export async function validateLeaveRequest(
       availableBalance: balance.availableDays,
     };
   } catch (error) {
-    console.error('Error validating leave request:', error);
+    console.error("Error validating leave request:", error);
     return {
       isValid: false,
-      message: 'Failed to validate leave request',
+      message: "Failed to validate leave request",
     };
   }
 }
@@ -126,7 +126,7 @@ export async function getAllUserBalances(
     // Get all active leave types
     const leaveTypes = await prisma.leaveType.findMany({
       where: { active: true },
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
 
     // Calculate balance for each leave type
@@ -141,10 +141,12 @@ export async function getAllUserBalances(
       })
     );
 
-    return balances.filter((balance): balance is LeaveBalance => balance !== null);
+    return balances.filter(
+      (balance): balance is LeaveBalance => balance !== null
+    );
   } catch (error) {
-    console.error('Error getting all user balances:', error);
-    throw new Error('Failed to retrieve leave balances');
+    console.error("Error getting all user balances:", error);
+    throw new Error("Failed to retrieve leave balances");
   }
 }
 
@@ -162,7 +164,7 @@ export async function checkOverlappingLeaves(
       where: {
         user_id: userId,
         id: excludeLeaveId ? { not: excludeLeaveId } : undefined,
-        status: { in: ['PENDING', 'APPROVED'] },
+        status: { in: ["PENDING", "APPROVED"] },
         OR: [
           {
             start_date: { lte: endDate },
@@ -174,8 +176,8 @@ export async function checkOverlappingLeaves(
 
     return !!overlapping;
   } catch (error) {
-    console.error('Error checking overlapping leaves:', error);
-    throw new Error('Failed to check for overlapping leaves');
+    console.error("Error checking overlapping leaves:", error);
+    throw new Error("Failed to check for overlapping leaves");
   }
 }
 

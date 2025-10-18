@@ -1,23 +1,29 @@
-'use client';
+"use client";
 
 /**
  * Manager Approvals Page
  * T-012: Manager approval interface
  */
 
-import { useState, useEffect } from 'react';
-import { LeaveRequestCard } from '@/components/manager/LeaveRequestCard';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { LeaveRequestCard } from "@/components/manager/LeaveRequestCard";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, RefreshCw, Filter } from 'lucide-react';
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, RefreshCw, Filter } from "lucide-react";
 
 interface LeaveRequest {
   id: string;
@@ -34,7 +40,7 @@ interface LeaveRequest {
   end_date: string;
   days_count: number;
   reason?: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
   manager_comment?: string;
   created_at: string;
 }
@@ -42,15 +48,15 @@ interface LeaveRequest {
 export default function ManagerApprovalsPage() {
   const [leaves, setLeaves] = useState<LeaveRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('pending');
-  const [selectedLeaveType, setSelectedLeaveType] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState("pending");
+  const [selectedLeaveType, setSelectedLeaveType] = useState<string>("all");
 
   const fetchLeaves = async (status?: string) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
-      if (status && status !== 'all') {
-        params.append('status', status.toUpperCase());
+      if (status && status !== "all") {
+        params.append("status", status.toUpperCase());
       }
 
       const response = await fetch(`/api/leaves?${params.toString()}`);
@@ -59,32 +65,32 @@ export default function ManagerApprovalsPage() {
         setLeaves(data.leaves || []);
       }
     } catch (error) {
-      console.error('Error fetching leaves:', error);
+      console.error("Error fetching leaves:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    const status = activeTab === 'all' ? undefined : activeTab;
+    const status = activeTab === "all" ? undefined : activeTab;
     fetchLeaves(status);
   }, [activeTab]);
 
   const handleApprove = async (id: string) => {
     try {
       const response = await fetch(`/api/leaves/${id}/approve`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({}),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to approve leave');
+        throw new Error("Failed to approve leave");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       throw error;
     }
   };
@@ -92,29 +98,30 @@ export default function ManagerApprovalsPage() {
   const handleReject = async (id: string, comment: string) => {
     try {
       const response = await fetch(`/api/leaves/${id}/reject`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ manager_comment: comment }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to reject leave');
+        throw new Error("Failed to reject leave");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       throw error;
     }
   };
 
-  const filteredLeaves = selectedLeaveType === 'all'
-    ? leaves
-    : leaves.filter((leave) => leave.leave_type.name === selectedLeaveType);
+  const filteredLeaves =
+    selectedLeaveType === "all"
+      ? leaves
+      : leaves.filter((leave) => leave.leave_type.name === selectedLeaveType);
 
-  const pendingCount = leaves.filter((l) => l.status === 'PENDING').length;
-  const approvedCount = leaves.filter((l) => l.status === 'APPROVED').length;
-  const rejectedCount = leaves.filter((l) => l.status === 'REJECTED').length;
+  const pendingCount = leaves.filter((l) => l.status === "PENDING").length;
+  const approvedCount = leaves.filter((l) => l.status === "APPROVED").length;
+  const rejectedCount = leaves.filter((l) => l.status === "REJECTED").length;
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
@@ -130,19 +137,25 @@ export default function ManagerApprovalsPage() {
         <Card className="glass-card">
           <CardHeader className="pb-3">
             <CardDescription>Pending Requests</CardDescription>
-            <CardTitle className="text-3xl text-yellow-600">{pendingCount}</CardTitle>
+            <CardTitle className="text-3xl text-yellow-600">
+              {pendingCount}
+            </CardTitle>
           </CardHeader>
         </Card>
         <Card className="glass-card">
           <CardHeader className="pb-3">
             <CardDescription>Approved</CardDescription>
-            <CardTitle className="text-3xl text-green-600">{approvedCount}</CardTitle>
+            <CardTitle className="text-3xl text-green-600">
+              {approvedCount}
+            </CardTitle>
           </CardHeader>
         </Card>
         <Card className="glass-card">
           <CardHeader className="pb-3">
             <CardDescription>Rejected</CardDescription>
-            <CardTitle className="text-3xl text-red-600">{rejectedCount}</CardTitle>
+            <CardTitle className="text-3xl text-red-600">
+              {rejectedCount}
+            </CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -164,7 +177,9 @@ export default function ManagerApprovalsPage() {
 
         <Button
           variant="outline"
-          onClick={() => fetchLeaves(activeTab === 'all' ? undefined : activeTab)}
+          onClick={() =>
+            fetchLeaves(activeTab === "all" ? undefined : activeTab)
+          }
           className="ml-auto"
         >
           <RefreshCw className="h-4 w-4 mr-2" />
@@ -189,10 +204,12 @@ export default function ManagerApprovalsPage() {
           ) : filteredLeaves.length === 0 ? (
             <Card className="glass-card">
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-muted-foreground mb-2">No leave requests found</p>
+                <p className="text-muted-foreground mb-2">
+                  No leave requests found
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {activeTab === 'pending'
-                    ? 'There are no pending requests at the moment'
+                  {activeTab === "pending"
+                    ? "There are no pending requests at the moment"
                     : `No ${activeTab} requests to display`}
                 </p>
               </CardContent>
@@ -205,7 +222,9 @@ export default function ManagerApprovalsPage() {
                   request={request}
                   onApprove={handleApprove}
                   onReject={handleReject}
-                  onRefresh={() => fetchLeaves(activeTab === 'all' ? undefined : activeTab)}
+                  onRefresh={() =>
+                    fetchLeaves(activeTab === "all" ? undefined : activeTab)
+                  }
                 />
               ))}
             </div>

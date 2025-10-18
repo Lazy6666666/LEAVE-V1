@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
 /**
  * Leave Request Form Component
  * T-009: Leave request submission with validation
  */
 
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { format, differenceInBusinessDays, addDays } from 'date-fns';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { format, differenceInBusinessDays, addDays } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,43 +20,48 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarIcon, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Form schema
-const leaveFormSchema = z.object({
-  leave_type_id: z.string({
-    required_error: 'Please select a leave type',
-  }),
-  start_date: z.date({
-    required_error: 'Start date is required',
-  }),
-  end_date: z.date({
-    required_error: 'End date is required',
-  }),
-  reason: z.string().optional(),
-}).refine(
-  (data) => data.end_date >= data.start_date,
-  {
-    message: 'End date must be after or equal to start date',
-    path: ['end_date'],
-  }
-);
+const leaveFormSchema = z
+  .object({
+    leave_type_id: z.string({
+      required_error: "Please select a leave type",
+    }),
+    start_date: z.date({
+      required_error: "Start date is required",
+    }),
+    end_date: z.date({
+      required_error: "End date is required",
+    }),
+    reason: z.string().optional(),
+  })
+  .refine((data) => data.end_date >= data.start_date, {
+    message: "End date must be after or equal to start date",
+    path: ["end_date"],
+  });
 
 type LeaveFormValues = z.infer<typeof leaveFormSchema>;
 
@@ -71,7 +76,10 @@ interface LeaveRequestFormProps {
   onCancel?: () => void;
 }
 
-export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps) {
+export function LeaveRequestForm({
+  onSuccess,
+  onCancel,
+}: LeaveRequestFormProps) {
   const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [workingDays, setWorkingDays] = useState(0);
@@ -84,13 +92,13 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
   useEffect(() => {
     async function fetchLeaveTypes() {
       try {
-        const response = await fetch('/api/leave-types');
+        const response = await fetch("/api/leave-types");
         if (response.ok) {
           const data = await response.json();
           setLeaveTypes(data.leave_types || []);
         }
       } catch (error) {
-        console.error('Error fetching leave types:', error);
+        console.error("Error fetching leave types:", error);
       }
     }
     fetchLeaveTypes();
@@ -99,7 +107,7 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
   // Calculate working days when dates change
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (name === 'start_date' || name === 'end_date') {
+      if (name === "start_date" || name === "end_date") {
         const { start_date, end_date } = value;
         if (start_date && end_date) {
           const days = differenceInBusinessDays(
@@ -116,10 +124,10 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
   async function onSubmit(data: LeaveFormValues) {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/leaves', {
-        method: 'POST',
+      const response = await fetch("/api/leaves", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           leave_type_id: data.leave_type_id,
@@ -135,13 +143,13 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
         onSuccess?.();
       } else {
         const error = await response.json();
-        form.setError('root', {
-          message: error.error || 'Failed to submit leave request',
+        form.setError("root", {
+          message: error.error || "Failed to submit leave request",
         });
       }
     } catch (error) {
-      form.setError('root', {
-        message: 'An error occurred. Please try again.',
+      form.setError("root", {
+        message: "An error occurred. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -152,9 +160,7 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
     <Card className="w-full max-w-2xl glass-card">
       <CardHeader>
         <CardTitle>New Leave Request</CardTitle>
-        <CardDescription>
-          Submit a leave request for approval
-        </CardDescription>
+        <CardDescription>Submit a leave request for approval</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -203,12 +209,12 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
                           <Button
                             variant="outline"
                             className={cn(
-                              'w-full pl-3 text-left font-normal',
-                              !field.value && 'text-muted-foreground'
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              format(field.value, "PPP")
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -246,12 +252,12 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
                           <Button
                             variant="outline"
                             className={cn(
-                              'w-full pl-3 text-left font-normal',
-                              !field.value && 'text-muted-foreground'
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              format(field.value, "PPP")
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -281,7 +287,9 @@ export function LeaveRequestForm({ onSuccess, onCancel }: LeaveRequestFormProps)
             {workingDays > 0 && (
               <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
                 <p className="text-sm font-medium">
-                  Duration: <span className="text-lg font-bold">{workingDays}</span> working days
+                  Duration:{" "}
+                  <span className="text-lg font-bold">{workingDays}</span>{" "}
+                  working days
                 </p>
               </div>
             )}

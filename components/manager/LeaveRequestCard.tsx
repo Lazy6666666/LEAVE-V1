@@ -1,19 +1,31 @@
-'use client';
+"use client";
 
 /**
  * Leave Request Card Component
  * T-012: Manager approval interface
  */
 
-import { useState } from 'react';
-import { format } from 'date-fns';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LeaveStatusBadge } from '@/components/employee/LeaveStatusBadge';
-import { Calendar, User, FileText, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
-import { RejectModal } from './RejectModal';
+import { useState } from "react";
+import { format } from "date-fns";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LeaveStatusBadge } from "@/components/employee/LeaveStatusBadge";
+import {
+  Calendar,
+  User,
+  FileText,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+} from "lucide-react";
+import { RejectModal } from "./RejectModal";
 
 interface LeaveRequest {
   id: string;
@@ -30,7 +42,7 @@ interface LeaveRequest {
   end_date: string;
   days_count: number;
   reason?: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
   manager_comment?: string;
   created_at: string;
 }
@@ -58,7 +70,7 @@ export function LeaveRequestCard({
       await onApprove(request.id);
       onRefresh?.();
     } catch (error) {
-      console.error('Error approving leave:', error);
+      console.error("Error approving leave:", error);
     } finally {
       setIsApproving(false);
     }
@@ -71,20 +83,20 @@ export function LeaveRequestCard({
       setIsRejectModalOpen(false);
       onRefresh?.();
     } catch (error) {
-      console.error('Error rejecting leave:', error);
+      console.error("Error rejecting leave:", error);
     }
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
+      .split(" ")
       .map((n) => n[0])
-      .join('')
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
-  const isPending = request.status === 'PENDING';
+  const isPending = request.status === "PENDING";
 
   return (
     <>
@@ -94,10 +106,14 @@ export function LeaveRequestCard({
             <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarImage src={request.user.profile.avatar_url} />
-                <AvatarFallback>{getInitials(request.user.profile.full_name)}</AvatarFallback>
+                <AvatarFallback>
+                  {getInitials(request.user.profile.full_name)}
+                </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-semibold text-lg">{request.user.profile.full_name}</h3>
+                <h3 className="font-semibold text-lg">
+                  {request.user.profile.full_name}
+                </h3>
                 <p className="text-sm text-muted-foreground flex items-center gap-1">
                   <User className="h-3 w-3" />
                   {request.leave_type.name}
@@ -113,10 +129,11 @@ export function LeaveRequestCard({
           <div className="flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="font-medium">
-              {format(new Date(request.start_date), 'MMM dd, yyyy')} - {format(new Date(request.end_date), 'MMM dd, yyyy')}
+              {format(new Date(request.start_date), "MMM dd, yyyy")} -{" "}
+              {format(new Date(request.end_date), "MMM dd, yyyy")}
             </span>
             <Badge variant="outline" className="ml-auto">
-              {request.days_count} {request.days_count === 1 ? 'day' : 'days'}
+              {request.days_count} {request.days_count === 1 ? "day" : "days"}
             </Badge>
           </div>
 
@@ -134,7 +151,7 @@ export function LeaveRequestCard({
           )}
 
           {/* Manager Comment (if rejected) */}
-          {request.manager_comment && request.status === 'REJECTED' && (
+          {request.manager_comment && request.status === "REJECTED" && (
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-sm text-destructive">
                 <XCircle className="h-4 w-4" />
@@ -148,7 +165,7 @@ export function LeaveRequestCard({
 
           {/* Requested Date */}
           <div className="text-xs text-muted-foreground">
-            Requested on {format(new Date(request.created_at), 'MMM dd, yyyy')}
+            Requested on {format(new Date(request.created_at), "MMM dd, yyyy")}
           </div>
         </CardContent>
 

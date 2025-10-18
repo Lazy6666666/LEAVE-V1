@@ -3,28 +3,30 @@
  * Using Zod for type-safe validation
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Leave Request Creation Schema
  */
-export const leaveRequestSchema = z.object({
-  leave_type_id: z.string().uuid('Invalid leave type ID'),
-  start_date: z.string().datetime('Invalid start date format'),
-  end_date: z.string().datetime('Invalid end date format'),
-  reason: z.string().optional(),
-  days_count: z.number().positive('Days count must be positive'),
-}).refine(
-  (data) => {
-    const start = new Date(data.start_date);
-    const end = new Date(data.end_date);
-    return end >= start;
-  },
-  {
-    message: 'End date must be after or equal to start date',
-    path: ['end_date'],
-  }
-);
+export const leaveRequestSchema = z
+  .object({
+    leave_type_id: z.string().uuid("Invalid leave type ID"),
+    start_date: z.string().datetime("Invalid start date format"),
+    end_date: z.string().datetime("Invalid end date format"),
+    reason: z.string().optional(),
+    days_count: z.number().positive("Days count must be positive"),
+  })
+  .refine(
+    (data) => {
+      const start = new Date(data.start_date);
+      const end = new Date(data.end_date);
+      return end >= start;
+    },
+    {
+      message: "End date must be after or equal to start date",
+      path: ["end_date"],
+    }
+  );
 
 export type LeaveRequestInput = z.infer<typeof leaveRequestSchema>;
 
@@ -32,7 +34,7 @@ export type LeaveRequestInput = z.infer<typeof leaveRequestSchema>;
  * Leave Status Update Schema
  */
 export const leaveStatusUpdateSchema = z.object({
-  status: z.enum(['APPROVED', 'REJECTED', 'CANCELLED']),
+  status: z.enum(["APPROVED", "REJECTED", "CANCELLED"]),
   manager_comment: z.string().optional(),
 });
 
@@ -51,7 +53,7 @@ export type LeaveApproval = z.infer<typeof leaveApprovalSchema>;
  * Leave Rejection Schema
  */
 export const leaveRejectionSchema = z.object({
-  manager_comment: z.string().min(1, 'Rejection reason is required'),
+  manager_comment: z.string().min(1, "Rejection reason is required"),
 });
 
 export type LeaveRejection = z.infer<typeof leaveRejectionSchema>;
@@ -60,7 +62,7 @@ export type LeaveRejection = z.infer<typeof leaveRejectionSchema>;
  * Leave Query Filters Schema
  */
 export const leaveQuerySchema = z.object({
-  status: z.enum(['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED']).optional(),
+  status: z.enum(["PENDING", "APPROVED", "REJECTED", "CANCELLED"]).optional(),
   start_date: z.string().datetime().optional(),
   end_date: z.string().datetime().optional(),
   leave_type_id: z.string().uuid().optional(),

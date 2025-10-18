@@ -3,10 +3,10 @@
  * T-013: Approve leave requests
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { prisma } from '@/lib/prisma';
-import { leaveApprovalSchema } from '@/lib/validations/leave';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { leaveApprovalSchema } from "@/lib/validations/leave";
 
 export async function POST(
   request: NextRequest,
@@ -21,7 +21,7 @@ export async function POST(
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user has manager/admin/HR role
@@ -29,9 +29,9 @@ export async function POST(
       where: { user_id: user.id },
     });
 
-    if (!profile || !['MANAGER', 'ADMIN', 'HR'].includes(profile.role)) {
+    if (!profile || !["MANAGER", "ADMIN", "HR"].includes(profile.role)) {
       return NextResponse.json(
-        { error: 'Insufficient permissions' },
+        { error: "Insufficient permissions" },
         { status: 403 }
       );
     }
@@ -42,7 +42,7 @@ export async function POST(
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: 'Validation failed', details: validation.error.errors },
+        { error: "Validation failed", details: validation.error.errors },
         { status: 400 }
       );
     }
@@ -64,11 +64,11 @@ export async function POST(
     });
 
     if (!leave) {
-      return NextResponse.json({ error: 'Leave not found' }, { status: 404 });
+      return NextResponse.json({ error: "Leave not found" }, { status: 404 });
     }
 
     // Check if leave is pending
-    if (leave.status !== 'PENDING') {
+    if (leave.status !== "PENDING") {
       return NextResponse.json(
         { error: `Cannot approve leave with status: ${leave.status}` },
         { status: 400 }
@@ -79,7 +79,7 @@ export async function POST(
     const updatedLeave = await prisma.leave.update({
       where: { id: leaveId },
       data: {
-        status: 'APPROVED',
+        status: "APPROVED",
         approved_by: user.id,
         approved_at: new Date(),
         manager_comment: data.manager_comment || null,
@@ -98,9 +98,9 @@ export async function POST(
     await prisma.notificationLog.create({
       data: {
         user_id: leave.user_id,
-        type: 'LEAVE_APPROVED',
-        title: 'Leave Request Approved',
-        message: `Your ${leave.leave_type.name} request from ${leave.start_date.toISOString().split('T')[0]} to ${leave.end_date.toISOString().split('T')[0]} has been approved`,
+        type: "LEAVE_APPROVED",
+        title: "Leave Request Approved",
+        message: `Your ${leave.leave_type.name} request from ${leave.start_date.toISOString().split("T")[0]} to ${leave.end_date.toISOString().split("T")[0]} has been approved`,
         link: `/employee/leaves/${leaveId}`,
         read: false,
       },
@@ -110,8 +110,8 @@ export async function POST(
     await prisma.auditLog.create({
       data: {
         user_id: user.id,
-        action: 'LEAVE_APPROVED',
-        entity_type: 'LEAVE',
+        action: "LEAVE_APPROVED",
+        entity_type: "LEAVE",
         entity_id: leaveId,
         details: {
           employee_id: leave.user_id,
@@ -124,13 +124,13 @@ export async function POST(
     });
 
     return NextResponse.json({
-      message: 'Leave approved successfully',
+      message: "Leave approved successfully",
       leave: updatedLeave,
     });
   } catch (error) {
-    console.error('Error approving leave:', error);
+    console.error("Error approving leave:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

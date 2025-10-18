@@ -3,15 +3,15 @@
  * T-011: Leave Request Submission and Listing
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { prisma } from '@/lib/prisma';
-import { leaveRequestSchema, leaveQuerySchema } from '@/lib/validations/leave';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { leaveRequestSchema, leaveQuerySchema } from "@/lib/validations/leave";
 import {
   validateLeaveRequest,
   checkOverlappingLeaves,
   calculateWorkingDays,
-} from '@/lib/services/leave-balance';
+} from "@/lib/services/leave-balance";
 
 /**
  * POST /api/leaves - Create new leave request
@@ -26,10 +26,7 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Parse and validate request body
@@ -38,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: 'Validation failed', details: validation.error.errors },
+        { error: "Validation failed", details: validation.error.errors },
         { status: 400 }
       );
     }
@@ -59,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     if (hasOverlap) {
       return NextResponse.json(
-        { error: 'You have overlapping leave requests for these dates' },
+        { error: "You have overlapping leave requests for these dates" },
         { status: 409 }
       );
     }
@@ -91,7 +88,7 @@ export async function POST(request: NextRequest) {
         end_date: endDate,
         days_count: workingDays,
         reason: data.reason || null,
-        status: 'PENDING',
+        status: "PENDING",
       },
       include: {
         leave_type: true,
@@ -102,8 +99,8 @@ export async function POST(request: NextRequest) {
     await prisma.notificationLog.create({
       data: {
         user_id: user.id,
-        type: 'LEAVE_CREATED',
-        title: 'Leave Request Submitted',
+        type: "LEAVE_CREATED",
+        title: "Leave Request Submitted",
         message: `Your leave request for ${workingDays} days has been submitted`,
         read: false,
       },
@@ -113,8 +110,8 @@ export async function POST(request: NextRequest) {
     await prisma.auditLog.create({
       data: {
         user_id: user.id,
-        action: 'LEAVE_CREATED',
-        entity_type: 'LEAVE',
+        action: "LEAVE_CREATED",
+        entity_type: "LEAVE",
         entity_id: leave.id,
         details: {
           leave_type: leave.leave_type.name,
@@ -127,15 +124,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'Leave request created successfully',
+        message: "Leave request created successfully",
         leave,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating leave request:', error);
+    console.error("Error creating leave request:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -154,10 +151,7 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user's profile to check role
@@ -166,27 +160,31 @@ export async function GET(request: NextRequest) {
     });
 
     if (!profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
     // Parse query parameters
     const { searchParams } = new URL(request.url);
     const queryValidation = leaveQuerySchema.safeParse({
-      status: searchParams.get('status'),
-      start_date: searchParams.get('start_date'),
-      end_date: searchParams.get('end_date'),
-      leave_type_id: searchParams.get('leave_type_id'),
-      user_id: searchParams.get('user_id'),
-      limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined,
-      offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined,
+      status: searchParams.get("status"),
+      start_date: searchParams.get("start_date"),
+      end_date: searchParams.get("end_date"),
+      leave_type_id: searchParams.get("leave_type_id"),
+      user_id: searchParams.get("user_id"),
+      limit: searchParams.get("limit")
+        ? parseInt(searchParams.get("limit")!)
+        : undefined,
+      offset: searchParams.get("offset")
+        ? parseInt(searchParams.get("offset")!)
+        : undefined,
     });
 
     if (!queryValidation.success) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: queryValidation.error.errors },
+        {
+          error: "Invalid query parameters",
+          details: queryValidation.error.errors,
+        },
         { status: 400 }
       );
     }
@@ -199,9 +197,9 @@ export async function GET(request: NextRequest) {
     // Employees can only see their own leaves
     // Managers can see team leaves (implement manager_id logic later)
     // HR and Admin can see all leaves
-    if (profile.role === 'EMPLOYEE') {
+    if (profile.role === "EMPLOYEE") {
       where.user_id = user.id;
-    } else if (profile.role === 'MANAGER') {
+    } else if (profile.role === "MANAGER") {
       // For now, managers see all (TODO: implement team filtering)
       // where.user_id = { in: teamMemberIds };
     }
@@ -216,7 +214,7 @@ export async function GET(request: NextRequest) {
       where.leave_type_id = query.leave_type_id;
     }
 
-    if (query.user_id && ['HR', 'ADMIN', 'MANAGER'].includes(profile.role)) {
+    if (query.user_id && ["HR", "ADMIN", "MANAGER"].includes(profile.role)) {
       where.user_id = query.user_id;
     }
 
@@ -240,7 +238,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: "desc",
       },
       take: query.limit,
       skip: query.offset,
@@ -256,9 +254,9 @@ export async function GET(request: NextRequest) {
       offset: query.offset,
     });
   } catch (error) {
-    console.error('Error fetching leaves:', error);
+    console.error("Error fetching leaves:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

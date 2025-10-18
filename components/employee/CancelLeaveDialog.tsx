@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 /**
  * Cancel Leave Dialog Component
  * T-015: Leave cancellation feature
  */
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,11 +13,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Loader2, AlertTriangle } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Loader2, AlertTriangle } from "lucide-react";
 
 interface CancelLeaveDialogProps {
   isOpen: boolean;
@@ -37,17 +37,17 @@ export function CancelLeaveDialog({
   onConfirm,
   leaveDetails,
 }: CancelLeaveDialogProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleConfirm = async () => {
     setIsSubmitting(true);
     try {
       await onConfirm(reason || undefined);
-      setReason('');
+      setReason("");
       onClose();
     } catch (error) {
-      console.error('Error cancelling leave:', error);
+      console.error("Error cancelling leave:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -55,7 +55,7 @@ export function CancelLeaveDialog({
 
   const handleClose = () => {
     if (!isSubmitting) {
-      setReason('');
+      setReason("");
       onClose();
     }
   };
@@ -69,11 +69,12 @@ export function CancelLeaveDialog({
             Cancel Leave Request
           </DialogTitle>
           <DialogDescription>
-            You are about to cancel your {leaveDetails.leaveType} request from{' '}
+            You are about to cancel your {leaveDetails.leaveType} request from{" "}
             {leaveDetails.startDate} to {leaveDetails.endDate}.
-            {leaveDetails.status === 'APPROVED' && (
+            {leaveDetails.status === "APPROVED" && (
               <span className="block mt-2 text-yellow-600 font-medium">
-                This leave has already been approved. Cancelling it will notify your manager.
+                This leave has already been approved. Cancelling it will notify
+                your manager.
               </span>
             )}
           </DialogDescription>
@@ -95,10 +96,18 @@ export function CancelLeaveDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
+          <Button
+            variant="outline"
+            onClick={handleClose}
+            disabled={isSubmitting}
+          >
             Keep Request
           </Button>
-          <Button variant="destructive" onClick={handleConfirm} disabled={isSubmitting}>
+          <Button
+            variant="destructive"
+            onClick={handleConfirm}
+            disabled={isSubmitting}
+          >
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Cancel Leave
           </Button>
