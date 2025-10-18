@@ -1,0 +1,173 @@
+// Prisma Schema for Leave Management System
+// Database: PostgreSQL (Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// Enums
+// ============================================
+
+enum Role {
+  EMPLOYEE
+  MANAGER
+  ADMIN
+  HR
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum AccessLevel {
+  PUBLIC
+  EMPLOYEE
+  MANAGER
+  ADMIN
+  HR
+}
+
+// ============================================
+// Core Models
+// ============================================
+
+model User {
+  id         String   @id @default(uuid()) @db.Uuid
+  email      String   @unique
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  profile Profile?
+  leaves  Leave[]
+
+  @@map("users")
+}
+
+model Profile {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @unique @db.Uuid
+  full_name  String
+  department String?
+  role       Role     @default(EMPLOYEE)
+  manager_id String?  @db.Uuid
+  avatar_url String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// ============================================
+// Leave Management
+// ============================================
+
+model LeaveType {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @unique
+  annual_quota    Int
+  requires_approval Boolean @default(true)
+  active          Boolean  @default(true)
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  leaves Leave[]
+
+  @@map("leave_types")
+}
+
+model Leave {
+  id              String      @id @default(uuid()) @db.Uuid
+  user_id         String      @db.Uuid
+  leave_type_id   String      @db.Uuid
+  start_date      DateTime    @db.Date
+  end_date        DateTime    @db.Date
+  days_count      Float
+  reason          String?
+  status          LeaveStatus @default(PENDING)
+  manager_comment String?
+  approved_by     String?     @db.Uuid
+  approved_at     DateTime?   @db.Timestamptz(6)
+  created_at      DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime    @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  user       User      @relation(fields: [user_id], references: [id])
+  leave_type LeaveType @relation(fields: [leave_type_id], references: [id])
+
+  @@map("leaves")
+}
+
+// ============================================
+// Document Management
+// ============================================
+
+model CompanyDocument {
+  id           String      @id @default(uuid()) @db.Uuid
+  title        String
+  description  String?
+  file_url     String
+  file_name    String
+  file_size    Int
+  category     String
+  tags         String[]
+  uploaded_by  String      @db.Uuid
+  access_level AccessLevel @default(PUBLIC)
+  expiry_date  DateTime?   @db.Timestamptz(6)
+  created_at   DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime    @updatedAt @db.Timestamptz(6)
+
+  @@map("company_documents")
+}
+
+// ============================================
+// System Features
+// ============================================
+
+model NotificationLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @db.Uuid
+  type       String
+  title      String
+  message    String
+  read       Boolean  @default(false)
+  link       String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("notification_logs")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  action      String
+  entity_type String
+  entity_id   String   @db.Uuid
+  details     Json?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("audit_logs")
+}
+
+model CompanySettings {
+  id         String   @id @default(uuid()) @db.Uuid
+  key        String   @unique
+  value      Json
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+
+  @@map("company_settings")
+}
