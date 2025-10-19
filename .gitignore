@@ -37,3 +37,6 @@ next-env.d.ts
 # Prisma
 prisma/migrations/dev.db
 prisma/dev.db
+
+# Browser screenshots
+.browser_screenshots/
