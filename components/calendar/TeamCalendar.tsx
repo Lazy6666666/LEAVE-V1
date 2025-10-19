@@ -2,15 +2,17 @@
 
 // Team Calendar Component - Main calendar view with filters
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, memo } from "react";
 import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import { enUS } from "date-fns/locale";
+import format from "date-fns/format";
+import parse from "date-fns/parse";
+import startOfWeek from "date-fns/startOfWeek";
+import getDay from "date-fns/getDay";
+import { enUS } from "date-fns/locale/en-US";
 import { CalendarEvent } from "@/types/calendar";
 import CalendarFilters from "./CalendarFilters";
 import CalendarEventComponent from "./CalendarEvent";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./calendar.css";
 
 const locales = {
   "en-US": enUS,
@@ -31,7 +33,7 @@ interface TeamCalendarProps {
   teamMembers: { id: string; name: string; department?: string }[];
 }
 
-export default function TeamCalendar({
+function TeamCalendar({
   initialEvents,
   leaveTypes,
   departments,
@@ -192,3 +194,5 @@ function getEndDate(date: Date, view: View): Date {
       return new Date(year, month + 1, 0);
   }
 }
+
+export default memo(TeamCalendar);

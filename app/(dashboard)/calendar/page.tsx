@@ -3,8 +3,21 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCalendarEvents, getDepartments } from "@/lib/services/calendar";
 import prisma from "@/lib/prisma";
-import TeamCalendar from "@/components/calendar/TeamCalendar";
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const TeamCalendar = dynamic(() => import("@/components/calendar/TeamCalendar"), {
+  loading: () => (
+    <div className="rounded-lg border bg-card/50 backdrop-blur-sm p-4">
+      <div className="space-y-4">
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-[700px] w-full" />
+      </div>
+    </div>
+  ),
+  ssr: false,
+});
 
 export default async function CalendarPage() {
   const supabase = await createClient();
@@ -74,24 +87,26 @@ export default async function CalendarPage() {
   });
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="space-y-2">
+    <main id="main-content" className="container mx-auto p-6 space-y-6">
+      <header className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Team Calendar</h1>
         <p className="text-muted-foreground">
           View team availability and plan leave requests
         </p>
-      </div>
+      </header>
 
-      <TeamCalendar
-        initialEvents={initialEvents}
-        leaveTypes={leaveTypes}
-        departments={departments}
-        teamMembers={teamMembers.map((member: any) => ({
-          id: member.id,
-          name: member.profile?.full_name || member.email,
-          department: member.profile?.department || undefined,
-        }))}
-      />
-    </div>
+      <section aria-label="Team leave calendar and filters">
+        <TeamCalendar
+          initialEvents={initialEvents}
+          leaveTypes={leaveTypes}
+          departments={departments}
+          teamMembers={teamMembers.map((member: any) => ({
+            id: member.id,
+            name: member.profile?.full_name || member.email,
+            department: member.profile?.department || undefined,
+          }))}
+        />
+      </section>
+    </main>
   );
 }

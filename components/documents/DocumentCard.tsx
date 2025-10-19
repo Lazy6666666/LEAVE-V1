@@ -23,7 +23,7 @@ import {
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
-import { format } from "date-fns";
+import format from "date-fns/format";
 import type { DocumentWithUploader } from "@/types/document";
 // AccessLevel enum from Prisma
 enum AccessLevel {

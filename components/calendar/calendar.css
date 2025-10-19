@@ -1,4 +1,5 @@
 /* Calendar styling with glassmorphism effects */
+@reference "@/app/globals.css";
 
 /* Calendar container */
 .rbc-calendar {

@@ -226,14 +226,29 @@ export async function GET(request: NextRequest) {
       where.end_date = { lte: new Date(query.end_date) };
     }
 
-    // Fetch leaves
+    // Fetch leaves with optimized select
     const leaves = await prisma.leave.findMany({
       where,
       include: {
-        leave_type: true,
+        leave_type: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            color: true,
+          },
+        },
         user: {
-          include: {
-            profile: true,
+          select: {
+            id: true,
+            email: true,
+            profile: {
+              select: {
+                full_name: true,
+                avatar_url: true,
+                department: true,
+              },
+            },
           },
         },
       },

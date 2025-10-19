@@ -5,8 +5,8 @@
  * T-012: Manager approval interface
  */
 
-import { useState } from "react";
-import { format } from "date-fns";
+import { useState, memo } from "react";
+import format from "date-fns/format";
 import {
   Card,
   CardContent,
@@ -54,7 +54,7 @@ interface LeaveRequestCardProps {
   onRefresh?: () => void;
 }
 
-export function LeaveRequestCard({
+const LeaveRequestCard = memo(function LeaveRequestCard({
   request,
   onApprove,
   onReject,
@@ -207,4 +207,6 @@ export function LeaveRequestCard({
       />
     </>
   );
-}
+});
+
+export { LeaveRequestCard };

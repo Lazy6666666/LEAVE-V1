@@ -9,7 +9,9 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { format, differenceInBusinessDays, addDays } from "date-fns";
+import format from "date-fns/format";
+import differenceInBusinessDays from "date-fns/differenceInBusinessDays";
+import addDays from "date-fns/addDays";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
