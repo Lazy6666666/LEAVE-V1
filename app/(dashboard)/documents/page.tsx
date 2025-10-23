@@ -22,8 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Mock data for production - in real app this would come from API
-const mockDocuments: Document[] = [];
+// Real document categories from database
 const documentCategories = [
   {
     id: "hr",
@@ -43,6 +42,18 @@ const documentCategories = [
     description: "Contracts, agreements, and compliance documents",
     icon: "⚖️",
   },
+  {
+    id: "operations",
+    name: "Operations",
+    description: "Operational procedures and workflows",
+    icon: "⚙️",
+  },
+  {
+    id: "training",
+    name: "Training",
+    description: "Training materials and documentation",
+    icon: "📚",
+  },
 ];
 
 // Simulate user role - in a real app, this would come from auth context
@@ -61,14 +72,25 @@ export default function DocumentsPage() {
   });
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Simulate loading documents
+  // Load documents from API
   useEffect(() => {
     const loadDocuments = async () => {
       setIsLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setDocuments(mockDocuments);
-      setIsLoading(false);
+      try {
+        const response = await fetch('/api/documents?limit=100');
+        if (response.ok) {
+          const data = await response.json();
+          setDocuments(data.documents || []);
+        } else {
+          console.error('Failed to load documents');
+          setDocuments([]);
+        }
+      } catch (error) {
+        console.error('Error loading documents:', error);
+        setDocuments([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadDocuments();
