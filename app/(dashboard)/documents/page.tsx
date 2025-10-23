@@ -20,8 +20,30 @@ import {
   CheckCircle,
   Clock,
 } from "lucide-react";
-import { mockDocuments, documentCategories } from "@/lib/mock/documents";
 import { cn } from "@/lib/utils";
+
+// Mock data for production - in real app this would come from API
+const mockDocuments: Document[] = [];
+const documentCategories = [
+  {
+    id: "hr",
+    name: "HR Documents",
+    description: "Employee handbooks, policies, and forms",
+    icon: "📋",
+  },
+  {
+    id: "finance",
+    name: "Finance",
+    description: "Financial reports, budgets, and statements",
+    icon: "💰",
+  },
+  {
+    id: "legal",
+    name: "Legal",
+    description: "Contracts, agreements, and compliance documents",
+    icon: "⚖️",
+  },
+];
 
 // Simulate user role - in a real app, this would come from auth context
 const currentUserRole = "EMPLOYEE";
