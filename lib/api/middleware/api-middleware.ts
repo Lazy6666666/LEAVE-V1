@@ -4,8 +4,8 @@
  * Provides common middleware functionality for API routes
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createErrorResponse, APIErrors } from '../api-response';
+import { NextRequest } from "next/server";
+import { createErrorResponse } from "../api-response";
 
 /**
  * Middleware to measure request duration
@@ -19,10 +19,10 @@ export function withTiming(handler: (req: NextRequest) => Promise<Response>) {
       const duration = Date.now() - start;
 
       // Add timing to response headers
-      response.headers.set('x-response-time', `${duration}ms`);
+      response.headers.set("x-response-time", `${duration}ms`);
 
       // If the response is JSON, update the metadata
-      if (response.headers.get('content-type')?.includes('application/json')) {
+      if (response.headers.get("content-type")?.includes("application/json")) {
         const cloned = response.clone();
         const data = await cloned.json();
 
@@ -44,8 +44,8 @@ export function withTiming(handler: (req: NextRequest) => Promise<Response>) {
 
       return createErrorResponse(
         500,
-        'INTERNAL_ERROR',
-        'Internal server error',
+        "INTERNAL_ERROR",
+        "Internal server error",
         { duration }
       );
     }
@@ -60,10 +60,16 @@ export function withCors(handler: (req: NextRequest) => Promise<Response>) {
     const response = await handler(req);
 
     // Add CORS headers
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    response.headers.set('Access-Control-Max-Age', '86400');
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS"
+    );
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+    response.headers.set("Access-Control-Max-Age", "86400");
 
     return response;
   };
@@ -72,16 +78,21 @@ export function withCors(handler: (req: NextRequest) => Promise<Response>) {
 /**
  * Middleware to add security headers
  */
-export function withSecurityHeaders(handler: (req: NextRequest) => Promise<Response>) {
+export function withSecurityHeaders(
+  handler: (req: NextRequest) => Promise<Response>
+) {
   return async (req: NextRequest): Promise<Response> => {
     const response = await handler(req);
 
     // Add security headers
-    response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('X-Frame-Options', 'DENY');
-    response.headers.set('X-XSS-Protection', '1; mode=block');
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("X-XSS-Protection", "1; mode=block");
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    response.headers.set(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=()"
+    );
 
     return response;
   };
@@ -90,16 +101,22 @@ export function withSecurityHeaders(handler: (req: NextRequest) => Promise<Respo
 /**
  * Middleware to handle errors globally
  */
-export function withErrorHandling(handler: (req: NextRequest) => Promise<Response>) {
+export function withErrorHandling(
+  handler: (req: NextRequest) => Promise<Response>
+) {
   return async (req: NextRequest): Promise<Response> => {
     try {
       return await handler(req);
     } catch (error) {
-      console.error('Unhandled API Error:', error);
+      console.error("Unhandled API Error:", error);
 
       // Handle known API errors
-      if (error && typeof error === 'object' && 'statusCode' in error) {
-        const apiError = error as { statusCode: number; code: string; message: string };
+      if (error && typeof error === "object" && "statusCode" in error) {
+        const apiError = error as {
+          statusCode: number;
+          code: string;
+          message: string;
+        };
         return createErrorResponse(
           apiError.statusCode,
           apiError.code,
@@ -110,8 +127,8 @@ export function withErrorHandling(handler: (req: NextRequest) => Promise<Respons
       // Handle unknown errors
       return createErrorResponse(
         500,
-        'INTERNAL_ERROR',
-        'Internal server error'
+        "INTERNAL_ERROR",
+        "Internal server error"
       );
     }
   };
@@ -121,7 +138,11 @@ export function withErrorHandling(handler: (req: NextRequest) => Promise<Respons
  * Compose multiple middleware
  */
 export function composeMiddleware(
-  ...middlewares: Array<(handler: (req: NextRequest) => Promise<Response>) => (req: NextRequest) => Promise<Response>>
+  ...middlewares: Array<
+    (
+      handler: (req: NextRequest) => Promise<Response>
+    ) => (req: NextRequest) => Promise<Response>
+  >
 ) {
   return (handler: (req: NextRequest) => Promise<Response>) => {
     return middlewares.reduceRight(

@@ -82,7 +82,7 @@ export const SwipeableListItem = ({
       setDragOffset(0);
       setIsDragging(false);
     },
-        trackMouse: true,
+    trackMouse: true,
     trackTouch: true,
   });
 

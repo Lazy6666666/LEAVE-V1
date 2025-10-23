@@ -142,7 +142,7 @@ export class SecurityMonitoring {
    * Generate unique event ID
    */
   private generateEventId(): string {
-    return `sec_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
+    return `sec_${Date.now()}_${crypto.randomBytes(8).toString("hex")}`;
   }
 
   /**
@@ -163,7 +163,10 @@ export class SecurityMonitoring {
           .gte("timestamp", oneMinuteAgo.toISOString())
           .lt("timestamp", now.toISOString());
 
-        if (recentFailed.data && recentFailed.data.length >= this.alertThresholds.failedLoginsPerMinute) {
+        if (
+          recentFailed.data &&
+          recentFailed.data.length >= this.alertThresholds.failedLoginsPerMinute
+        ) {
           await this.triggerAlert({
             type: "BRUTE_FORCE_ATTACK",
             severity: SecuritySeverity.HIGH,
@@ -186,7 +189,10 @@ export class SecurityMonitoring {
           .gte("timestamp", oneHourAgo.toISOString())
           .lt("timestamp", now.toISOString());
 
-        if (recentXss.data && recentXss.data.length >= this.alertThresholds.xssAttemptsPerHour) {
+        if (
+          recentXss.data &&
+          recentXss.data.length >= this.alertThresholds.xssAttemptsPerHour
+        ) {
           await this.triggerAlert({
             type: "XSS_ATTACK_PATTERN",
             severity: SecuritySeverity.HIGH,
@@ -209,7 +215,11 @@ export class SecurityMonitoring {
           .gte("timestamp", oneMinuteAgo.toISOString())
           .lt("timestamp", now.toISOString());
 
-        if (recentRateLimitHits.data && recentRateLimitHits.data.length >= this.alertThresholds.rateLimitHitsPerMinute) {
+        if (
+          recentRateLimitHits.data &&
+          recentRateLimitHits.data.length >=
+            this.alertThresholds.rateLimitHitsPerMinute
+        ) {
           await this.triggerAlert({
             type: "API_ABUSE",
             severity: SecuritySeverity.MEDIUM,
@@ -281,7 +291,7 @@ export class SecurityMonitoring {
       }
 
       // Create security notifications
-      const notifications = admins.map(admin => ({
+      const notifications = admins.map((admin) => ({
         user_id: admin.user_id,
         type: "SECURITY_ALERT",
         title: `Security Alert: ${alert.type}`,
@@ -345,7 +355,9 @@ export class SecurityMonitoring {
     try {
       await this.supabase.from("blocked_ips").insert({
         ip,
-        blocked_until: new Date(Date.now() + durationSeconds * 1000).toISOString(),
+        blocked_until: new Date(
+          Date.now() + durationSeconds * 1000
+        ).toISOString(),
         reason: "Security alert auto-block",
         created_at: new Date().toISOString(),
       });
@@ -365,7 +377,10 @@ export class SecurityMonitoring {
         .update({ details: { session_invalidated: true } })
         .eq("ip", ip)
         .eq("type", SecurityEventType.LOGIN_SUCCESS)
-        .gte("timestamp", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()); // Last 24 hours
+        .gte(
+          "timestamp",
+          new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        ); // Last 24 hours
     } catch (error) {
       console.error("Failed to invalidate sessions:", error);
     }
@@ -403,43 +418,39 @@ export class SecurityMonitoring {
       const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
       const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-      const [
-        recentEvents,
-        recentAlerts,
-        activeThreats,
-        blockedIPs,
-      ] = await Promise.all([
-        // Recent security events (24h)
-        this.supabase
-          .from("security_events")
-          .select("*")
-          .gte("timestamp", oneDayAgo.toISOString())
-          .order("timestamp", { ascending: false })
-          .limit(100),
+      const [recentEvents, recentAlerts, activeThreats, blockedIPs] =
+        await Promise.all([
+          // Recent security events (24h)
+          this.supabase
+            .from("security_events")
+            .select("*")
+            .gte("timestamp", oneDayAgo.toISOString())
+            .order("timestamp", { ascending: false })
+            .limit(100),
 
-        // Recent alerts (24h)
-        this.supabase
-          .from("security_alerts")
-          .select("*")
-          .gte("timestamp", oneDayAgo.toISOString())
-          .order("timestamp", { ascending: false })
-          .limit(50),
+          // Recent alerts (24h)
+          this.supabase
+            .from("security_alerts")
+            .select("*")
+            .gte("timestamp", oneDayAgo.toISOString())
+            .order("timestamp", { ascending: false })
+            .limit(50),
 
-        // Active threats (7 days)
-        this.supabase
-          .from("security_events")
-          .select("*")
-          .gte("timestamp", oneWeekAgo.toISOString())
-          .in("severity", [SecuritySeverity.HIGH, SecuritySeverity.CRITICAL])
-          .order("timestamp", { ascending: false })
-          .limit(100),
+          // Active threats (7 days)
+          this.supabase
+            .from("security_events")
+            .select("*")
+            .gte("timestamp", oneWeekAgo.toISOString())
+            .in("severity", [SecuritySeverity.HIGH, SecuritySeverity.CRITICAL])
+            .order("timestamp", { ascending: false })
+            .limit(100),
 
-        // Blocked IPs
-        this.supabase
-          .from("blocked_ips")
-          .select("*")
-          .gt("blocked_until", now.toISOString()),
-      ]);
+          // Blocked IPs
+          this.supabase
+            .from("blocked_ips")
+            .select("*")
+            .gt("blocked_until", now.toISOString()),
+        ]);
 
       return {
         recentEvents: recentEvents.data || [],
@@ -450,7 +461,10 @@ export class SecurityMonitoring {
           totalEvents24h: recentEvents.data?.length || 0,
           totalAlerts24h: recentAlerts.data?.length || 0,
           activeBlockedIPs: blockedIPs.data?.length || 0,
-          criticalAlerts: recentAlerts.data?.filter((a: any) => a.severity === SecuritySeverity.CRITICAL).length || 0,
+          criticalAlerts:
+            recentAlerts.data?.filter(
+              (a: any) => a.severity === SecuritySeverity.CRITICAL
+            ).length || 0,
         },
       };
     } catch (error) {

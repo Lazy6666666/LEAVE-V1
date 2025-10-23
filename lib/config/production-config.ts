@@ -223,10 +223,13 @@ export function validateProductionEnvironment(): boolean {
     "SESSION_SECRET",
   ];
 
-  const missing = required.filter(key => !process.env[key]);
+  const missing = required.filter((key) => !process.env[key]);
 
   if (missing.length > 0) {
-    console.error("Missing required production environment variables:", missing);
+    console.error(
+      "Missing required production environment variables:",
+      missing
+    );
     return false;
   }
 
@@ -240,28 +243,32 @@ export function getSecureHeadersConfig() {
   const config = getProductionConfig();
 
   return {
-    "Content-Security-Policy": config.ENABLE_CSP ? [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://*.supabase.co",
-      "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co",
-      "frame-src 'none'",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
-    ].join("; ") : undefined,
+    "Content-Security-Policy": config.ENABLE_CSP
+      ? [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' https://fonts.gstatic.com",
+          "img-src 'self' data: blob: https://*.supabase.co",
+          "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co",
+          "frame-src 'none'",
+          "object-src 'none'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "frame-ancestors 'none'",
+          "upgrade-insecure-requests",
+        ].join("; ")
+      : undefined,
 
-    "Strict-Transport-Security": config.ENABLE_HSTS ?
-      "max-age=31536000; includeSubDomains; preload" : undefined,
+    "Strict-Transport-Security": config.ENABLE_HSTS
+      ? "max-age=31536000; includeSubDomains; preload"
+      : undefined,
 
     "X-Frame-Options": "DENY",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    "Permissions-Policy":
+      "camera=(), microphone=(), geolocation=(), interest-cohort=()",
     "Cross-Origin-Embedder-Policy": "require-corp",
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",

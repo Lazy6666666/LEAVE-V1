@@ -16,34 +16,46 @@ const AdminLoadingFallback = () => (
 
 // Dynamically import admin components
 export const AdminAnalytics = dynamic(
-  () => import("@/components/analytics/analytics-charts").then((mod) => mod.default),
+  () =>
+    import("@/components/analytics/analytics-charts").then(
+      (mod) => mod.default
+    ),
   {
     loading: AdminLoadingFallback,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const AdminPerformance = dynamic(
-  () => import("@/app/(dashboard)/admin/performance/page").then((mod) => mod.default),
+  () =>
+    import("@/app/(dashboard)/admin/performance/page").then(
+      (mod) => mod.default
+    ),
   {
     loading: AdminLoadingFallback,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const AdminAuditLogs = dynamic(
-  () => import("@/app/(dashboard)/admin/audit-logs/page").then((mod) => mod.default),
+  () =>
+    import("@/app/(dashboard)/admin/audit-logs/page").then(
+      (mod) => mod.default
+    ),
   {
     loading: AdminLoadingFallback,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const AdminSecurityMFA = dynamic(
-  () => import("@/app/(dashboard)/admin/security/mfa/page").then((mod) => mod.default),
+  () =>
+    import("@/app/(dashboard)/admin/security/mfa/page").then(
+      (mod) => mod.default
+    ),
   {
     loading: AdminLoadingFallback,
-    ssr: false
+    ssr: false,
   }
 );
 
@@ -51,14 +63,15 @@ export const AdminUserManagement = dynamic(
   () => import("@/app/(dashboard)/admin/users/page").then((mod) => mod.default),
   {
     loading: AdminLoadingFallback,
-    ssr: false
+    ssr: false,
   }
 );
 
 export const AdminSettings = dynamic(
-  () => import("@/app/(dashboard)/admin/settings/page").then((mod) => mod.default),
+  () =>
+    import("@/app/(dashboard)/admin/settings/page").then((mod) => mod.default),
   {
     loading: AdminLoadingFallback,
-    ssr: false
+    ssr: false,
   }
 );

@@ -73,7 +73,10 @@ export const AnimatedStatCard = ({
   return (
     <div
       ref={ref}
-      className={cn("group cursor-pointer opacity-0 translate-y-5 animate-in", className)}
+      className={cn(
+        "group cursor-pointer opacity-0 translate-y-5 animate-in",
+        className
+      )}
     >
       <Card className="elevation-hover-2">
         <CardContent className="p-6">
@@ -106,9 +109,7 @@ export const AnimatedStatCard = ({
                 </motion.div>
               )}
             </div>
-            <div
-              className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors hover:scale-110 hover:rotate-5 active:scale-95 transform"
-            >
+            <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors hover:scale-110 hover:rotate-5 active:scale-95 transform">
               {icon}
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomBytes } from "crypto";
 
 export interface SecurityHeadersConfig {
   enableCSP?: boolean;
@@ -90,55 +91,57 @@ export class SecurityHeadersService {
     const isProduction = process.env.NODE_ENV === "production";
 
     // Stricter CSP for production
-    const directives = isProduction ? [
-      // Default to self-origin only
-      "default-src 'self'",
+    const directives = isProduction
+      ? [
+          // Default to self-origin only
+          "default-src 'self'",
 
-      // Strict script sources - remove unsafe-inline/eval in production
-      "script-src 'self' https://js.stripe.com https://checkout.stripe.com",
+          // Strict script sources - remove unsafe-inline/eval in production
+          "script-src 'self' https://js.stripe.com https://checkout.stripe.com",
 
-      // Style sources with nonce support in production
-      "style-src 'self' https://fonts.googleapis.com 'nonce-%CSP_NONCE%'",
+          // Style sources with nonce support in production
+          "style-src 'self' https://fonts.googleapis.com 'nonce-%CSP_NONCE%'",
 
-      // Font sources
-      "font-src 'self' https://fonts.gstatic.com",
+          // Font sources
+          "font-src 'self' https://fonts.gstatic.com",
 
-      // Image sources
-      "img-src 'self' data: blob: https://*.supabase.co",
+          // Image sources
+          "img-src 'self' data: blob: https://*.supabase.co",
 
-      // Connect sources for APIs and WebSockets
-      "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co",
+          // Connect sources for APIs and WebSockets
+          "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co",
 
-      // No frames allowed
-      "frame-src 'none'",
-      "object-src 'none'",
+          // No frames allowed
+          "frame-src 'none'",
+          "object-src 'none'",
 
-      // Base restrictions
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
+          // Base restrictions
+          "base-uri 'self'",
+          "form-action 'self'",
+          "frame-ancestors 'none'",
 
-      // Enforce HTTPS
-      "upgrade-insecure-requests",
+          // Enforce HTTPS
+          "upgrade-insecure-requests",
 
-      // Additional security
-      "block-all-mixed-content",
-      "require-trusted-types-for 'script'",
-    ] : [
-      // Development CSP - more permissive
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://checkout.stripe.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://*.supabase.co",
-      "connect-src 'self' https://api.stripe.com https://js.stripe.com https://*.supabase.co wss://*.supabase.co",
-      "frame-src 'none'",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
-    ];
+          // Additional security
+          "block-all-mixed-content",
+          "require-trusted-types-for 'script'",
+        ]
+      : [
+          // Development CSP - more permissive
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://checkout.stripe.com",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' https://fonts.gstatic.com",
+          "img-src 'self' data: blob: https://*.supabase.co",
+          "connect-src 'self' https://api.stripe.com https://js.stripe.com https://*.supabase.co wss://*.supabase.co",
+          "frame-src 'none'",
+          "object-src 'none'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "frame-ancestors 'none'",
+          "upgrade-insecure-requests",
+        ];
 
     return directives.join("; ");
   }
@@ -147,8 +150,7 @@ export class SecurityHeadersService {
    * Generate nonce for inline scripts/styles
    */
   static generateNonce(): string {
-    const crypto = require('crypto');
-    return crypto.randomBytes(16).toString('base64');
+    return randomBytes(16).toString("base64");
   }
 
   /**

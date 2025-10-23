@@ -9,7 +9,7 @@ enum Role {
   HR = "HR",
 }
 
-enum AccessLevel {
+export enum AccessLevel {
   PUBLIC = "PUBLIC",
   EMPLOYEE = "EMPLOYEE",
   MANAGER = "MANAGER",

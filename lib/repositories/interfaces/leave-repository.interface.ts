@@ -5,7 +5,7 @@
  * This enables easy testing and swapping of implementations.
  */
 
-import { Leave, LeaveStatus, LeaveType } from '@prisma/client';
+import { Leave, LeaveStatus } from "@prisma/client";
 
 export interface LeaveQueryOptions {
   userId?: string;
@@ -72,8 +72,17 @@ export interface ILeaveRepository {
   findConflicts(conflict: ConflictCheck): Promise<Leave[]>;
 
   // Balance operations
-  getBalance(userId: string, leaveTypeId: string, year: number): Promise<LeaveBalance | null>;
-  updateBalance(userId: string, leaveTypeId: string, year: number, days: number): Promise<LeaveBalance>;
+  getBalance(
+    userId: string,
+    leaveTypeId: string,
+    year: number
+  ): Promise<LeaveBalance | null>;
+  updateBalance(
+    userId: string,
+    leaveTypeId: string,
+    year: number,
+    days: number
+  ): Promise<LeaveBalance>;
 
   // Statistics
   getStatistics(userId?: string): Promise<{

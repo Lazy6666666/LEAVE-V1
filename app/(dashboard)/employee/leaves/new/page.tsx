@@ -12,7 +12,10 @@ import Link from "next/link";
 
 // Lazy load the optimized leave form component
 const OptimizedLeaveForm = dynamic(
-  () => import("@/components/optimized/OptimizedLeaveForm").then((mod) => ({ default: mod.OptimizedLeaveForm })),
+  () =>
+    import("@/components/optimized/OptimizedLeaveForm").then((mod) => ({
+      default: mod.OptimizedLeaveForm,
+    })),
   {
     loading: () => (
       <div className="flex items-center justify-center p-8">
@@ -20,14 +23,17 @@ const OptimizedLeaveForm = dynamic(
         <span className="ml-2">Loading form...</span>
       </div>
     ),
-    ssr: false
+    ssr: false,
   }
 );
 
 // Load icon separately for minimal bundle impact
-const ArrowLeft = dynamic(() => import("lucide-react").then(mod => ({ default: mod.ArrowLeft })), {
-  ssr: false
-});
+const ArrowLeft = dynamic(
+  () => import("lucide-react").then((mod) => ({ default: mod.ArrowLeft })),
+  {
+    ssr: false,
+  }
+);
 
 export default function NewLeaveRequestPage() {
   const router = useRouter();

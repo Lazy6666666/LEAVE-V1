@@ -2,13 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 // Optimized lucide-react imports for tree-shaking
-import {
-  Search,
-  X,
-  Filter,
-  Clock,
-  TrendingUp,
-} from "@/lib/utils/icons";
+import { Search, X, Filter, Clock, TrendingUp } from "@/lib/utils/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {

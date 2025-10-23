@@ -41,7 +41,33 @@ interface ChartData {
   name: string;
   value: number;
   color?: string;
-  [key: string]: any;
+  department?: string;
+  date?: string;
+  percentage?: number;
+  change?: number;
+}
+
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    name: string;
+    value: number;
+    color?: string;
+    dataKey?: string;
+    payload?: ChartData;
+  }>;
+  label?: string;
+}
+
+// Extend the recharts label props interface
+interface PieLabelRenderProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
+  index: number;
 }
 
 interface AnalyticsChartsProps {
@@ -59,12 +85,12 @@ const COLORS = [
   "#84cc16", // lime-500
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
         <p className="font-medium text-sm">{label}</p>
-        {payload.map((entry: any, index: number) => (
+        {payload.map((entry, index: number) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             {entry.name}: {entry.value}
             {entry.dataKey?.includes("Rate") && "%"}
@@ -85,7 +111,7 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-}: any) => {
+}: PieLabelRenderProps) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -312,11 +338,11 @@ export default function AnalyticsCharts({ className }: AnalyticsChartsProps) {
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={leaveTypeData}
+                    data={leaveTypeData as any[]}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={renderCustomizedLabel}
+                    label={renderCustomizedLabel as any}
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"

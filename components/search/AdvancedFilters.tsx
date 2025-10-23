@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 // Optimized lucide-react imports for tree-shaking
-import {
-  Filter,
-  X,
-  Calendar,
-  User,
-  FileText,
-} from "@/lib/utils/icons";
+import { Filter, X, Calendar, User, FileText } from "@/lib/utils/icons";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

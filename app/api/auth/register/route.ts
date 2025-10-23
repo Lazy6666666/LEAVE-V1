@@ -7,7 +7,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { ValidationMiddleware, SQLInjectionProtection, RequestTracker } from "@/lib/middleware/validation-middleware";
+import {
+  ValidationMiddleware,
+  SQLInjectionProtection,
+  RequestTracker,
+} from "@/lib/middleware/validation-middleware";
 
 // Registration schema
 const registrationSchema = z.object({
@@ -37,11 +41,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Get validated body from headers
-    const validatedBody = JSON.parse(request.headers.get("x-validated-body") || "{}");
+    const validatedBody = JSON.parse(
+      request.headers.get("x-validated-body") || "{}"
+    );
     const { userId, fullName, department, email } = validatedBody;
 
     // Additional security check for SQL injection
-    if (!SQLInjectionProtection.validateQueryParams({ userId, email, department })) {
+    if (
+      !SQLInjectionProtection.validateQueryParams({ userId, email, department })
+    ) {
       const response = NextResponse.json(
         { error: "Invalid input detected" },
         { status: 400 }
@@ -118,12 +126,14 @@ export async function POST(request: NextRequest) {
     );
     RequestTracker.addRequestId(response, requestId);
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Registration error [${requestId}]:`, error);
 
     // Don't expose detailed errors in production
     const isDevelopment = process.env.NODE_ENV === "development";
-    const errorDetails = isDevelopment ? error.message : "Registration failed";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    const errorDetails = isDevelopment ? errorMessage : "Registration failed";
 
     const response = NextResponse.json(
       { error: "Internal server error", details: errorDetails },

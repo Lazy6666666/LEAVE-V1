@@ -27,7 +27,11 @@
     "postinstall": "prisma generate",
     "validate": "npm run type-check && npm run lint && npm run format:check",
     "analyze": "cross-env ANALYZE=true npm run build",
-    "perf:build": "npm run build && npm run analyze"
+    "perf:build": "npm run build && npm run analyze",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "validate-refactoring": "tsx scripts/validate-refactoring.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -86,7 +90,11 @@
   "devDependencies": {
     "@next/bundle-analyzer": "^15.5.6",
     "@tanstack/react-query-devtools": "^5.90.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/file-saver": "^2.0.7",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
     "@types/node-jose": "^1.1.13",
     "@types/react-big-calendar": "^1.16.3",
@@ -95,9 +103,11 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "jest": "^30.2.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.14",
+    "ts-jest": "^29.4.5",
     "tsx": "^4.20.6"
   }
 }

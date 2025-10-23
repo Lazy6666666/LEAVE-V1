@@ -5,7 +5,8 @@
  * and ensure data integrity across the application.
  */
 
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
+import { randomBytes } from "crypto";
 
 /**
  * Sanitization configuration for different content types
@@ -19,19 +20,36 @@ const SANITIZATION_CONFIGS = {
   },
   // Basic: Basic formatting allowed
   basic: {
-    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'span'] as string[],
-    ALLOWED_ATTR: ['class'] as string[],
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "p", "br", "span"] as string[],
+    ALLOWED_ATTR: ["class"] as string[],
     KEEP_CONTENT: true,
   },
   // Rich: Rich text formatting allowed
   rich: {
     ALLOWED_TAGS: [
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'p', 'br', 'span', 'strong', 'em', 'i', 'b',
-      'u', 'ul', 'ol', 'li', 'blockquote',
-      'a', 'code', 'pre'
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "p",
+      "br",
+      "span",
+      "strong",
+      "em",
+      "i",
+      "b",
+      "u",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "a",
+      "code",
+      "pre",
     ] as string[],
-    ALLOWED_ATTR: ['href', 'title', 'class', 'target'] as string[],
+    ALLOWED_ATTR: ["href", "title", "class", "target"] as string[],
     KEEP_CONTENT: true,
   },
 } as const;
@@ -42,16 +60,15 @@ type SanitizationLevel = keyof typeof SANITIZATION_CONFIGS;
  * XSS Protection Class
  */
 export class XSSProtection {
-
   /**
    * Sanitize HTML content to prevent XSS attacks
    */
   static sanitizeHTML(
     html: string,
-    level: SanitizationLevel = 'strict'
+    level: SanitizationLevel = "strict"
   ): string {
-    if (!html || typeof html !== 'string') {
-      return '';
+    if (!html || typeof html !== "string") {
+      return "";
     }
 
     const config = SANITIZATION_CONFIGS[level];
@@ -71,8 +88,23 @@ export class XSSProtection {
         attributeNameCheck: null,
         allowCustomizedBuiltInElements: false,
       },
-      FORBID_TAGS: ['script', 'object', 'embed', 'iframe', 'form', 'input', 'button'],
-      FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
+      FORBID_TAGS: [
+        "script",
+        "object",
+        "embed",
+        "iframe",
+        "form",
+        "input",
+        "button",
+      ],
+      FORBID_ATTR: [
+        "onerror",
+        "onload",
+        "onclick",
+        "onmouseover",
+        "onfocus",
+        "onblur",
+      ],
     });
 
     return configResult;
@@ -82,18 +114,18 @@ export class XSSProtection {
    * Sanitize plain text input
    */
   static sanitizeText(text: string): string {
-    if (!text || typeof text !== 'string') {
-      return '';
+    if (!text || typeof text !== "string") {
+      return "";
     }
 
     // Remove HTML tags
-    let sanitized = text.replace(/<[^>]*>/g, '');
+    let sanitized = text.replace(/<[^>]*>/g, "");
 
     // Remove potentially dangerous characters
-    sanitized = sanitized.replace(/[<>]/g, '');
+    sanitized = sanitized.replace(/[<>]/g, "");
 
     // Normalize whitespace
-    sanitized = sanitized.trim().replace(/\s+/g, ' ');
+    sanitized = sanitized.trim().replace(/\s+/g, " ");
 
     // Length limit to prevent DoS
     const MAX_LENGTH = 10000;
@@ -108,30 +140,30 @@ export class XSSProtection {
    * Sanitize email address
    */
   static sanitizeEmail(email: string): string {
-    if (!email || typeof email !== 'string') {
-      return '';
+    if (!email || typeof email !== "string") {
+      return "";
     }
 
     // Basic email sanitization
     const sanitized = email.toLowerCase().trim();
 
     // Remove potentially dangerous characters
-    const cleanEmail = sanitized.replace(/[<>]/g, '');
+    const cleanEmail = sanitized.replace(/[<>]/g, "");
 
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(cleanEmail) ? cleanEmail : '';
+    return emailRegex.test(cleanEmail) ? cleanEmail : "";
   }
 
   /**
    * Sanitize numeric input
    */
   static sanitizeNumber(value: string | number): number | null {
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return isNaN(value) ? null : value;
     }
 
-    if (typeof value !== 'string') {
+    if (typeof value !== "string") {
       return null;
     }
 
@@ -145,61 +177,64 @@ export class XSSProtection {
    * Sanitize UUID
    */
   static sanitizeUUID(uuid: string): string {
-    if (!uuid || typeof uuid !== 'string') {
-      return '';
+    if (!uuid || typeof uuid !== "string") {
+      return "";
     }
 
-    const sanitized = uuid.trim().replace(/[^a-f0-9-]/gi, '');
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const sanitized = uuid.trim().replace(/[^a-f0-9-]/gi, "");
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-    return uuidRegex.test(sanitized) ? sanitized : '';
+    return uuidRegex.test(sanitized) ? sanitized : "";
   }
 
   /**
    * Sanitize file name
    */
   static sanitizeFilename(filename: string): string {
-    if (!filename || typeof filename !== 'string') {
-      return '';
+    if (!filename || typeof filename !== "string") {
+      return "";
     }
 
     // Remove path traversal attempts
-    let sanitized = filename.replace(/[\/\\]/g, '_');
+    let sanitized = filename.replace(/[\/\\]/g, "_");
 
     // Remove dangerous characters
-    sanitized = sanitized.replace(/[<>:"|?*]/g, '_');
+    sanitized = sanitized.replace(/[<>:"|?*]/g, "_");
 
     // Remove control characters
-    sanitized = sanitized.replace(/[\x00-\x1f\x7f]/g, '');
+    sanitized = sanitized.replace(/[\x00-\x1f\x7f]/g, "");
 
     // Remove leading/trailing dots and spaces
-    sanitized = sanitized.trim().replace(/^\.+|\.+$/g, '');
+    sanitized = sanitized.trim().replace(/^\.+|\.+$/g, "");
 
     // Limit length
     const maxLength = 255;
     if (sanitized.length > maxLength) {
-      const extension = sanitized.includes('.') ?
-        sanitized.substring(sanitized.lastIndexOf('.')) : '';
-      const nameWithoutExt = sanitized.substring(0, sanitized.lastIndexOf('.')) || sanitized;
+      const extension = sanitized.includes(".")
+        ? sanitized.substring(sanitized.lastIndexOf("."))
+        : "";
+      const nameWithoutExt =
+        sanitized.substring(0, sanitized.lastIndexOf(".")) || sanitized;
       const maxNameLength = maxLength - extension.length;
       sanitized = nameWithoutExt.substring(0, maxNameLength) + extension;
     }
 
-    return sanitized || 'unnamed_file';
+    return sanitized || "unnamed_file";
   }
 
   /**
    * Sanitize URL
    */
   static sanitizeURL(url: string): string {
-    if (!url || typeof url !== 'string') {
-      return '';
+    if (!url || typeof url !== "string") {
+      return "";
     }
 
     const sanitized = url.trim();
 
     // Allow only http, https, mailto protocols
-    const allowedProtocols = ['http:', 'https:', 'mailto:'];
+    const allowedProtocols = ["http:", "https:", "mailto:"];
     let protocol: string;
 
     try {
@@ -207,11 +242,11 @@ export class XSSProtection {
       protocol = parsed.protocol;
     } catch {
       // Invalid URL
-      return '';
+      return "";
     }
 
     if (!allowedProtocols.includes(protocol)) {
-      return '';
+      return "";
     }
 
     return sanitized;
@@ -221,7 +256,7 @@ export class XSSProtection {
    * Sanitize JSON input
    */
   static sanitizeJSON(jsonString: string): any {
-    if (!jsonString || typeof jsonString !== 'string') {
+    if (!jsonString || typeof jsonString !== "string") {
       return null;
     }
 
@@ -241,17 +276,17 @@ export class XSSProtection {
    * Remove prototype pollution from objects
    */
   private static removePrototypePollution(obj: any): any {
-    if (obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== "object") {
       return obj;
     }
 
     if (Array.isArray(obj)) {
-      return obj.map(item => this.removePrototypePollution(item));
+      return obj.map((item) => this.removePrototypePollution(item));
     }
 
     const cleanObj: any = {};
     for (const key in obj) {
-      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
         continue;
       }
       cleanObj[key] = this.removePrototypePollution(obj[key]);
@@ -269,7 +304,7 @@ export class InputValidator {
    * Validate and sanitize request body
    */
   static sanitizeRequestBody(body: any, schema: any): any {
-    if (!body || typeof body !== 'object') {
+    if (!body || typeof body !== "object") {
       return null;
     }
 
@@ -280,7 +315,7 @@ export class InputValidator {
       // Then sanitize each field
       return this.sanitizeObject(validated);
     } catch (error) {
-      console.error('Schema validation failed:', error);
+      console.error("Schema validation failed:", error);
       return null;
     }
   }
@@ -289,12 +324,12 @@ export class InputValidator {
    * Recursively sanitize object properties
    */
   private static sanitizeObject(obj: any): any {
-    if (obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== "object") {
       return obj;
     }
 
     if (Array.isArray(obj)) {
-      return obj.map(item => this.sanitizeObject(item));
+      return obj.map((item) => this.sanitizeObject(item));
     }
 
     const sanitized: any = {};
@@ -313,15 +348,15 @@ export class InputValidator {
       return value;
     }
 
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       return XSSProtection.sanitizeText(value);
     }
 
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return XSSProtection.sanitizeNumber(value);
     }
 
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
       return this.sanitizeObject(value);
     }
 
@@ -337,8 +372,7 @@ export class CSPHelper {
    * Generate nonce for inline scripts
    */
   static generateNonce(): string {
-    const crypto = require('crypto');
-    return crypto.randomBytes(16).toString('base64');
+    return randomBytes(16).toString("base64");
   }
 
   /**
@@ -356,20 +390,24 @@ export class SecurityHeaders {
   /**
    * Generate security headers for responses
    */
-  static getSecurityHeaders(isProduction: boolean = false): Record<string, string> {
+  static getSecurityHeaders(
+    isProduction: boolean = false
+  ): Record<string, string> {
     const headers: Record<string, string> = {
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY',
-      'X-XSS-Protection': '1; mode=block',
-      'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Resource-Policy': 'same-origin',
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy":
+        "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Resource-Policy": "same-origin",
     };
 
     if (isProduction) {
-      headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload';
+      headers["Strict-Transport-Security"] =
+        "max-age=31536000; includeSubDomains; preload";
     }
 
     return headers;

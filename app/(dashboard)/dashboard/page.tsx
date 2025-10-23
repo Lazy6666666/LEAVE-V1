@@ -188,7 +188,10 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground welcome-message" data-testid="welcome-message">
+          <p
+            className="text-muted-foreground welcome-message"
+            data-testid="welcome-message"
+          >
             Welcome back! Here&apos;s your leave management overview.
           </p>
         </div>

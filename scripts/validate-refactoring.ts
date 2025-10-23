@@ -15,7 +15,6 @@ interface ValidationResult {
 }
 
 export class RefactoringValidator {
-  private results: ValidationResult[] = [];
 
   /**
    * Validate API response times
@@ -95,6 +94,7 @@ export class RefactoringValidator {
       'app/api/leaves/route.ts',
       'lib/repositories/leave-repository.ts',
     ];
+    console.log('Analyzing files:', refactoredFiles.join(', '));
 
     const metrics = {
       totalLines: 0,

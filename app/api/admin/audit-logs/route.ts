@@ -45,7 +45,23 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Build where clause
-    const where: any = {};
+    const where: {
+      action?: string;
+      entity_type?: string;
+      OR?: Array<{
+        user?: {
+          profile?: {
+            OR?: Array<{
+              full_name?: { contains: string; mode: "insensitive" };
+              email?: { contains: string; mode: "insensitive" };
+            }>;
+          };
+        };
+        action?: { contains: string; mode: "insensitive" };
+        entity_type?: { contains: string; mode: "insensitive" };
+      }>;
+      created_at?: { gte?: Date };
+    } = {};
 
     if (actionFilter && actionFilter !== "all") {
       where.action = actionFilter;

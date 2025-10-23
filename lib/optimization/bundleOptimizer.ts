@@ -3,12 +3,11 @@
  * Advanced optimization strategies for smaller bundle sizes
  */
 
-
 // Performance budgets and targets
 export const PERFORMANCE_BUDGETS = {
   // Bundle sizes in KB
   BUNDLE_TOTAL: 350, // Target: <350KB
-  BUNDLE_VENDOR: 300,  // Target: <300KB
+  BUNDLE_VENDOR: 300, // Target: <300KB
   BUNDLE_LARGEST_ROUTE: 5, // Target: <5KB
 
   // Performance metrics
@@ -159,7 +158,9 @@ export class BundleOptimizer {
         // First Contentful Paint
         const fcpObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
-          const fcpEntry = entries.find((entry) => entry.name === "first-contentful-paint");
+          const fcpEntry = entries.find(
+            (entry) => entry.name === "first-contentful-paint"
+          );
           if (fcpEntry) {
             this.metrics.loadingTime.FCP = fcpEntry.startTime;
             this.checkPerformanceThreshold("FCP", fcpEntry.startTime);
@@ -196,7 +197,9 @@ export class BundleOptimizer {
 
     const threshold = thresholds[metric];
     if (threshold && value > threshold) {
-      console.warn(`Performance warning: ${metric} ${Math.round(value)}ms exceeds threshold of ${threshold}ms`);
+      console.warn(
+        `Performance warning: ${metric} ${Math.round(value)}ms exceeds threshold of ${threshold}ms`
+      );
     }
   }
 
@@ -212,7 +215,10 @@ export class BundleOptimizer {
     let score = 100;
 
     // Bundle size scoring
-    const totalBundleSize = Object.values(bundleSize).reduce((a: number, b: number) => a + b, 0);
+    const totalBundleSize = Object.values(bundleSize).reduce(
+      (a: number, b: number) => a + b,
+      0
+    );
     if (totalBundleSize > PERFORMANCE_BUDGETS.BUNDLE_TOTAL * 1024) {
       score -= 30;
     } else if (totalBundleSize > 300 * 1024) {
@@ -220,20 +226,27 @@ export class BundleOptimizer {
     }
 
     // Loading time scoring
-    if (loadingTime.LCP && loadingTime.LCP > PERFORMANCE_BUDGETS.LARGEST_CONTENTFUL_PAINT) {
+    if (
+      loadingTime.LCP &&
+      loadingTime.LCP > PERFORMANCE_BUDGETS.LARGEST_CONTENTFUL_PAINT
+    ) {
       score -= 25;
     } else if (loadingTime.LCP && loadingTime.LCP > 2000) {
       score -= 10;
     }
 
-    if (loadingTime.FCP && loadingTime.FCP > PERFORMANCE_BUDGETS.FIRST_CONTENTFUL_PAINT) {
+    if (
+      loadingTime.FCP &&
+      loadingTime.FCP > PERFORMANCE_BUDGETS.FIRST_CONTENTFUL_PAINT
+    ) {
       score -= 25;
     } else if (loadingTime.FCP && loadingTime.FCP > 1200) {
       score -= 10;
     }
 
     // Determine status
-    let status: "excellent" | "good" | "needs-improvement" | "poor" = "excellent";
+    let status: "excellent" | "good" | "needs-improvement" | "poor" =
+      "excellent";
     if (score < 60) status = "poor";
     else if (score < 75) status = "needs-improvement";
     else if (score < 90) status = "good";
@@ -268,13 +281,15 @@ export class BundleOptimizer {
         name: "Tree Shaking",
         description: "Remove unused code from bundles",
         impact: "high",
-        implementation: "Use ES6 modules and direct imports for libraries like lucide-react",
+        implementation:
+          "Use ES6 modules and direct imports for libraries like lucide-react",
       },
       {
         name: "Code Splitting",
         description: "Split code into smaller chunks loaded on demand",
         impact: "high",
-        implementation: "Use Next.js dynamic imports for admin and heavy components",
+        implementation:
+          "Use Next.js dynamic imports for admin and heavy components",
       },
       {
         name: "Image Optimization",
@@ -361,10 +376,7 @@ export class BundleOptimizer {
     if (typeof document === "undefined") return;
 
     // Preload critical JavaScript
-    const criticalResources = [
-      "/vendors.js",
-      "/common.js",
-    ];
+    const criticalResources = ["/vendors.js", "/common.js"];
 
     criticalResources.forEach((resource) => {
       const link = document.createElement("link");

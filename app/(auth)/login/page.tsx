@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, LogIn, Mail, Shield, Sparkles, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Mail, Shield, Sparkles, ArrowRight } from "lucide-react";
 
 // Professional animated character component
 function SecurityCharacter({
@@ -71,14 +71,20 @@ function SecurityCharacter({
               mood === "success"
                 ? "bg-green-500 text-white"
                 : mood === "thinking"
-                ? "bg-yellow-500 text-white"
-                : mood === "watching"
-                ? "bg-blue-500 text-white animate-pulse"
-                : "bg-gray-400 text-white"
+                  ? "bg-yellow-500 text-white"
+                  : mood === "watching"
+                    ? "bg-blue-500 text-white animate-pulse"
+                    : "bg-gray-400 text-white"
             }
           `}
         >
-          {mood === "success" ? "✓" : mood === "thinking" ? "..." : mood === "watching" ? "👁" : "○"}
+          {mood === "success"
+            ? "✓"
+            : mood === "thinking"
+              ? "..."
+              : mood === "watching"
+                ? "👁"
+                : "○"}
         </div>
       </div>
 
@@ -102,7 +108,9 @@ export default function LoginPage() {
     rememberMe: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [characterMood, setCharacterMood] = useState<"idle" | "watching" | "success" | "thinking">("idle");
+  const [characterMood, setCharacterMood] = useState<
+    "idle" | "watching" | "success" | "thinking"
+  >("idle");
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
@@ -139,7 +147,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleInputFocus = (field: "email" | "password") => {
+  const handleInputFocus = (_field: "email" | "password") => {
     setCharacterMood("watching");
   };
 
@@ -235,7 +243,8 @@ export default function LoginPage() {
                 Welcome Back
               </h2>
               <p className="text-xl text-gray-300 max-w-lg">
-                Secure access to your leave management dashboard with enterprise-grade protection.
+                Secure access to your leave management dashboard with
+                enterprise-grade protection.
               </p>
             </div>
 
@@ -243,7 +252,9 @@ export default function LoginPage() {
             <div className="flex justify-center lg:justify-start">
               <SecurityCharacter
                 mood={characterMood}
-                isActive={Object.keys(formData).some(key => formData[key as keyof typeof formData] !== "")}
+                isActive={Object.keys(formData).some(
+                  (key) => formData[key as keyof typeof formData] !== ""
+                )}
               />
             </div>
 
@@ -254,8 +265,12 @@ export default function LoginPage() {
                   <Shield className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Secure Authentication</p>
-                  <p className="text-sm text-gray-400">Enterprise-grade security</p>
+                  <p className="font-semibold text-white">
+                    Secure Authentication
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    Enterprise-grade security
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3 text-gray-300">
@@ -264,7 +279,9 @@ export default function LoginPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-white">Smart Dashboard</p>
-                  <p className="text-sm text-gray-400">Intuitive leave management</p>
+                  <p className="text-sm text-gray-400">
+                    Intuitive leave management
+                  </p>
                 </div>
               </div>
             </div>
@@ -320,7 +337,9 @@ export default function LoginPage() {
                         ${errors.email ? "border-red-500 focus:border-red-500" : ""}
                       `}
                       disabled={isLoading}
-                      aria-describedby={errors.email ? "email-error" : undefined}
+                      aria-describedby={
+                        errors.email ? "email-error" : undefined
+                      }
                       aria-invalid={!!errors.email}
                     />
                     {errors.email && (
@@ -359,7 +378,9 @@ export default function LoginPage() {
                           ${errors.password ? "border-red-500 focus:border-red-500" : ""}
                         `}
                         disabled={isLoading}
-                        aria-describedby={errors.password ? "password-error" : undefined}
+                        aria-describedby={
+                          errors.password ? "password-error" : undefined
+                        }
                         aria-invalid={!!errors.password}
                       />
                       <Button
@@ -369,7 +390,9 @@ export default function LoginPage() {
                         className="absolute right-0 top-0 h-full w-12 text-gray-400 hover:text-white transition-colors"
                         onClick={handlePasswordToggle}
                         disabled={isLoading}
-                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
                       >
                         {showPassword ? (
                           <EyeOff className="w-4 h-4" />
@@ -461,7 +484,8 @@ export default function LoginPage() {
             {/* Demo credentials */}
             <div className="mt-6 p-4 glass-card text-center">
               <p className="text-sm text-gray-300">
-                <strong className="text-white">Demo Account:</strong> Use any email and password (min. 6 characters) to access the dashboard
+                <strong className="text-white">Demo Account:</strong> Use any
+                email and password (min. 6 characters) to access the dashboard
               </p>
             </div>
           </div>

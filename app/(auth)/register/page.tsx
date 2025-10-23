@@ -33,7 +33,9 @@ export default function RegisterPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -284,9 +286,7 @@ export default function RegisterPage() {
                     <option value="operations">Operations</option>
                   </select>
                   {errors.department && (
-                    <p className="text-sm text-red-600">
-                      {errors.department}
-                    </p>
+                    <p className="text-sm text-red-600">{errors.department}</p>
                   )}
                 </div>
               </div>

@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { XSSProtection, InputValidator } from "@/lib/utils/input-sanitization";
+import { randomBytes } from "crypto";
 
 export interface ValidationConfig {
   schema?: z.ZodSchema;
@@ -25,7 +26,10 @@ export class ValidationMiddleware {
   static create(config: ValidationConfig) {
     return async (request: NextRequest): Promise<NextResponse | null> => {
       // Check allowed methods
-      if (config.allowedMethods && !config.allowedMethods.includes(request.method)) {
+      if (
+        config.allowedMethods &&
+        !config.allowedMethods.includes(request.method)
+      ) {
         return NextResponse.json(
           { error: "Method not allowed" },
           { status: 405 }
@@ -81,7 +85,10 @@ export class ValidationMiddleware {
 
         // Schema validation
         if (config.schema) {
-          const validated = InputValidator.sanitizeRequestBody(body, config.schema);
+          const validated = InputValidator.sanitizeRequestBody(
+            body,
+            config.schema
+          );
           if (!validated) {
             return NextResponse.json(
               { error: "Request validation failed" },
@@ -127,10 +134,10 @@ export class ValidationMiddleware {
         return NextResponse.json(
           {
             error: "Invalid query parameters",
-            details: error.issues.map(e => ({
-              field: e.path.join('.'),
-              message: e.message
-            }))
+            details: error.issues.map((e) => ({
+              field: e.path.join("."),
+              message: e.message,
+            })),
           },
           { status: 400 }
         );
@@ -149,10 +156,7 @@ export class ValidationMiddleware {
     // Check file size (default 10MB)
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      return NextResponse.json(
-        { error: "File too large" },
-        { status: 413 }
-      );
+      return NextResponse.json({ error: "File too large" }, { status: 413 });
     }
 
     // Check file type
@@ -188,10 +192,11 @@ export class ValidationMiddleware {
    */
   static schemas = {
     uuid: z.string().uuid("Invalid UUID format"),
-    email: z.string().email("Invalid email format").transform(val =>
-      XSSProtection.sanitizeEmail(val)
-    ),
-    text: z.string().transform(val => XSSProtection.sanitizeText(val)),
+    email: z
+      .string()
+      .email("Invalid email format")
+      .transform((val) => XSSProtection.sanitizeEmail(val)),
+    text: z.string().transform((val) => XSSProtection.sanitizeText(val)),
     positiveNumber: z.number().positive("Must be positive"),
     nonNegativeNumber: z.number().nonnegative("Must be non-negative"),
     date: z.string().datetime("Invalid date format"),
@@ -200,9 +205,12 @@ export class ValidationMiddleware {
       offset: z.number().int().nonnegative().optional().default(0),
     }),
     search: z.object({
-      q: z.string().min(1).max(100).transform(val =>
-        XSSProtection.sanitizeText(val)
-      ).optional(),
+      q: z
+        .string()
+        .min(1)
+        .max(100)
+        .transform((val) => XSSProtection.sanitizeText(val))
+        .optional(),
       limit: z.number().int().positive().max(100).optional().default(20),
       offset: z.number().int().nonnegative().optional().default(0),
     }),
@@ -224,7 +232,7 @@ export class SQLInjectionProtection {
       /(\b(UNION|ALL|SELECT|DISTINCT|FROM|WHERE|JOIN|INNER|LEFT|RIGHT|GROUP|BY|ORDER|HAVING|LIMIT|OFFSET)\b)/i,
     ];
 
-    return sqlPatterns.some(pattern => pattern.test(input));
+    return sqlPatterns.some((pattern) => pattern.test(input));
   }
 
   /**
@@ -232,7 +240,7 @@ export class SQLInjectionProtection {
    */
   static validateQueryParams(params: Record<string, any>): boolean {
     for (const [_key, value] of Object.entries(params)) {
-      if (typeof value === 'string' && this.detectSQLInjection(value)) {
+      if (typeof value === "string" && this.detectSQLInjection(value)) {
         return false;
       }
     }
@@ -248,15 +256,14 @@ export class RequestTracker {
    * Generate unique request ID for tracing
    */
   static generateRequestId(): string {
-    const crypto = require('crypto');
-    return `req_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
+    return `req_${Date.now()}_${randomBytes(8).toString("hex")}`;
   }
 
   /**
    * Add request ID to response headers
    */
   static addRequestId(response: NextResponse, requestId: string): void {
-    response.headers.set('X-Request-ID', requestId);
-    response.headers.set('X-Response-Time', Date.now().toString());
+    response.headers.set("X-Request-ID", requestId);
+    response.headers.set("X-Response-Time", Date.now().toString());
   }
 }

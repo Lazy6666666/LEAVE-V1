@@ -5,8 +5,8 @@
  * Handles all database operations related to leaves.
  */
 
-import { prisma } from '@/lib/prisma';
-import { Leave, LeaveStatus } from '@prisma/client';
+import { prisma } from "@/lib/prisma";
+import { Leave } from "@prisma/client";
 import {
   ILeaveRepository,
   LeaveQueryOptions,
@@ -14,18 +14,30 @@ import {
   LeaveUpdateData,
   LeaveBalance,
   ConflictCheck,
-} from './interfaces/leave-repository.interface';
+} from "./interfaces/leave-repository.interface";
 
 export class LeaveRepository implements ILeaveRepository {
   /**
    * Create a new leave request
    */
   async create(data: LeaveCreateData): Promise<Leave> {
+    // Calculate days count
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
+    const daysCount =
+      Math.ceil(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      ) + 1;
+
     return await prisma.leave.create({
       data: {
-        ...data,
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
+        user_id: data.userId,
+        leave_type_id: data.leaveTypeId,
+        start_date: startDate,
+        end_date: endDate,
+        days_count: daysCount,
+        reason: data.reason,
+        approved_by: data.approverId,
       },
       include: {
         user: {
@@ -34,25 +46,15 @@ export class LeaveRepository implements ILeaveRepository {
             email: true,
             profile: {
               select: {
-                firstName: true,
-                lastName: true,
+                id: true,
+                full_name: true,
+                department: true,
+                role: true,
               },
             },
           },
         },
-        leaveType: true,
-        approver: {
-          select: {
-            id: true,
-            email: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        },
+        leave_type: true,
       },
     });
   }
@@ -70,26 +72,15 @@ export class LeaveRepository implements ILeaveRepository {
             email: true,
             profile: {
               select: {
-                firstName: true,
-                lastName: true,
+                id: true,
+                full_name: true,
                 department: true,
+                role: true,
               },
             },
           },
         },
-        leaveType: true,
-        approver: {
-          select: {
-            id: true,
-            email: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        },
+        leave_type: true,
       },
     });
   }
@@ -98,9 +89,21 @@ export class LeaveRepository implements ILeaveRepository {
    * Update a leave request
    */
   async update(id: string, data: LeaveUpdateData): Promise<Leave> {
+    const updateData: any = {};
+
+    if (data.status !== undefined) {
+      updateData.status = data.status;
+    }
+    if (data.approverComments !== undefined) {
+      updateData.manager_comment = data.approverComments;
+    }
+    if (data.processedAt !== undefined) {
+      updateData.approved_at = data.processedAt;
+    }
+
     return await prisma.leave.update({
       where: { id },
-      data,
+      data: updateData,
       include: {
         user: {
           select: {
@@ -108,25 +111,15 @@ export class LeaveRepository implements ILeaveRepository {
             email: true,
             profile: {
               select: {
-                firstName: true,
-                lastName: true,
+                id: true,
+                full_name: true,
+                department: true,
+                role: true,
               },
             },
           },
         },
-        leaveType: true,
-        approver: {
-          select: {
-            id: true,
-            email: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        },
+        leave_type: true,
       },
     });
   }
@@ -146,15 +139,15 @@ export class LeaveRepository implements ILeaveRepository {
   async findMany(options: LeaveQueryOptions): Promise<Leave[]> {
     const where: any = {};
 
-    if (options.userId) where.userId = options.userId;
+    if (options.userId) where.user_id = options.userId;
     if (options.status) where.status = options.status;
-    if (options.leaveTypeId) where.leaveTypeId = options.leaveTypeId;
+    if (options.leaveTypeId) where.leave_type_id = options.leaveTypeId;
     if (options.startDate || options.endDate) {
       where.OR = [
         {
           AND: [
-            { startDate: { lte: options.endDate } },
-            { endDate: { gte: options.startDate } },
+            { start_date: { lte: options.endDate } },
+            { end_date: { gte: options.startDate } },
           ],
         },
       ];
@@ -163,34 +156,25 @@ export class LeaveRepository implements ILeaveRepository {
     return await prisma.leave.findMany({
       where,
       include: {
-        user: options.includeUser ? {
-          select: {
-            id: true,
-            email: true,
-            profile: {
+        user: options.includeUser
+          ? {
               select: {
-                firstName: true,
-                lastName: true,
-                department: true,
+                id: true,
+                email: true,
+                profile: {
+                  select: {
+                    id: true,
+                    full_name: true,
+                    department: true,
+                    role: true,
+                  },
+                },
               },
-            },
-          },
-        } : false,
-        leaveType: options.includeLeaveType ? true : false,
-        approver: options.includeUser ? {
-          select: {
-            id: true,
-            email: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        } : false,
+            }
+          : false,
+        leave_type: options.includeLeaveType ? true : false,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: "desc" },
       take: options.limit,
       skip: options.offset,
     });
@@ -202,15 +186,15 @@ export class LeaveRepository implements ILeaveRepository {
   async count(options: LeaveQueryOptions): Promise<number> {
     const where: any = {};
 
-    if (options.userId) where.userId = options.userId;
+    if (options.userId) where.user_id = options.userId;
     if (options.status) where.status = options.status;
-    if (options.leaveTypeId) where.leaveTypeId = options.leaveTypeId;
+    if (options.leaveTypeId) where.leave_type_id = options.leaveTypeId;
     if (options.startDate || options.endDate) {
       where.OR = [
         {
           AND: [
-            { startDate: { lte: options.endDate } },
-            { endDate: { gte: options.startDate } },
+            { start_date: { lte: options.endDate } },
+            { end_date: { gte: options.startDate } },
           ],
         },
       ];
@@ -225,16 +209,16 @@ export class LeaveRepository implements ILeaveRepository {
   async findPendingForManager(managerId: string): Promise<Leave[]> {
     // Get team members for this manager
     const teamMembers = await prisma.profile.findMany({
-      where: { managerId },
-      select: { userId: true },
+      where: { manager_id: managerId },
+      select: { user_id: true },
     });
 
-    const userIds = teamMembers.map(m => m.userId);
+    const userIds = teamMembers.map((m) => m.user_id);
 
     return await prisma.leave.findMany({
       where: {
-        userId: { in: userIds },
-        status: 'PENDING',
+        user_id: { in: userIds },
+        status: "PENDING",
       },
       include: {
         user: {
@@ -243,16 +227,17 @@ export class LeaveRepository implements ILeaveRepository {
             email: true,
             profile: {
               select: {
-                firstName: true,
-                lastName: true,
+                id: true,
+                full_name: true,
                 department: true,
+                role: true,
               },
             },
           },
         },
-        leaveType: true,
+        leave_type: true,
       },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { created_at: "asc" },
     });
   }
 
@@ -265,32 +250,20 @@ export class LeaveRepository implements ILeaveRepository {
 
     return await prisma.leave.findMany({
       where: {
-        userId,
+        user_id: userId,
         OR: [
           {
             AND: [
-              { startDate: { lte: endDate } },
-              { endDate: { gte: startDate } },
+              { start_date: { lte: endDate } },
+              { end_date: { gte: startDate } },
             ],
           },
         ],
       },
       include: {
-        leaveType: true,
-        approver: {
-          select: {
-            id: true,
-            email: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        },
+        leave_type: true,
       },
-      orderBy: { startDate: 'desc' },
+      orderBy: { start_date: "desc" },
     });
   }
 
@@ -299,13 +272,13 @@ export class LeaveRepository implements ILeaveRepository {
    */
   async findConflicts(conflict: ConflictCheck): Promise<Leave[]> {
     const where: any = {
-      userId: conflict.userId,
-      status: { in: ['PENDING', 'APPROVED'] },
+      user_id: conflict.userId,
+      status: { in: ["PENDING", "APPROVED"] },
       OR: [
         {
           AND: [
-            { startDate: { lte: conflict.endDate } },
-            { endDate: { gte: conflict.startDate } },
+            { start_date: { lte: conflict.endDate } },
+            { end_date: { gte: conflict.startDate } },
           ],
         },
       ],
@@ -319,7 +292,7 @@ export class LeaveRepository implements ILeaveRepository {
     return await prisma.leave.findMany({
       where,
       include: {
-        leaveType: true,
+        leave_type: true,
       },
     });
   }
@@ -334,9 +307,9 @@ export class LeaveRepository implements ILeaveRepository {
   ): Promise<LeaveBalance | null> {
     const balance = await prisma.leaveBalance.findUnique({
       where: {
-        userId_leaveTypeId_year: {
-          userId,
-          leaveTypeId,
+        user_id_leave_type_id_year: {
+          user_id: userId,
+          leave_type_id: leaveTypeId,
           year,
         },
       },
@@ -345,12 +318,12 @@ export class LeaveRepository implements ILeaveRepository {
     if (!balance) return null;
 
     return {
-      userId: balance.userId,
-      leaveTypeId: balance.leaveTypeId,
+      userId: balance.user_id,
+      leaveTypeId: balance.leave_type_id,
       year: balance.year,
-      allocated: balance.allocated,
-      used: balance.used,
-      remaining: balance.remaining,
+      allocated: balance.total_days,
+      used: balance.used_days,
+      remaining: balance.remaining_days,
     };
   }
 
@@ -366,52 +339,52 @@ export class LeaveRepository implements ILeaveRepository {
     // Ensure the balance record exists
     await prisma.leaveBalance.upsert({
       where: {
-        userId_leaveTypeId_year: {
-          userId,
-          leaveTypeId,
+        user_id_leave_type_id_year: {
+          user_id: userId,
+          leave_type_id: leaveTypeId,
           year,
         },
       },
       update: {
-        used: {
+        used_days: {
           increment: days,
         },
-        remaining: {
+        remaining_days: {
           decrement: days,
         },
       },
       create: {
-        userId,
-        leaveTypeId,
+        user_id: userId,
+        leave_type_id: leaveTypeId,
         year,
-        allocated: 0, // This should be set based on company policy
-        used: days,
-        remaining: -days, // Temporary, will be updated
+        total_days: 0, // This should be set based on company policy
+        used_days: days,
+        remaining_days: -days, // Temporary, will be updated
       },
     });
 
     // Fetch the updated balance
     const updated = await prisma.leaveBalance.findUnique({
       where: {
-        userId_leaveTypeId_year: {
-          userId,
-          leaveTypeId,
+        user_id_leave_type_id_year: {
+          user_id: userId,
+          leave_type_id: leaveTypeId,
           year,
         },
       },
     });
 
     if (!updated) {
-      throw new Error('Failed to update leave balance');
+      throw new Error("Failed to update leave balance");
     }
 
     return {
-      userId: updated.userId,
-      leaveTypeId: updated.leaveTypeId,
+      userId: updated.user_id,
+      leaveTypeId: updated.leave_type_id,
       year: updated.year,
-      allocated: updated.allocated,
-      used: updated.used,
-      remaining: updated.remaining,
+      allocated: updated.total_days,
+      used: updated.used_days,
+      remaining: updated.remaining_days,
     };
   }
 
@@ -424,13 +397,13 @@ export class LeaveRepository implements ILeaveRepository {
     approved: number;
     rejected: number;
   }> {
-    const where = userId ? { userId } : {};
+    const where = userId ? { user_id: userId } : {};
 
     const [total, pending, approved, rejected] = await Promise.all([
       prisma.leave.count({ where }),
-      prisma.leave.count({ where: { ...where, status: 'PENDING' } }),
-      prisma.leave.count({ where: { ...where, status: 'APPROVED' } }),
-      prisma.leave.count({ where: { ...where, status: 'REJECTED' } }),
+      prisma.leave.count({ where: { ...where, status: "PENDING" } }),
+      prisma.leave.count({ where: { ...where, status: "APPROVED" } }),
+      prisma.leave.count({ where: { ...where, status: "REJECTED" } }),
     ]);
 
     return { total, pending, approved, rejected };

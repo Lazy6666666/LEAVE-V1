@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import {
-  Search,
-  ArrowLeft,
-  Download,
-  ExternalLink,
-} from "@/lib/utils/icons";
+import { Search, ArrowLeft, Download, ExternalLink } from "@/lib/utils/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

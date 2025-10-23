@@ -93,7 +93,7 @@ interface SidebarNavigationProps {
 }
 
 export default function SidebarNavigation({
-  className
+  className,
 }: SidebarNavigationProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>([
@@ -213,7 +213,10 @@ export default function SidebarNavigation({
               <Icon className="h-4 w-4" />
               <span className="flex-1">{item.title}</span>
               {item.badge && (
-                <Badge variant="secondary" className="bg-gray-700 text-gray-300">
+                <Badge
+                  variant="secondary"
+                  className="bg-gray-700 text-gray-300"
+                >
                   {item.badge}
                 </Badge>
               )}

@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { searchDocuments } from "@/lib/services/document-search";
-import { DocumentSearchParams } from "@/types/document";
+import { DocumentSearchParams, AccessLevel } from "@/types/document";
 
 /**
  * GET /api/documents
@@ -50,10 +50,20 @@ export async function GET(request: NextRequest) {
       uploadedBy: searchParams.get("uploadedBy") || undefined,
       dateFrom: searchParams.get("dateFrom") || undefined,
       dateTo: searchParams.get("dateTo") || undefined,
-      expiryStatus: (searchParams.get("expiryStatus") as any) || undefined,
-      accessLevel: (searchParams.get("accessLevel") as any) || undefined,
-      sortBy: (searchParams.get("sortBy") as any) || "uploadedAt",
-      sortOrder: (searchParams.get("sortOrder") as any) || "desc",
+      expiryStatus: searchParams.get("expiryStatus") as
+        | "all"
+        | "expiring"
+        | "expired"
+        | undefined,
+      accessLevel: searchParams.get("accessLevel") as AccessLevel | undefined,
+      sortBy:
+        (searchParams.get("sortBy") as
+          | "title"
+          | "uploadedAt"
+          | "fileSize"
+          | "category"
+          | "expiryDate") || "uploadedAt",
+      sortOrder: (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
       page: parseInt(searchParams.get("page") || "1"),
       limit: parseInt(searchParams.get("limit") || "20"),
     };

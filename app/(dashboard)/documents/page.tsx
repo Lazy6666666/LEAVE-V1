@@ -29,30 +29,40 @@ const documentCategories = [
     name: "HR Documents",
     description: "Employee handbooks, policies, and forms",
     icon: "📋",
+    color: "#3b82f6",
+    documentCount: 0,
   },
   {
     id: "finance",
     name: "Finance",
     description: "Financial reports, budgets, and statements",
     icon: "💰",
+    color: "#10b981",
+    documentCount: 0,
   },
   {
     id: "legal",
     name: "Legal",
     description: "Contracts, agreements, and compliance documents",
     icon: "⚖️",
+    color: "#ef4444",
+    documentCount: 0,
   },
   {
     id: "operations",
     name: "Operations",
     description: "Operational procedures and workflows",
     icon: "⚙️",
+    color: "#f59e0b",
+    documentCount: 0,
   },
   {
     id: "training",
     name: "Training",
     description: "Training materials and documentation",
     icon: "📚",
+    color: "#8b5cf6",
+    documentCount: 0,
   },
 ];
 
@@ -77,16 +87,16 @@ export default function DocumentsPage() {
     const loadDocuments = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/documents?limit=100');
+        const response = await fetch("/api/documents?limit=100");
         if (response.ok) {
           const data = await response.json();
           setDocuments(data.documents || []);
         } else {
-          console.error('Failed to load documents');
+          console.error("Failed to load documents");
           setDocuments([]);
         }
       } catch (error) {
-        console.error('Error loading documents:', error);
+        console.error("Error loading documents:", error);
         setDocuments([]);
       } finally {
         setIsLoading(false);

@@ -43,7 +43,9 @@ export {
 const iconCache = new Map<string, React.ComponentType<any>>();
 
 // Lazy load icon with caching
-export const lazyLoadIcon = async (iconName: string): Promise<React.ComponentType<any> | null> => {
+export const lazyLoadIcon = async (
+  iconName: string
+): Promise<React.ComponentType<any> | null> => {
   if (iconCache.has(iconName)) {
     return iconCache.get(iconName)!;
   }
@@ -68,18 +70,25 @@ export const lazyLoadIcon = async (iconName: string): Promise<React.ComponentTyp
 // Preload critical icons for better performance
 export const preloadCriticalIcons = async () => {
   const criticalIcons = [
-    'Calendar', 'Clock', 'CheckCircle', 'AlertCircle', 'User',
-    'Search', 'Filter', 'TrendingUp', 'Activity'
+    "Calendar",
+    "Clock",
+    "CheckCircle",
+    "AlertCircle",
+    "User",
+    "Search",
+    "Filter",
+    "TrendingUp",
+    "Activity",
   ];
 
-  const promises = criticalIcons.map(icon => lazyLoadIcon(icon));
+  const promises = criticalIcons.map((icon) => lazyLoadIcon(icon));
   await Promise.allSettled(promises);
 };
 
 // Icon optimization utilities
 export const optimizeIconImports = () => {
   // Remove unused icons from bundle (this would be called during build)
-  if (typeof window !== 'undefined') {
-    console.log('Optimizing icon imports...');
+  if (typeof window !== "undefined") {
+    console.log("Optimizing icon imports...");
   }
 };

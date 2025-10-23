@@ -37,7 +37,7 @@ export interface APIError {
  */
 export function createSuccessResponse<T>(
   data: T,
-  metadata?: Partial<APIResponse<T>['metadata']>
+  metadata?: Partial<APIResponse<T>["metadata"]>
 ): Response {
   const response: APIResponse<T> = {
     success: true,
@@ -84,34 +84,34 @@ export function createErrorResponse(
  */
 export const API_ERROR_CODES = {
   // Validation errors
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
-  INVALID_INPUT: 'INVALID_INPUT',
-  MISSING_REQUIRED_FIELD: 'MISSING_REQUIRED_FIELD',
+  VALIDATION_ERROR: "VALIDATION_ERROR",
+  INVALID_INPUT: "INVALID_INPUT",
+  MISSING_REQUIRED_FIELD: "MISSING_REQUIRED_FIELD",
 
   // Authentication errors
-  UNAUTHORIZED: 'UNAUTHORIZED',
-  INVALID_TOKEN: 'INVALID_TOKEN',
-  TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+  UNAUTHORIZED: "UNAUTHORIZED",
+  INVALID_TOKEN: "INVALID_TOKEN",
+  TOKEN_EXPIRED: "TOKEN_EXPIRED",
 
   // Authorization errors
-  FORBIDDEN: 'FORBIDDEN',
-  INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
+  FORBIDDEN: "FORBIDDEN",
+  INSUFFICIENT_PERMISSIONS: "INSUFFICIENT_PERMISSIONS",
 
   // Resource errors
-  NOT_FOUND: 'NOT_FOUND',
-  ALREADY_EXISTS: 'ALREADY_EXISTS',
-  CONFLICT: 'CONFLICT',
+  NOT_FOUND: "NOT_FOUND",
+  ALREADY_EXISTS: "ALREADY_EXISTS",
+  CONFLICT: "CONFLICT",
 
   // Business logic errors
-  INSUFFICIENT_BALANCE: 'INSUFFICIENT_BALANCE',
-  INVALID_DATE_RANGE: 'INVALID_DATE_RANGE',
-  LEAVE_CONFLICT: 'LEAVE_CONFLICT',
-  CANNOT_APPROVE_OWN_LEAVE: 'CANNOT_APPROVE_OWN_LEAVE',
+  INSUFFICIENT_BALANCE: "INSUFFICIENT_BALANCE",
+  INVALID_DATE_RANGE: "INVALID_DATE_RANGE",
+  LEAVE_CONFLICT: "LEAVE_CONFLICT",
+  CANNOT_APPROVE_OWN_LEAVE: "CANNOT_APPROVE_OWN_LEAVE",
 
   // System errors
-  INTERNAL_ERROR: 'INTERNAL_ERROR',
-  DATABASE_ERROR: 'DATABASE_ERROR',
-  EXTERNAL_SERVICE_ERROR: 'EXTERNAL_SERVICE_ERROR',
+  INTERNAL_ERROR: "INTERNAL_ERROR",
+  DATABASE_ERROR: "DATABASE_ERROR",
+  EXTERNAL_SERVICE_ERROR: "EXTERNAL_SERVICE_ERROR",
 } as const;
 
 /**
@@ -125,7 +125,7 @@ export class APIError extends Error {
     public details?: any
   ) {
     super(message);
-    this.name = 'APIError';
+    this.name = "APIError";
   }
 }
 
@@ -134,47 +134,48 @@ export class APIError extends Error {
  */
 export const APIErrors = {
   // 400 Bad Request
-  badRequest: (message: string = 'Bad request') =>
+  badRequest: (message: string = "Bad request") =>
     new APIError(400, API_ERROR_CODES.INVALID_INPUT, message),
 
-  validationError: (message: string = 'Validation failed', details?: any) =>
+  validationError: (message: string = "Validation failed", details?: any) =>
     new APIError(400, API_ERROR_CODES.VALIDATION_ERROR, message, details),
 
   // 401 Unauthorized
-  unauthorized: (message: string = 'Unauthorized') =>
+  unauthorized: (message: string = "Unauthorized") =>
     new APIError(401, API_ERROR_CODES.UNAUTHORIZED, message),
 
-  invalidToken: (message: string = 'Invalid token') =>
+  invalidToken: (message: string = "Invalid token") =>
     new APIError(401, API_ERROR_CODES.INVALID_TOKEN, message),
 
-  tokenExpired: (message: string = 'Token expired') =>
+  tokenExpired: (message: string = "Token expired") =>
     new APIError(401, API_ERROR_CODES.TOKEN_EXPIRED, message),
 
   // 403 Forbidden
-  forbidden: (message: string = 'Forbidden') =>
+  forbidden: (message: string = "Forbidden") =>
     new APIError(403, API_ERROR_CODES.FORBIDDEN, message),
 
-  insufficientPermissions: (message: string = 'Insufficient permissions') =>
+  insufficientPermissions: (message: string = "Insufficient permissions") =>
     new APIError(403, API_ERROR_CODES.INSUFFICIENT_PERMISSIONS, message),
 
   // 404 Not Found
-  notFound: (resource: string = 'Resource') =>
+  notFound: (resource: string = "Resource") =>
     new APIError(404, API_ERROR_CODES.NOT_FOUND, `${resource} not found`),
 
   // 409 Conflict
-  conflict: (message: string = 'Conflict') =>
+  conflict: (message: string = "Conflict") =>
     new APIError(409, API_ERROR_CODES.CONFLICT, message),
 
-  leaveConflict: (message: string = 'Leave dates conflict with existing leave') =>
-    new APIError(409, API_ERROR_CODES.LEAVE_CONFLICT, message),
+  leaveConflict: (
+    message: string = "Leave dates conflict with existing leave"
+  ) => new APIError(409, API_ERROR_CODES.LEAVE_CONFLICT, message),
 
-  insufficientBalance: (message: string = 'Insufficient leave balance') =>
+  insufficientBalance: (message: string = "Insufficient leave balance") =>
     new APIError(400, API_ERROR_CODES.INSUFFICIENT_BALANCE, message),
 
   // 500 Internal Server Error
-  internalError: (message: string = 'Internal server error') =>
+  internalError: (message: string = "Internal server error") =>
     new APIError(500, API_ERROR_CODES.INTERNAL_ERROR, message),
 
-  databaseError: (message: string = 'Database error') =>
+  databaseError: (message: string = "Database error") =>
     new APIError(500, API_ERROR_CODES.DATABASE_ERROR, message),
 } as const;

@@ -17,19 +17,59 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import dynamic from "next/dynamic";
 
 // Lazy load recharts components individually
-const LineChart = dynamic(() => import("recharts").then(mod => ({ default: mod.LineChart })), { ssr: false });
-const BarChart = dynamic(() => import("recharts").then(mod => ({ default: mod.BarChart })), { ssr: false });
-const PieChart = dynamic(() => import("recharts").then(mod => ({ default: mod.PieChart })), { ssr: false });
-const ResponsiveContainer = dynamic(() => import("recharts").then(mod => ({ default: mod.ResponsiveContainer })), { ssr: false });
-const Line = dynamic(() => import("recharts").then(mod => ({ default: mod.Line })), { ssr: false });
-const Bar = dynamic(() => import("recharts").then(mod => ({ default: mod.Bar })), { ssr: false });
-const Pie = dynamic(() => import("recharts").then(mod => ({ default: mod.Pie })), { ssr: false });
-const XAxis = dynamic(() => import("recharts").then(mod => ({ default: mod.XAxis })), { ssr: false });
-const YAxis = dynamic(() => import("recharts").then(mod => ({ default: mod.YAxis })), { ssr: false });
-const CartesianGrid = dynamic(() => import("recharts").then(mod => ({ default: mod.CartesianGrid })), { ssr: false });
-const Tooltip = dynamic(() => import("recharts").then(mod => ({ default: mod.Tooltip })), { ssr: false });
-const Legend = dynamic(() => import("recharts").then(mod => ({ default: (mod as any).Legend })), { ssr: false });
-const Cell = dynamic(() => import("recharts").then(mod => ({ default: mod.Cell })), { ssr: false });
+const LineChart = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.LineChart })),
+  { ssr: false }
+);
+const BarChart = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.BarChart })),
+  { ssr: false }
+);
+const PieChart = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.PieChart })),
+  { ssr: false }
+);
+const ResponsiveContainer = dynamic(
+  () =>
+    import("recharts").then((mod) => ({ default: mod.ResponsiveContainer })),
+  { ssr: false }
+);
+const Line = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.Line })),
+  { ssr: false }
+);
+const Bar = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.Bar })),
+  { ssr: false }
+);
+const Pie = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.Pie })),
+  { ssr: false }
+);
+const XAxis = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.XAxis })),
+  { ssr: false }
+);
+const YAxis = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.YAxis })),
+  { ssr: false }
+);
+const CartesianGrid = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.CartesianGrid })),
+  { ssr: false }
+);
+const Tooltip = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.Tooltip })),
+  { ssr: false }
+);
+const Legend = dynamic(
+  () => import("recharts").then((mod) => ({ default: (mod as any).Legend })),
+  { ssr: false }
+);
+const Cell = dynamic(
+  () => import("recharts").then((mod) => ({ default: mod.Cell })),
+  { ssr: false }
+);
 import {
   Activity,
   AlertTriangle,

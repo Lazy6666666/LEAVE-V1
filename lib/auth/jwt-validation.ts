@@ -70,12 +70,12 @@ export class JWTValidationService {
    */
   private isValidJWTPayload(payload: any): payload is JWTPayload {
     return (
-      typeof payload === 'object' &&
+      typeof payload === "object" &&
       payload !== null &&
-      typeof payload.sub === 'string' &&
-      typeof payload.email === 'string' &&
-      typeof payload.role === 'string' &&
-      typeof payload.exp === 'number'
+      typeof payload.sub === "string" &&
+      typeof payload.email === "string" &&
+      typeof payload.role === "string" &&
+      typeof payload.exp === "number"
     );
   }
 
@@ -220,7 +220,11 @@ export class JWTValidationService {
 }
 
 // Helper function for JWT verification
-async function jwtVerify(token: string, secret: Uint8Array, options: any): Promise<{ payload: any }> {
+async function jwtVerify(
+  token: string,
+  secret: Uint8Array,
+  options: any
+): Promise<{ payload: any }> {
   try {
     const { jwtVerify } = await import("jose");
     return await jwtVerify(token, secret, options);

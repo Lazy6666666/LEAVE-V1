@@ -12,15 +12,29 @@ import { format } from "date-fns";
 import dynamic from "next/dynamic";
 
 // Lazy load heavy components
-const Calendar = dynamic(() => import("@/components/ui/calendar").then(mod => ({ default: mod.Calendar })), {
-  loading: () => <div className="h-10 w-32 bg-muted animate-pulse rounded" />,
-  ssr: false
-});
+const Calendar = dynamic(
+  () =>
+    import("@/components/ui/calendar").then((mod) => ({
+      default: mod.Calendar,
+    })),
+  {
+    loading: () => <div className="h-10 w-32 bg-muted animate-pulse rounded" />,
+    ssr: false,
+  }
+);
 
-const Textarea = dynamic(() => import("@/components/ui/textarea").then(mod => ({ default: mod.Textarea })), {
-  loading: () => <div className="h-24 w-full bg-muted animate-pulse rounded" />,
-  ssr: false
-});
+const Textarea = dynamic(
+  () =>
+    import("@/components/ui/textarea").then((mod) => ({
+      default: mod.Textarea,
+    })),
+  {
+    loading: () => (
+      <div className="h-24 w-full bg-muted animate-pulse rounded" />
+    ),
+    ssr: false,
+  }
+);
 
 // Import lightweight components directly
 import {
@@ -329,7 +343,6 @@ export function OptimizedLeaveForm({
     }
   };
 
-  
   // Optimized form submission
   const onSubmit = async (data: LeaveFormData) => {
     setIsSubmitting(true);
@@ -423,7 +436,8 @@ export function OptimizedLeaveForm({
                   className={cn(
                     "flex-1 mx-1 text-xs",
                     steps[index]?.isValid && "text-success",
-                    currentStep === index && "bg-primary text-primary-foreground"
+                    currentStep === index &&
+                      "bg-primary text-primary-foreground"
                   )}
                 >
                   {step.title}
@@ -449,8 +463,8 @@ export function OptimizedLeaveForm({
                           Leave Type & Dates
                         </h3>
                         <p className="text-muted-foreground mb-6">
-                          Select the type of leave you're requesting and choose your
-                          dates.
+                          Select the type of leave you're requesting and choose
+                          your dates.
                         </p>
                       </div>
 
@@ -477,7 +491,10 @@ export function OptimizedLeaveForm({
                                     <div className="flex items-center justify-between w-full">
                                       <span>{formatLeaveType(type)}</span>
                                       {type.requires_documentation && (
-                                        <Badge variant="outline" className="ml-2">
+                                        <Badge
+                                          variant="outline"
+                                          className="ml-2"
+                                        >
                                           Documents Required
                                         </Badge>
                                       )}
@@ -605,7 +622,8 @@ export function OptimizedLeaveForm({
                           Reason for Leave
                         </h3>
                         <p className="text-muted-foreground mb-6">
-                          Please provide a detailed reason for your leave request.
+                          Please provide a detailed reason for your leave
+                          request.
                         </p>
                       </div>
 
