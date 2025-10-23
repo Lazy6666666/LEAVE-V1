@@ -62,6 +62,7 @@ This guide will help you deploy the Leave Management System to production.
 ### Option 1: Vercel (Recommended)
 
 1. **Push to GitHub**
+
    ```bash
    git add .
    git commit -m "Initial production deployment"
@@ -93,6 +94,7 @@ This guide will help you deploy the Leave Management System to production.
 ### Option 2: Docker Deployment
 
 1. **Create Dockerfile**
+
    ```dockerfile
    FROM node:18-alpine AS base
 
@@ -145,6 +147,7 @@ This guide will help you deploy the Leave Management System to production.
 ### Option 3: Traditional VPS (DigitalOcean, AWS, etc.)
 
 1. **Server Setup**
+
    ```bash
    # Update system
    sudo apt update && sudo apt upgrade -y
@@ -161,6 +164,7 @@ This guide will help you deploy the Leave Management System to production.
    ```
 
 2. **Clone and Build**
+
    ```bash
    git clone <your-repo-url>
    cd leave
@@ -170,6 +174,7 @@ This guide will help you deploy the Leave Management System to production.
    ```
 
 3. **Configure PM2**
+
    ```bash
    pm2 start npm --name "leave-management" -- start
    pm2 save
@@ -178,6 +183,7 @@ This guide will help you deploy the Leave Management System to production.
 
 4. **Configure Nginx**
    Create `/etc/nginx/sites-available/leave-management`:
+
    ```nginx
    server {
        listen 80;
@@ -195,6 +201,7 @@ This guide will help you deploy the Leave Management System to production.
    ```
 
 5. **Enable Site**
+
    ```bash
    sudo ln -s /etc/nginx/sites-available/leave-management /etc/nginx/sites-enabled/
    sudo nginx -t
@@ -223,12 +230,14 @@ This guide will help you deploy the Leave Management System to production.
 ### 2. Monitoring Setup
 
 **Recommended Tools:**
+
 - **Uptime Monitoring**: UptimeRobot, Pingdom
 - **Error Tracking**: Sentry, Rollbar
 - **Performance**: Vercel Analytics, Google Analytics
 - **Database**: Supabase Dashboard, pgAdmin
 
 **Set up alerts for:**
+
 - Application downtime
 - High error rates
 - Slow database queries
@@ -238,12 +247,14 @@ This guide will help you deploy the Leave Management System to production.
 ### 3. Backup Strategy
 
 **Database Backups:**
+
 - Enable Supabase automatic backups
 - Set up daily backup schedule
 - Test backup restoration process
 - Store backups in multiple locations
 
 **Code Backups:**
+
 - Ensure Git repository is backed up
 - Tag releases: `git tag v1.0.0`
 - Keep production branch protected
@@ -298,6 +309,7 @@ If issues occur after deployment:
    - Click "Promote to Production"
 
 2. **Database Rollback**
+
    ```bash
    # Rollback last migration
    npx prisma migrate resolve --rolled-back [migration-name]
@@ -312,22 +324,26 @@ If issues occur after deployment:
 ## Production Maintenance
 
 ### Daily
+
 - Monitor error logs
 - Check uptime status
 - Review critical alerts
 
 ### Weekly
+
 - Review performance metrics
 - Check database query performance
 - Audit user activity logs
 
 ### Monthly
+
 - Test backup restoration
 - Review security logs
 - Update dependencies
 - Review and optimize database
 
 ### Quarterly
+
 - Security audit
 - Performance review
 - User feedback review

@@ -1,8 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Filter, X, Calendar, User, FileText, Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+// Optimized lucide-react imports for tree-shaking
+import {
+  Filter,
+  X,
+  Calendar,
+  User,
+  FileText,
+} from "@/lib/utils/icons";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -10,18 +17,18 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/sheet";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 
 export interface SearchFilters {
   type?: string[];
@@ -38,15 +45,21 @@ interface AdvancedFiltersProps {
   onClear: () => void;
 }
 
-export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedFiltersProps) {
+export function AdvancedFilters({
+  filters,
+  onFiltersChange,
+  onClear,
+}: AdvancedFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const activeFiltersCount = Object.values(filters).filter(v => v !== undefined && (Array.isArray(v) ? v.length > 0 : true)).length;
+  const activeFiltersCount = Object.values(filters).filter(
+    (v) => v !== undefined && (Array.isArray(v) ? v.length > 0 : true)
+  ).length;
 
   const handleTypeToggle = (type: string) => {
     const current = filters.type || [];
     const updated = current.includes(type)
-      ? current.filter(t => t !== type)
+      ? current.filter((t) => t !== type)
       : [...current, type];
     onFiltersChange({ ...filters, type: updated });
   };
@@ -54,7 +67,7 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
   const handleStatusToggle = (status: string) => {
     const current = filters.status || [];
     const updated = current.includes(status)
-      ? current.filter(s => s !== status)
+      ? current.filter((s) => s !== status)
       : [...current, status];
     onFiltersChange({ ...filters, status: updated });
   };
@@ -62,21 +75,35 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
   const handleCategoryToggle = (category: string) => {
     const current = filters.category || [];
     const updated = current.includes(category)
-      ? current.filter(c => c !== category)
+      ? current.filter((c) => c !== category)
       : [...current, category];
     onFiltersChange({ ...filters, category: updated });
   };
 
   const types = [
-    { value: 'leave', label: 'Leave Requests', icon: Calendar },
-    { value: 'document', label: 'Documents', icon: FileText },
-    { value: 'user', label: 'Users', icon: User },
-    { value: 'calendar', label: 'Calendar Events', icon: Calendar },
+    { value: "leave", label: "Leave Requests", icon: Calendar },
+    { value: "document", label: "Documents", icon: FileText },
+    { value: "user", label: "Users", icon: User },
+    { value: "calendar", label: "Calendar Events", icon: Calendar },
   ];
 
-  const statuses = ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
-  const categories = ['Policy', 'Form', 'Contract', 'Certificate', 'Report', 'Other'];
-  const departments = ['Engineering', 'HR', 'Sales', 'Marketing', 'Finance', 'Operations'];
+  const statuses = ["PENDING", "APPROVED", "REJECTED", "CANCELLED"];
+  const categories = [
+    "Policy",
+    "Form",
+    "Contract",
+    "Certificate",
+    "Report",
+    "Other",
+  ];
+  const departments = [
+    "Engineering",
+    "HR",
+    "Sales",
+    "Marketing",
+    "Finance",
+    "Operations",
+  ];
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -114,8 +141,8 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
                     onClick={() => handleTypeToggle(type.value)}
                     className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all ${
                       isSelected
-                        ? 'border-primary bg-primary/10'
-                        : 'border-border hover:border-primary/50'
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -131,32 +158,44 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
             <Label>Date Range</Label>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label htmlFor="dateFrom" className="text-xs text-muted-foreground">
+                <Label
+                  htmlFor="dateFrom"
+                  className="text-xs text-muted-foreground"
+                >
                   From
                 </Label>
                 <Input
                   id="dateFrom"
                   type="date"
-                  value={filters.dateFrom || ''}
-                  onChange={(e) => onFiltersChange({ ...filters, dateFrom: e.target.value })}
+                  value={filters.dateFrom || ""}
+                  onChange={(e) =>
+                    onFiltersChange({ ...filters, dateFrom: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="dateTo" className="text-xs text-muted-foreground">
+                <Label
+                  htmlFor="dateTo"
+                  className="text-xs text-muted-foreground"
+                >
                   To
                 </Label>
                 <Input
                   id="dateTo"
                   type="date"
-                  value={filters.dateTo || ''}
-                  onChange={(e) => onFiltersChange({ ...filters, dateTo: e.target.value })}
+                  value={filters.dateTo || ""}
+                  onChange={(e) =>
+                    onFiltersChange({ ...filters, dateTo: e.target.value })
+                  }
                 />
               </div>
             </div>
           </div>
 
           {/* Status (for leave requests) */}
-          {(!filters.type || filters.type.includes('leave') || filters.type.includes('calendar')) && (
+          {(!filters.type ||
+            filters.type.includes("leave") ||
+            filters.type.includes("calendar")) && (
             <div className="space-y-3">
               <Label>Status</Label>
               <div className="space-y-2">
@@ -180,7 +219,7 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
           )}
 
           {/* Category (for documents) */}
-          {(!filters.type || filters.type.includes('document')) && (
+          {(!filters.type || filters.type.includes("document")) && (
             <div className="space-y-3">
               <Label>Document Category</Label>
               <div className="space-y-2">
@@ -207,9 +246,12 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
           <div className="space-y-3">
             <Label>Department</Label>
             <Select
-              value={filters.department?.[0] || ''}
+              value={filters.department?.[0] || ""}
               onValueChange={(value) =>
-                onFiltersChange({ ...filters, department: value ? [value] : [] })
+                onFiltersChange({
+                  ...filters,
+                  department: value ? [value] : [],
+                })
               }
             >
               <SelectTrigger>
@@ -273,7 +315,11 @@ export function AdvancedFilters({ filters, onFiltersChange, onClear }: AdvancedF
         </div>
 
         <div className="mt-6 flex gap-3">
-          <Button variant="outline" className="flex-1" onClick={() => setIsOpen(false)}>
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => setIsOpen(false)}
+          >
             Cancel
           </Button>
           <Button className="flex-1" onClick={() => setIsOpen(false)}>

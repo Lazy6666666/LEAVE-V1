@@ -13,6 +13,7 @@
 ## Objectives
 
 Achieve the following performance benchmarks:
+
 - ✅ Lighthouse Performance Score: >90
 - ✅ Largest Contentful Paint (LCP): <2.5s
 - ✅ First Input Delay (FID): <100ms
@@ -60,6 +61,7 @@ npm run build
 **Solution**: Use Next.js Image Component
 
 #### Files to Update:
+
 - Search for all `<img>` tags in components
 - Replace with `next/image`
 
@@ -67,10 +69,10 @@ npm run build
 
 ```tsx
 // Before
-<img src="/logo.png" alt="Logo" width={100} height={100} />
+<img src="/logo.png" alt="Logo" width={100} height={100} />;
 
 // After
-import Image from 'next/image';
+import Image from "next/image";
 
 <Image
   src="/logo.png"
@@ -80,10 +82,11 @@ import Image from 'next/image';
   priority // For above-fold images
   placeholder="blur" // For better UX
   blurDataURL="data:..." // Optional
-/>
+/>;
 ```
 
 **Action Items**:
+
 - [ ] Search for all `<img>` tags: `grep -r "<img" app/ components/`
 - [ ] Replace with Next.js `Image` component
 - [ ] Add `priority` prop to above-fold images
@@ -99,6 +102,7 @@ import Image from 'next/image';
 **Solution**: Dynamic imports with `next/dynamic`
 
 #### Components to Lazy Load:
+
 - Heavy modals and dialogs
 - Calendar component
 - Charts/graphs
@@ -108,21 +112,19 @@ import Image from 'next/image';
 
 ```tsx
 // Before
-import { CalendarComponent } from '@/components/calendar';
+import { CalendarComponent } from "@/components/calendar";
 
 // After
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const CalendarComponent = dynamic(
-  () => import('@/components/calendar'),
-  {
-    loading: () => <div>Loading calendar...</div>,
-    ssr: false // If component uses window/document
-  }
-);
+const CalendarComponent = dynamic(() => import("@/components/calendar"), {
+  loading: () => <div>Loading calendar...</div>,
+  ssr: false, // If component uses window/document
+});
 ```
 
 **Action Items**:
+
 - [ ] Identify large components (>50KB)
 - [ ] Implement dynamic imports for:
   - [ ] Calendar component (`react-big-calendar`)
@@ -142,7 +144,7 @@ const CalendarComponent = dynamic(
 
 ```tsx
 // app/providers.tsx or similar
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -158,14 +160,13 @@ const queryClient = new QueryClient({
 
 export function Providers({ children }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
 ```
 
 **Action Items**:
+
 - [ ] Review current React Query configuration
 - [ ] Add appropriate `staleTime` to prevent unnecessary refetches
 - [ ] Implement query prefetching for predictable navigation
@@ -183,7 +184,7 @@ export function Providers({ children }) {
 // Before: N+1 Query Problem
 const leaves = await prisma.leave.findMany();
 for (const leave of leaves) {
-  const user = await prisma.user.findUnique({ where: { id: leave.user_id }});
+  const user = await prisma.user.findUnique({ where: { id: leave.user_id } });
 }
 
 // After: Use include/select
@@ -212,6 +213,7 @@ CREATE INDEX idx_documents_category ON company_documents(category);
 ```
 
 **Action Items**:
+
 - [ ] Review all Prisma queries in API routes
 - [ ] Add appropriate `include`/`select` to prevent over-fetching
 - [ ] Add database indexes for common query patterns
@@ -225,6 +227,7 @@ CREATE INDEX idx_documents_category ON company_documents(category);
 #### Current Dependencies Analysis:
 
 Large dependencies in package.json:
+
 - `react-big-calendar` (~300KB)
 - `lodash` (~70KB) - Should use specific imports
 - `date-fns` - Should use specific imports
@@ -233,17 +236,18 @@ Large dependencies in package.json:
 
 ```tsx
 // Before: Imports entire library
-import _ from 'lodash';
-import { format, parse, startOfDay, endOfDay } from 'date-fns';
+import _ from "lodash";
+import { format, parse, startOfDay, endOfDay } from "date-fns";
 
 // After: Import specific functions
-import debounce from 'lodash/debounce';
-import throttle from 'lodash/throttle';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
+import debounce from "lodash/debounce";
+import throttle from "lodash/throttle";
+import format from "date-fns/format";
+import parse from "date-fns/parse";
 ```
 
 **Action Items**:
+
 - [ ] Audit all imports with bundle analyzer
 - [ ] Replace full `lodash` imports with specific function imports
 - [ ] Replace full `date-fns` imports with specific function imports
@@ -278,12 +282,12 @@ ANALYZE=true npm run build
 
 ```tsx
 // app/layout.tsx
-import { Inter, Geist } from 'next/font/google';
+import { Inter, Geist } from "next/font/google";
 
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap', // Prevent FOIT (Flash of Invisible Text)
-  variable: '--font-inter',
+  subsets: ["latin"],
+  display: "swap", // Prevent FOIT (Flash of Invisible Text)
+  variable: "--font-inter",
 });
 
 export default function RootLayout({ children }) {
@@ -296,6 +300,7 @@ export default function RootLayout({ children }) {
 ```
 
 **Action Items**:
+
 - [ ] Use `next/font` for all font loading
 - [ ] Set `display: 'swap'` to prevent blocking
 - [ ] Preload critical fonts
@@ -313,15 +318,15 @@ export default function RootLayout({ children }) {
 // API Route: /api/leaves
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '10');
+  const page = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "10");
   const skip = (page - 1) * limit;
 
   const [leaves, total] = await Promise.all([
     prisma.leave.findMany({
       skip,
       take: limit,
-      orderBy: { created_at: 'desc' },
+      orderBy: { created_at: "desc" },
       select: {
         id: true,
         // Only select needed fields
@@ -343,6 +348,7 @@ export async function GET(request: Request) {
 ```
 
 **Action Items**:
+
 - [ ] Implement pagination for all list endpoints
 - [ ] Use `select` to return only needed fields
 - [ ] Add response compression (Next.js does this by default)
@@ -357,22 +363,28 @@ export async function GET(request: Request) {
 ```tsx
 // Before
 function LeaveList({ leaves }) {
-  const filteredLeaves = leaves.filter(leave => leave.status === 'PENDING');
-  return <div>{filteredLeaves.map(leave => <LeaveCard key={leave.id} {...leave} />)}</div>;
+  const filteredLeaves = leaves.filter((leave) => leave.status === "PENDING");
+  return (
+    <div>
+      {filteredLeaves.map((leave) => (
+        <LeaveCard key={leave.id} {...leave} />
+      ))}
+    </div>
+  );
 }
 
 // After
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 function LeaveList({ leaves }) {
   const filteredLeaves = useMemo(
-    () => leaves.filter(leave => leave.status === 'PENDING'),
+    () => leaves.filter((leave) => leave.status === "PENDING"),
     [leaves]
   );
 
   return (
     <div>
-      {filteredLeaves.map(leave => (
+      {filteredLeaves.map((leave) => (
         <LeaveCard key={leave.id} leave={leave} />
       ))}
     </div>
@@ -386,6 +398,7 @@ const LeaveCard = memo(({ leave }) => {
 ```
 
 **Action Items**:
+
 - [ ] Use `useMemo` for expensive computations
 - [ ] Use `useCallback` for function props
 - [ ] Use `React.memo` for components that receive stable props
@@ -417,16 +430,17 @@ export default async function LeavesPage() {
 }
 
 // components/LeaveListClient.tsx
-'use client'; // Mark as client component only when needed
+("use client"); // Mark as client component only when needed
 
 export function LeaveListClient({ leaves }) {
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
   // Interactive client logic here
   return <div>...</div>;
 }
 ```
 
 **Action Items**:
+
 - [ ] Identify components that don't need client-side interactivity
 - [ ] Convert to Server Components where possible
 - [ ] Move data fetching to Server Components
@@ -440,24 +454,25 @@ export function LeaveListClient({ leaves }) {
 
 ```tsx
 // Static Generation (fastest)
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 // Revalidate every hour
 export const revalidate = 3600;
 
 // Dynamic but cached
-import { unstable_cache } from 'next/cache';
+import { unstable_cache } from "next/cache";
 
 const getCachedLeaves = unstable_cache(
   async () => {
     return prisma.leave.findMany();
   },
-  ['leaves-list'],
+  ["leaves-list"],
   { revalidate: 60 }
 );
 ```
 
 **Action Items**:
+
 - [ ] Implement ISR (Incremental Static Regeneration) for semi-static pages
 - [ ] Cache API responses with appropriate TTL
 - [ ] Use Next.js built-in caching mechanisms
@@ -470,6 +485,7 @@ const getCachedLeaves = unstable_cache(
 ### 1. Lighthouse Audits
 
 Run on all major pages:
+
 - [ ] Homepage/Login
 - [ ] Dashboard
 - [ ] Leave Request page
@@ -509,6 +525,7 @@ k6 run test-load.js
 ### 3. Core Web Vitals Monitoring
 
 **Action Items**:
+
 - [ ] Set up Next.js Analytics or Vercel Analytics
 - [ ] Monitor real user metrics (RUM)
 - [ ] Track Core Web Vitals over time
@@ -519,12 +536,14 @@ k6 run test-load.js
 ## Expected Outcomes
 
 ### Before Optimization (Baseline):
+
 - Lighthouse Score: ~60-70
 - LCP: ~4-5s
 - Bundle Size: ~800KB
 - API Response: ~1-2s
 
 ### After Optimization (Target):
+
 - ✅ Lighthouse Score: >90
 - ✅ LCP: <2.5s
 - ✅ FID: <100ms
@@ -595,6 +614,7 @@ Create `.lighthouserc.json`:
 **Estimated Total Time**: 2-3 days
 
 ### Day 1: Quick Wins
+
 - Image optimization (2 hours)
 - Font optimization (30 minutes)
 - Database indexes (1 hour)
@@ -602,11 +622,13 @@ Create `.lighthouserc.json`:
 - **End of Day 1**: Run Lighthouse, measure improvements
 
 ### Day 2: Major Optimizations
+
 - Code splitting & lazy loading (3 hours)
 - Bundle size reduction (2 hours)
 - API optimization & pagination (2 hours)
 
 ### Day 3: Fine-tuning & Testing
+
 - Client-side optimizations (2 hours)
 - Server Components refactoring (3 hours)
 - Load testing (1 hour)

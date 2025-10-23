@@ -21,7 +21,7 @@ import { logDocumentAccess } from "@/lib/services/document-audit";
  * GET /api/documents/[id] - Get single document with access check
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -49,13 +49,6 @@ export async function GET(
     // Fetch document
     const document = await prisma.companyDocument.findUnique({
       where: { id: documentId },
-      include: {
-        uploader: {
-          include: {
-            profile: true,
-          },
-        },
-      },
     });
 
     if (!document) {
@@ -125,13 +118,6 @@ export async function PATCH(
           expiry_date: expiry_date ? new Date(expiry_date) : null,
         }),
       },
-      include: {
-        uploader: {
-          include: {
-            profile: true,
-          },
-        },
-      },
     });
 
     // Log edit
@@ -156,7 +142,7 @@ export async function PATCH(
  * DELETE /api/documents/[id] - Delete document (ADMIN only)
  */
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

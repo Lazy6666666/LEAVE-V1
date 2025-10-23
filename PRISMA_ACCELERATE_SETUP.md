@@ -35,6 +35,7 @@ DIRECT_URL="postgresql://user:password@host:5432/database"
 ```
 
 **Why two URLs?**
+
 - `DATABASE_URL`: Used by your application at runtime (with Accelerate)
 - `DIRECT_URL`: Used for Prisma migrations, introspection, and db push
 
@@ -78,11 +79,13 @@ export const prisma = new PrismaClient().$extends(withAccelerate());
 If you're using Supabase, you need both URLs:
 
 **DATABASE_URL (Accelerate):**
+
 - This is your Prisma Accelerate URL
 - Format: `prisma+postgres://accelerate.prisma-data.net/?api_key=YOUR_API_KEY`
 - You already have this
 
 **DIRECT_URL (Supabase):**
+
 1. Go to Supabase Dashboard → Settings → Database
 2. Copy the **Connection String** in **Session Mode**
 3. Format: `postgresql://postgres:[password]@db.[project].supabase.co:5432/postgres`
@@ -167,15 +170,15 @@ echo $DIRECT_URL
 Create a test file `test-db.ts`:
 
 ```typescript
-import { prisma } from './lib/prisma';
+import { prisma } from "./lib/prisma";
 
 async function testConnection() {
   try {
     const users = await prisma.user.findMany({ take: 1 });
-    console.log('✅ Database connection successful!');
-    console.log('Users:', users);
+    console.log("✅ Database connection successful!");
+    console.log("Users:", users);
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error("❌ Database connection failed:", error);
   } finally {
     await prisma.$disconnect();
   }
@@ -185,6 +188,7 @@ testConnection();
 ```
 
 Run it:
+
 ```bash
 npx tsx test-db.ts
 ```

@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strict": false,
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "include": ["__tests__/**/*", "tests/**/*"],
+  "exclude": ["node_modules", ".next", "coverage", "dist"]
+}

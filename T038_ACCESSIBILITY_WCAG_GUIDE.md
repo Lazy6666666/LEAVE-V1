@@ -13,6 +13,7 @@
 ## Objectives
 
 Achieve **WCAG 2.1 Level AA compliance** across all application features:
+
 - ✅ Perceivable: Information presented in ways all users can perceive
 - ✅ Operable: UI components navigable by all users
 - ✅ Understandable: Content and operation understandable to all users
@@ -53,11 +54,13 @@ Achieve **WCAG 2.1 Level AA compliance** across all application features:
 ### 1. Color Contrast (WCAG 1.4.3 - Level AA)
 
 **Requirement**:
+
 - Normal text: 4.5:1 contrast ratio
 - Large text (18pt+ or 14pt+ bold): 3:1 contrast ratio
 - UI components and graphics: 3:1 contrast ratio
 
 #### Tools for Testing:
+
 ```bash
 # Install axe DevTools Chrome Extension
 # or use WebAIM Contrast Checker: https://webaim.org/resources/contrastchecker/
@@ -86,20 +89,20 @@ export default {
       colors: {
         // Primary colors with AA-compliant contrast
         primary: {
-          DEFAULT: '#0066CC', // 4.54:1 on white
-          foreground: '#FFFFFF',
+          DEFAULT: "#0066CC", // 4.54:1 on white
+          foreground: "#FFFFFF",
         },
         // Error states
         destructive: {
-          DEFAULT: '#DC2626', // 4.51:1 on white
-          foreground: '#FFFFFF',
+          DEFAULT: "#DC2626", // 4.51:1 on white
+          foreground: "#FFFFFF",
         },
         // Background combinations
-        background: '#FFFFFF',
-        foreground: '#111827', // 16.28:1 on white
+        background: "#FFFFFF",
+        foreground: "#111827", // 16.28:1 on white
         muted: {
-          DEFAULT: '#F3F4F6',
-          foreground: '#374151', // 10.36:1 on #F3F4F6
+          DEFAULT: "#F3F4F6",
+          foreground: "#374151", // 10.36:1 on #F3F4F6
         },
       },
     },
@@ -108,6 +111,7 @@ export default {
 ```
 
 **Action Items**:
+
 - [ ] Audit all color combinations with contrast checker
 - [ ] Update colors that don't meet 4.5:1 ratio
 - [ ] Test dark mode contrast ratios
@@ -159,9 +163,9 @@ export default {
 #### Focus Management:
 
 ```tsx
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export function Modal({ isOpen, onClose, children }) {
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -189,7 +193,7 @@ export function Modal({ isOpen, onClose, children }) {
 
   // Trap focus within modal
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       onClose();
     }
   };
@@ -208,6 +212,7 @@ export function Modal({ isOpen, onClose, children }) {
 ```
 
 **Action Items**:
+
 - [ ] Test all pages with keyboard only (no mouse)
 - [ ] Ensure logical tab order
 - [ ] Add skip navigation links
@@ -232,9 +237,15 @@ export default function DashboardLayout({ children }) {
       <header role="banner">
         <nav aria-label="Main navigation">
           <ul>
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/leaves">Leaves</a></li>
-            <li><a href="/calendar">Calendar</a></li>
+            <li>
+              <a href="/dashboard">Dashboard</a>
+            </li>
+            <li>
+              <a href="/leaves">Leaves</a>
+            </li>
+            <li>
+              <a href="/calendar">Calendar</a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -333,6 +344,7 @@ export default function DashboardLayout({ children }) {
 ```
 
 **Action Items**:
+
 - [ ] Add semantic HTML5 landmarks (header, main, nav, aside, footer)
 - [ ] Add `aria-label` to all icon-only buttons
 - [ ] Add `aria-describedby` for form error messages
@@ -350,21 +362,25 @@ export default function DashboardLayout({ children }) {
 #### Accessible Form Implementation:
 
 ```tsx
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 const leaveSchema = z.object({
-  type: z.string().min(1, 'Leave type is required'),
-  startDate: z.string().min(1, 'Start date is required'),
-  endDate: z.string().min(1, 'End date is required'),
-  reason: z.string().min(10, 'Reason must be at least 10 characters'),
+  type: z.string().min(1, "Leave type is required"),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().min(1, "End date is required"),
+  reason: z.string().min(10, "Reason must be at least 10 characters"),
 });
 
 export function LeaveRequestForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(leaveSchema),
   });
 
@@ -400,10 +416,10 @@ export function LeaveRequestForm() {
         </label>
         <select
           id="type"
-          {...register('type')}
+          {...register("type")}
           aria-required="true"
-          aria-invalid={errors.type ? 'true' : 'false'}
-          aria-describedby={errors.type ? 'type-error' : 'type-hint'}
+          aria-invalid={errors.type ? "true" : "false"}
+          aria-describedby={errors.type ? "type-error" : "type-hint"}
         >
           <option value="">Select leave type</option>
           <option value="annual">Annual Leave</option>
@@ -428,10 +444,10 @@ export function LeaveRequestForm() {
         <input
           type="date"
           id="startDate"
-          {...register('startDate')}
+          {...register("startDate")}
           aria-required="true"
-          aria-invalid={errors.startDate ? 'true' : 'false'}
-          aria-describedby={errors.startDate ? 'start-error' : undefined}
+          aria-invalid={errors.startDate ? "true" : "false"}
+          aria-describedby={errors.startDate ? "start-error" : undefined}
         />
         {errors.startDate && (
           <span id="start-error" role="alert" className="error">
@@ -448,9 +464,9 @@ export function LeaveRequestForm() {
         </label>
         <textarea
           id="reason"
-          {...register('reason')}
+          {...register("reason")}
           aria-required="true"
-          aria-invalid={errors.reason ? 'true' : 'false'}
+          aria-invalid={errors.reason ? "true" : "false"}
           aria-describedby="reason-hint reason-error"
           rows={4}
         />
@@ -465,10 +481,7 @@ export function LeaveRequestForm() {
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        aria-label="Submit leave request"
-      >
+      <button type="submit" aria-label="Submit leave request">
         Submit Request
       </button>
     </form>
@@ -477,6 +490,7 @@ export function LeaveRequestForm() {
 ```
 
 **Action Items**:
+
 - [ ] Ensure all form inputs have associated labels
 - [ ] Add `required` indicators (visual and ARIA)
 - [ ] Implement inline validation with clear error messages
@@ -548,9 +562,7 @@ export function LeaveRequestForm() {
         <td>{formatDate(leave.start_date)}</td>
         <td>{formatDate(leave.end_date)}</td>
         <td>
-          <span className={`status-${leave.status}`}>
-            {leave.status}
-          </span>
+          <span className={`status-${leave.status}`}>{leave.status}</span>
         </td>
         <td>
           <button aria-label={`Approve leave for ${leave.user.full_name}`}>
@@ -564,6 +576,7 @@ export function LeaveRequestForm() {
 ```
 
 **Action Items**:
+
 - [ ] Add `aria-live` regions for notifications
 - [ ] Add `aria-atomic` for content that should be read as whole
 - [ ] Mark decorative images with `aria-hidden="true"`
@@ -636,6 +649,7 @@ select:focus-visible {
 ```
 
 **Action Items**:
+
 - [ ] Add visible focus styles to all interactive elements
 - [ ] Ensure focus indicators have 3:1 contrast ratio
 - [ ] Test focus order is logical
@@ -686,6 +700,7 @@ select:focus-visible {
 ```
 
 **Action Items**:
+
 - [ ] Add descriptive alt text to all images
 - [ ] Mark decorative images with empty alt
 - [ ] Add text alternatives for charts/graphs
@@ -700,11 +715,11 @@ select:focus-visible {
 
 ```tsx
 // app/(dashboard)/leaves/page.tsx
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'My Leave Requests | Leave Management System',
-  description: 'View and manage your leave requests',
+  title: "My Leave Requests | Leave Management System",
+  description: "View and manage your leave requests",
 };
 
 export default function LeavesPage() {
@@ -737,6 +752,7 @@ export default function LeavesPage() {
 ```
 
 **Action Items**:
+
 - [ ] Ensure all pages have unique, descriptive titles
 - [ ] Use proper heading hierarchy (h1 → h2 → h3)
 - [ ] Don't skip heading levels
@@ -770,6 +786,7 @@ export default function LeavesPage() {
 ```
 
 **Action Items**:
+
 - [ ] Test all pages at 200% zoom
 - [ ] Ensure no horizontal scrolling at zoom
 - [ ] Use relative units (rem/em) instead of px
@@ -803,13 +820,16 @@ if (process.env.NODE_ENV !== 'production') {
 ### 3. Screen Readers
 
 **Windows**:
+
 - NVDA (free): https://www.nvaccess.org/
 - JAWS (paid): https://www.freedomscientific.com/
 
 **Mac**:
+
 - VoiceOver (built-in): Cmd+F5
 
 **Testing Checklist**:
+
 - [ ] Navigate entire site with keyboard only
 - [ ] Test with screen reader (NVDA/VoiceOver)
 - [ ] Run axe DevTools on all pages
@@ -880,18 +900,21 @@ if (process.env.NODE_ENV !== 'production') {
 **Estimated Total Time**: 2-3 days
 
 ### Day 1: Semantic HTML & ARIA
+
 - Add semantic landmarks (2 hours)
 - Add ARIA labels to all interactive elements (3 hours)
 - Fix heading hierarchy (1 hour)
 - Test with screen reader (1 hour)
 
 ### Day 2: Keyboard & Focus
+
 - Implement keyboard navigation (2 hours)
 - Add focus indicators (1 hour)
 - Add skip links (30 minutes)
 - Test keyboard-only navigation (2 hours)
 
 ### Day 3: Forms & Color Contrast
+
 - Fix color contrast issues (2 hours)
 - Improve form accessibility (2 hours)
 - Add error handling (1 hour)

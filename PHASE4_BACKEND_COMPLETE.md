@@ -15,6 +15,7 @@
 #### Services Implemented
 
 **1. Document Access Control Service** (`lib/services/document-access.ts`)
+
 - canAccessDocument() - Check view permission
 - canDownloadDocument() - Check download permission
 - canEditDocument() - Check edit permission
@@ -23,6 +24,7 @@
 - validateAndLogAccess() - Validate and audit access attempts
 
 **2. Document Audit Service** (`lib/services/document-audit.ts`)
+
 - logDocumentAccess() - Log all access events
 - getDocumentAccessHistory() - Document access history
 - getUserDocumentAccessHistory() - User access history
@@ -31,17 +33,21 @@
 #### RLS Policies Implemented (Supabase)
 
 **Policy 1: View Access**
+
 - ADMIN & HR: Access all documents
 - PUBLIC documents: All authenticated users
 - Role-based access hierarchy
 
 **Policy 2: Upload Documents**
+
 - Only ADMIN and HR can upload
 
 **Policy 3: Update Documents**
+
 - ADMIN, HR, or document uploader can update
 
 **Policy 4: Delete Documents**
+
 - Only ADMIN can delete
 
 #### API Endpoints
@@ -56,6 +62,7 @@
 #### Services Implemented
 
 **Document Expiry Service** (`lib/services/document-expiry.ts`)
+
 - isDocumentExpired() - Check if expired
 - getDaysUntilExpiry() - Calculate days remaining
 - getExpiryStatus() - Get comprehensive status
@@ -65,6 +72,7 @@
 - checkAndNotifyExpiringDocuments() - Cron job handler
 
 **Expiry Thresholds**:
+
 - Critical: 7 days
 - Warning: 14 days
 - Notice: 30 days
@@ -80,11 +88,13 @@
 #### Services Implemented
 
 **Document Search Service** (`lib/services/document-search.ts`)
+
 - searchDocuments() - Advanced search with filters
 - getFilterOptions() - Available filter values
 - getDocumentStatistics() - Dashboard statistics
 
 **Search Capabilities**:
+
 - Full-text search on title and description
 - Filter by: categories, tags, uploader, date range, expiry status, access level
 - Sort by: title, uploadedAt, fileSize, category, expiryDate
@@ -97,6 +107,7 @@
 #### Database Optimization
 
 **Search Indexes Created**:
+
 - idx_documents_title - Text search
 - idx_documents_category - Category filtering
 - idx_documents_tags - GIN index for tag arrays
@@ -117,24 +128,29 @@
 ### Files Created
 
 **Types**:
+
 - types/document.ts
 
 **Utilities**:
+
 - lib/supabase/server.ts
 
 **Services**:
+
 - lib/services/document-access.ts
 - lib/services/document-audit.ts
 - lib/services/document-expiry.ts
 - lib/services/document-search.ts
 
 **API Routes**:
+
 - app/api/documents/route.ts
 - app/api/documents/[id]/route.ts
 - app/api/documents/[id]/download/route.ts
 - app/api/documents/expiry/route.ts
 
 **Database**:
+
 - Migration: document_search_indexes
 - RLS policies via Supabase MCP
 
@@ -144,19 +160,20 @@
 
 ### Access Control Matrix
 
-| Role     | View   | Download | Upload | Edit Own | Edit All | Delete |
-|----------|--------|----------|--------|----------|----------|--------|
-| EMPLOYEE | Yes(*) | Yes(*)   | No     | No       | No       | No     |
-| MANAGER  | Yes(**) | Yes(**)  | No     | No       | No       | No     |
-| HR       | All    | All      | Yes    | Yes      | Yes      | No     |
-| ADMIN    | All    | All      | Yes    | Yes      | Yes      | Yes    |
+| Role     | View      | Download  | Upload | Edit Own | Edit All | Delete |
+| -------- | --------- | --------- | ------ | -------- | -------- | ------ |
+| EMPLOYEE | Yes(\*)   | Yes(\*)   | No     | No       | No       | No     |
+| MANAGER  | Yes(\*\*) | Yes(\*\*) | No     | No       | No       | No     |
+| HR       | All       | All       | Yes    | Yes      | Yes      | No     |
+| ADMIN    | All       | All       | Yes    | Yes      | Yes      | Yes    |
 
-(*) Based on document access level  
-(**) Based on document access level
+(\*) Based on document access level  
+(\*\*) Based on document access level
 
 ### Audit Trail
 
 All document operations logged to audit_logs table:
+
 - DOCUMENT_VIEW
 - DOCUMENT_DOWNLOAD
 - DOCUMENT_EDIT
@@ -168,6 +185,7 @@ All document operations logged to audit_logs table:
 ## Testing Status
 
 ### Access Control
+
 - [x] ADMIN can access all documents
 - [x] HR can access all documents
 - [x] EMPLOYEE access based on document level
@@ -175,12 +193,14 @@ All document operations logged to audit_logs table:
 - [x] Audit logging works
 
 ### Expiry Tracking
+
 - [x] Expired documents identified
 - [x] Expiring soon identified (30/14/7 days)
 - [x] Expiry API functional
 - [ ] Notifications (pending cron setup)
 
 ### Search & Filter
+
 - [x] Text search works
 - [x] All filters functional
 - [x] Sorting works

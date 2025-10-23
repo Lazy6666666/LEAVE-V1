@@ -5,12 +5,15 @@
 ## Step 1: Configure Supabase (2 minutes)
 
 ### 1.1 Run SQL Setup
+
 Open your Supabase SQL Editor and run:
+
 ```bash
 supabase_notification_setup.sql
 ```
 
 Or manually:
+
 ```sql
 -- Enable RLS
 ALTER TABLE notification_logs ENABLE ROW LEVEL SECURITY;
@@ -32,6 +35,7 @@ WITH CHECK (true);
 ```
 
 ### 1.2 Enable Realtime
+
 1. Go to **Database → Replication** in Supabase Dashboard
 2. Find `notification_logs` table
 3. Click **Enable** for realtime replication
@@ -85,7 +89,7 @@ Find your existing dashboard layout and add:
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 // In your header/navigation:
-<NotificationBell />
+<NotificationBell />;
 ```
 
 ✅ **NotificationBell is now visible!**
@@ -100,14 +104,14 @@ Open your browser console and run:
 
 ```javascript
 // Create a test notification via API
-await fetch('/api/notifications/test', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+await fetch("/api/notifications/test", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    type: 'SYSTEM_ANNOUNCEMENT',
-    title: 'Test Notification',
-    message: 'Your notification system is working! 🎉'
-  })
+    type: "SYSTEM_ANNOUNCEMENT",
+    title: "Test Notification",
+    message: "Your notification system is working! 🎉",
+  }),
 });
 ```
 
@@ -136,6 +140,7 @@ VALUES (
 ## You're Done! 🎉
 
 Your notification system is now:
+
 - ✅ Showing in the header
 - ✅ Displaying real-time updates
 - ✅ Ready to use throughout your app
@@ -155,7 +160,7 @@ await createNotification({
   type: "LEAVE_APPROVED",
   title: "Leave Approved! 🎉",
   message: "Your 3-day Annual Leave request has been approved",
-  link: "/employee/my-leaves"
+  link: "/employee/my-leaves",
 });
 ```
 
@@ -177,6 +182,7 @@ import {
 Navigate to: `/notifications`
 
 This page includes:
+
 - Search functionality
 - Filters (type, read status)
 - Bulk actions
@@ -189,6 +195,7 @@ This page includes:
 ### ❌ Notifications not appearing?
 
 1. **Check RLS policies are created**:
+
    ```sql
    SELECT * FROM pg_policies WHERE tablename = 'notification_logs';
    ```
@@ -204,6 +211,7 @@ This page includes:
 ### ❌ Real-time not working?
 
 1. **Check environment variables**:
+
    ```bash
    NEXT_PUBLIC_SUPABASE_URL=your-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key
@@ -231,18 +239,18 @@ This page includes:
 
 ## Feature Overview
 
-| Feature | Status |
-|---------|--------|
-| Real-time updates | ✅ Working |
-| Unread count badge | ✅ Working |
-| Mark as read | ✅ Working |
-| Mark all as read | ✅ Working |
-| Notification dropdown | ✅ Working |
+| Feature                 | Status     |
+| ----------------------- | ---------- |
+| Real-time updates       | ✅ Working |
+| Unread count badge      | ✅ Working |
+| Mark as read            | ✅ Working |
+| Mark all as read        | ✅ Working |
+| Notification dropdown   | ✅ Working |
 | Full notifications page | ✅ Working |
-| Search & filters | ✅ Working |
-| Mobile responsive | ✅ Working |
-| Glassmorphism design | ✅ Working |
-| TypeScript types | ✅ Working |
+| Search & filters        | ✅ Working |
+| Mobile responsive       | ✅ Working |
+| Glassmorphism design    | ✅ Working |
+| TypeScript types        | ✅ Working |
 
 ---
 

@@ -112,6 +112,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
 ```
 
 **Benefits**:
+
 - Keyboard users can bypass navigation
 - Works across all pages in the application
 - Proper focus management
@@ -138,6 +139,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
 ```
 
 **Improvements**:
+
 - Proper `main` landmark with `id="main-content"` for skip link target
 - `header` landmark for page title
 - `section` with descriptive `aria-label`
@@ -155,9 +157,12 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    - `<section>` landmarks for filters and notification list
 
 2. **Live Region Updates**
+
    ```tsx
    <p role="status" aria-live="polite">
-     {unreadCount > 0 ? `${unreadCount} unread notifications` : "All caught up!"}
+     {unreadCount > 0
+       ? `${unreadCount} unread notifications`
+       : "All caught up!"}
    </p>
    ```
 
@@ -166,6 +171,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    - Screen reader users get text descriptions instead
 
 4. **Search and Filter Labels**
+
    ```tsx
    <label htmlFor="notification-search" className="sr-only">
      Search notifications
@@ -178,10 +184,16 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    ```
 
 5. **Bulk Actions with Live Updates**
+
    ```tsx
    <div role="status" aria-live="polite">
-     <p>{selectedIds.size} notification{selectedIds.size !== 1 ? 's' : ''} selected</p>
-     <Button aria-label={`Mark ${selectedIds.size} selected notifications as read`}>
+     <p>
+       {selectedIds.size} notification{selectedIds.size !== 1 ? "s" : ""}{" "}
+       selected
+     </p>
+     <Button
+       aria-label={`Mark ${selectedIds.size} selected notifications as read`}
+     >
        Mark as read
      </Button>
    </div>
@@ -195,6 +207,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    - Unread indicators with `role="status"`
 
 7. **Time Elements**
+
    ```tsx
    <time dateTime={notification.created_at}>
      {formatRelativeTime(notification.created_at)}
@@ -202,6 +215,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    ```
 
 8. **Loading States**
+
    ```tsx
    <div role="status" aria-label="Loading notifications">
      <Skeleton ... />
@@ -209,6 +223,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    ```
 
 9. **Empty States**
+
    ```tsx
    <div role="status">
      <h2>No notifications found</h2>
@@ -400,7 +415,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
 
 - ✅ **3.3.2 Labels or Instructions (A)**
   - All form fields have labels
-  - Required fields marked with *
+  - Required fields marked with \*
   - Hints provided with aria-describedby
 
 - ✅ **3.3.3 Error Suggestion (AA)**
@@ -446,14 +461,16 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    - Firefox: https://addons.mozilla.org/en-US/firefox/addon/axe-devtools/
 
 2. **Run axe-core Tests Programmatically**
+
    ```bash
    npm install --save-dev @axe-core/react
    ```
 
    Add to `app/layout.tsx` (development only):
+
    ```tsx
-   if (process.env.NODE_ENV !== 'production') {
-     import('@axe-core/react').then((axe) => {
+   if (process.env.NODE_ENV !== "production") {
+     import("@axe-core/react").then((axe) => {
        axe.default(React, ReactDOM, 1000);
      });
    }
@@ -490,6 +507,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
 #### Screen Reader Testing
 
 **Windows (NVDA - Free)**:
+
 1. Download: https://www.nvaccess.org/download/
 2. Install and start NVDA (Ctrl+Alt+N)
 3. Navigate with:
@@ -501,6 +519,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    - Tab: Interactive elements
 
 **Mac (VoiceOver - Built-in)**:
+
 1. Enable: Cmd+F5
 2. Navigate with:
    - Cmd+L: Next item
@@ -510,6 +529,7 @@ Successfully implemented comprehensive accessibility improvements across the Lea
    - VO+J: Next form control
 
 **Testing Checklist**:
+
 - [ ] All page content is announced
 - [ ] Headings structure makes sense
 - [ ] Form labels are read with inputs

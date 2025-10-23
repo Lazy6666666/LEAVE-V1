@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL") // Commented out to fix env issue
 }
 
 // ============================================
@@ -48,8 +48,9 @@ model User {
   updated_at DateTime @updatedAt @db.Timestamptz(6)
 
   // Relations
-  profile Profile?
-  leaves  Leave[]
+  profile   Profile?
+  leaves    Leave[]
+  auditLogs AuditLog[]
 
   @@map("users")
 }
@@ -112,6 +113,21 @@ model Leave {
   @@map("leaves")
 }
 
+model LeaveBalance {
+  id            String   @id @default(uuid()) @db.Uuid
+  user_id       String   @db.Uuid
+  leave_type_id String   @db.Uuid
+  year          Int
+  total_days    Float    @default(0)
+  used_days     Float    @default(0)
+  remaining_days Float   @default(0)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @updatedAt @db.Timestamptz(6)
+
+  @@unique([user_id, leave_type_id, year])
+  @@map("leave_balances")
+}
+
 // ============================================
 // Document Management
 // ============================================
@@ -157,8 +173,14 @@ model AuditLog {
   action      String
   entity_type String
   entity_id   String   @db.Uuid
-  details     Json?
+  old_values  String?  @db.Text
+  new_values  String?  @db.Text
+  ip_address  String?  @db.Text
+  user_agent  String?  @db.Text
   created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("audit_logs")
 }

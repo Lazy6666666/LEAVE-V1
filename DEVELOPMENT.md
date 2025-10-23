@@ -25,33 +25,33 @@ Visit `http://localhost:3000`
 
 ### Development
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server on port 3000 |
-| `npm run build` | Create production build |
-| `npm run start` | Start production server |
+| Command            | Description                             |
+| ------------------ | --------------------------------------- |
+| `npm run dev`      | Start development server on port 3000   |
+| `npm run build`    | Create production build                 |
+| `npm run start`    | Start production server                 |
 | `npm run validate` | Run type-check, lint, and format checks |
 
 ### Database
 
-| Command | Description |
-|---------|-------------|
-| `npm run db:setup` | Complete database setup (generate, migrate, seed) |
-| `npm run db:seed` | Seed database with initial data |
-| `npm run db:reset` | Reset database and re-seed |
-| `npm run prisma:generate` | Generate Prisma client |
-| `npm run prisma:migrate` | Create and apply migration |
-| `npm run prisma:studio` | Open Prisma Studio (database GUI) |
+| Command                   | Description                                       |
+| ------------------------- | ------------------------------------------------- |
+| `npm run db:setup`        | Complete database setup (generate, migrate, seed) |
+| `npm run db:seed`         | Seed database with initial data                   |
+| `npm run db:reset`        | Reset database and re-seed                        |
+| `npm run prisma:generate` | Generate Prisma client                            |
+| `npm run prisma:migrate`  | Create and apply migration                        |
+| `npm run prisma:studio`   | Open Prisma Studio (database GUI)                 |
 
 ### Code Quality
 
-| Command | Description |
-|---------|-------------|
-| `npm run type-check` | Check TypeScript types |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Fix ESLint errors |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting |
+| Command                | Description               |
+| ---------------------- | ------------------------- |
+| `npm run type-check`   | Check TypeScript types    |
+| `npm run lint`         | Run ESLint                |
+| `npm run lint:fix`     | Fix ESLint errors         |
+| `npm run format`       | Format code with Prettier |
+| `npm run format:check` | Check code formatting     |
 
 ---
 
@@ -172,8 +172,8 @@ Visit `http://localhost:5555` to view and edit database records.
 
 After seeding, the following users are available:
 
-| Email | Password | Role |
-|-------|----------|------|
+| Email             | Password | Role  |
+| ----------------- | -------- | ----- |
 | admin@company.com | admin123 | ADMIN |
 
 **⚠️ Change default credentials in production!**
@@ -191,27 +191,27 @@ After seeding, the following users are available:
 
 ### Available Roles
 
-| Role | Description | Capabilities |
-|------|-------------|--------------|
-| **EMPLOYEE** | Regular employee | Submit leave requests, view own data |
-| **MANAGER** | Team manager | Approve team leave, view team data |
-| **HR** | HR personnel | Manage documents, view all leave |
-| **ADMIN** | System administrator | Full system access, user management |
+| Role         | Description          | Capabilities                         |
+| ------------ | -------------------- | ------------------------------------ |
+| **EMPLOYEE** | Regular employee     | Submit leave requests, view own data |
+| **MANAGER**  | Team manager         | Approve team leave, view team data   |
+| **HR**       | HR personnel         | Manage documents, view all leave     |
+| **ADMIN**    | System administrator | Full system access, user management  |
 
 ### Permission System
 
 Permissions are managed in `lib/rbac/permissions.ts`. Use helper functions:
 
 ```typescript
-import { hasPermission, requirePermission } from '@/lib/rbac/permissions';
+import { hasPermission, requirePermission } from "@/lib/rbac/permissions";
 
 // Check if user has permission
-if (await hasPermission(userId, 'leave.approve')) {
+if (await hasPermission(userId, "leave.approve")) {
   // User can approve leave
 }
 
 // Require permission (throws error if not authorized)
-await requirePermission(userId, 'user.edit');
+await requirePermission(userId, "user.edit");
 ```
 
 ---
@@ -221,6 +221,7 @@ await requirePermission(userId, 'user.edit');
 ### Creating New Features
 
 1. **Database Changes**:
+
    ```bash
    # Modify prisma/schema.prisma
    npm run prisma:migrate

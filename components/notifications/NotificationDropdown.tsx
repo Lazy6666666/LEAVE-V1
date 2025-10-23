@@ -19,10 +19,10 @@ import {
   FileX,
   Megaphone,
   Clock,
+  Users,
   LucideIcon,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -51,6 +51,7 @@ const iconMap: Record<NotificationType, LucideIcon> = {
   DOCUMENT_DELETED: FileX,
   SYSTEM_ANNOUNCEMENT: Megaphone,
   LEAVE_REQUEST_PENDING: Clock,
+  ROLE_CHANGED: Users,
 };
 
 export function NotificationDropdown({

@@ -23,7 +23,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, RefreshCw, Filter } from "lucide-react";
+import { SkeletonList } from "@/components/ui/enhanced-skeleton";
+import { RefreshCw, Filter } from "lucide-react";
 
 interface LeaveRequest {
   id: string;
@@ -198,9 +199,7 @@ export default function ManagerApprovalsPage() {
 
         <TabsContent value={activeTab} className="mt-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
+            <SkeletonList items={5} />
           ) : filteredLeaves.length === 0 ? (
             <Card className="glass-card">
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">

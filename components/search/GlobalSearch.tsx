@@ -1,23 +1,30 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { Search, X, Filter, Clock, TrendingUp } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useCallback } from "react";
+// Optimized lucide-react imports for tree-shaking
+import {
+  Search,
+  X,
+  Filter,
+  Clock,
+  TrendingUp,
+} from "@/lib/utils/icons";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRouter } from 'next/navigation';
-import { debounce } from 'lodash';
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter } from "next/navigation";
+import { debounce } from "lodash";
 
 interface SearchResult {
   id: string;
-  type: 'leave' | 'document' | 'user' | 'calendar';
+  type: "leave" | "document" | "user" | "calendar";
   title: string;
   description: string;
   url: string;
@@ -29,9 +36,12 @@ interface GlobalSearchProps {
   showFilters?: boolean;
 }
 
-export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: GlobalSearchProps) {
+export function GlobalSearch({
+  placeholder = "Search...",
+  showFilters = true,
+}: GlobalSearchProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +49,7 @@ export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: 
 
   // Load recent searches from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem('recentSearches');
+    const stored = localStorage.getItem("recentSearches");
     if (stored) {
       setRecentSearches(JSON.parse(stored));
     }
@@ -55,11 +65,13 @@ export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: 
 
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+        const response = await fetch(
+          `/api/search?q=${encodeURIComponent(searchQuery)}`
+        );
         const data = await response.json();
         setResults(data.results || []);
       } catch (error) {
-        console.error('Search error:', error);
+        console.error("Search error:", error);
         setResults([]);
       } finally {
         setIsLoading(false);
@@ -74,29 +86,34 @@ export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: 
 
   const handleSelect = (result: SearchResult) => {
     // Add to recent searches
-    const updated = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+    const updated = [query, ...recentSearches.filter((s) => s !== query)].slice(
+      0,
+      5
+    );
     setRecentSearches(updated);
-    localStorage.setItem('recentSearches', JSON.stringify(updated));
+    localStorage.setItem("recentSearches", JSON.stringify(updated));
 
     // Navigate to result
     router.push(result.url);
     setIsOpen(false);
-    setQuery('');
+    setQuery("");
   };
 
   const clearRecentSearches = () => {
     setRecentSearches([]);
-    localStorage.removeItem('recentSearches');
+    localStorage.removeItem("recentSearches");
   };
 
   const getTypeColor = (type: string) => {
     const colors = {
-      leave: 'bg-blue-500/10 text-blue-500',
-      document: 'bg-purple-500/10 text-purple-500',
-      user: 'bg-green-500/10 text-green-500',
-      calendar: 'bg-orange-500/10 text-orange-500',
+      leave: "bg-blue-500/10 text-blue-500",
+      document: "bg-purple-500/10 text-purple-500",
+      user: "bg-green-500/10 text-green-500",
+      calendar: "bg-orange-500/10 text-orange-500",
     };
-    return colors[type as keyof typeof colors] || 'bg-gray-500/10 text-gray-500';
+    return (
+      colors[type as keyof typeof colors] || "bg-gray-500/10 text-gray-500"
+    );
   };
 
   return (
@@ -114,7 +131,7 @@ export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: 
             variant="ghost"
             size="sm"
             className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
-            onClick={() => router.push('/search')}
+            onClick={() => router.push("/search")}
           >
             <Filter className="h-4 w-4" />
           </Button>
@@ -141,7 +158,7 @@ export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: 
                 variant="ghost"
                 size="sm"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
-                onClick={() => setQuery('')}
+                onClick={() => setQuery("")}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -200,7 +217,10 @@ export function GlobalSearch({ placeholder = 'Search...', showFilters = true }: 
                     onClick={() => handleSelect(result)}
                   >
                     <div className="flex items-start gap-3">
-                      <Badge className={getTypeColor(result.type)} variant="outline">
+                      <Badge
+                        className={getTypeColor(result.type)}
+                        variant="outline"
+                      >
                         {result.type}
                       </Badge>
                       <div className="flex-1 min-w-0">

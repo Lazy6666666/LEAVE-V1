@@ -1,26 +1,62 @@
 // Calendar service for fetching and formatting calendar events
+// Enhanced with performance optimizations and caching
 
-import prisma from "@/lib/prisma";
+import prisma, { readOnlyPrisma } from "@/lib/prisma";
 import {
   CalendarEvent,
   CalendarFilters,
   LEAVE_TYPE_COLORS,
 } from "@/types/calendar";
 
+// Simple in-memory cache for calendar events (for development)
+const calendarEventCache = new Map<
+  string,
+  { data: CalendarEvent[]; timestamp: number }
+>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 /**
- * Get calendar events based on filters
+ * Generate cache key from filters
+ */
+function generateCacheKey(filters: CalendarFilters): string {
+  const { userIds, leaveTypeIds, departments, startDate, endDate } = filters;
+  return JSON.stringify({
+    userIds: userIds?.sort() || [],
+    leaveTypeIds: leaveTypeIds?.sort() || [],
+    departments: departments?.sort() || [],
+    startDate,
+    endDate,
+  });
+}
+
+/**
+ * Get calendar events based on filters with caching
  */
 export async function getCalendarEvents(
   filters: CalendarFilters
 ): Promise<CalendarEvent[]> {
+  // Generate cache key
+  const cacheKey = generateCacheKey(filters);
+
+  // Check cache first (only in development or if explicitly enabled)
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.ENABLE_CALENDAR_CACHE === "true"
+  ) {
+    const cached = calendarEventCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return cached.data;
+    }
+  }
+
   const { userIds, leaveTypeIds, departments, startDate, endDate } = filters;
 
-  // Build where clause
+  // Build where clause with optimized indexing
   const where: any = {
     status: "APPROVED",
   };
 
-  // Date range filter
+  // Date range filter - optimized for idx_leaves_dates index
   if (startDate && endDate) {
     where.AND = [
       { start_date: { lte: new Date(endDate) } },
@@ -28,7 +64,7 @@ export async function getCalendarEvents(
     ];
   }
 
-  // User filter
+  // User filter - optimized for idx_leaves_user_status index
   if (userIds && userIds.length > 0) {
     where.user_id = { in: userIds };
   }
@@ -38,7 +74,7 @@ export async function getCalendarEvents(
     where.leave_type_id = { in: leaveTypeIds };
   }
 
-  // Department filter
+  // Department filter - use indexed department queries
   if (departments && departments.length > 0) {
     where.user = {
       profile: {
@@ -47,8 +83,11 @@ export async function getCalendarEvents(
     };
   }
 
-  // Fetch leaves with related data
-  const leaves = await prisma.leave.findMany({
+  // Use read replica for dashboard queries if available
+  const client = readOnlyPrisma || prisma;
+
+  // Fetch leaves with optimized query to prevent N+1 problems
+  const leaves = await client.leave.findMany({
     where,
     include: {
       user: {
@@ -69,13 +108,34 @@ export async function getCalendarEvents(
         },
       },
     },
-    orderBy: {
-      start_date: "asc",
-    },
+    orderBy: [
+      { start_date: "asc" }, // Uses idx_leaves_dates
+      { created_at: "desc" }, // Uses idx_leaves_user_status_created_at
+    ],
   });
 
   // Transform to calendar events
-  return leaves.map((leave) => formatEventForCalendar(leave));
+  const events = leaves.map((leave) => formatEventForCalendar(leave));
+
+  // Cache results (only in development)
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.ENABLE_CALENDAR_CACHE === "true"
+  ) {
+    calendarEventCache.set(cacheKey, { data: events, timestamp: Date.now() });
+
+    // Clean old cache entries periodically
+    if (calendarEventCache.size > 100) {
+      const now = Date.now();
+      for (const [key, value] of calendarEventCache.entries()) {
+        if (now - value.timestamp > CACHE_TTL) {
+          calendarEventCache.delete(key);
+        }
+      }
+    }
+  }
+
+  return events;
 }
 
 /**
@@ -107,7 +167,7 @@ export function formatEventForCalendar(leave: any): CalendarEvent {
 }
 
 /**
- * Get team members for filter dropdown
+ * Get team members for filter dropdown with caching
  */
 export async function getTeamMembers(userId?: string) {
   const where: any = {};
@@ -116,7 +176,7 @@ export async function getTeamMembers(userId?: string) {
   if (userId) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
         profile: {
           select: {
             department: true,
@@ -132,9 +192,12 @@ export async function getTeamMembers(userId?: string) {
     }
   }
 
+  // Optimized query with selective fields and proper indexing
   const users = await prisma.user.findMany({
     where,
-    include: {
+    select: {
+      id: true,
+      email: true,
       profile: {
         select: {
           full_name: true,
@@ -142,15 +205,12 @@ export async function getTeamMembers(userId?: string) {
         },
       },
     },
-    orderBy: {
-      profile: {
-        full_name: "asc",
-      },
-    },
+    orderBy: [
+      { profile: { full_name: "asc" } }, // Uses profiles index
+    ],
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return users.map((user: any) => ({
+  return users.map((user) => ({
     id: user.id,
     name: user.profile?.full_name || user.email,
     department: user.profile?.department,

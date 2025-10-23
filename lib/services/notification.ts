@@ -48,7 +48,7 @@ export async function createNotification({
  * Create notification for leave request created (for managers)
  */
 export async function notifyLeaveRequestCreated(
-  employeeId: string,
+  _employeeId: string,
   employeeName: string,
   leaveId: string,
   leaveDays: number,
@@ -64,17 +64,17 @@ export async function notifyLeaveRequestCreated(
     },
   });
 
-  const notifications = managers.map((manager) =>
-    createNotification({
-      userId: manager.user_id,
-      type: "LEAVE_REQUEST_PENDING",
-      title: "New Leave Request",
-      message: `${employeeName} has requested ${leaveDays} days of ${leaveType}`,
-      link: `/manager/leave-requests`,
-    })
+  await Promise.all(
+    managers.map((manager) =>
+      createNotification({
+        userId: manager.user_id,
+        type: "LEAVE_REQUEST_PENDING",
+        title: "New Leave Request",
+        message: `${employeeName} has requested ${leaveDays} days of ${leaveType}`,
+        link: `/manager/leave-requests/${leaveId}`,
+      })
+    )
   );
-
-  await Promise.all(notifications);
 }
 
 /**
@@ -92,7 +92,7 @@ export async function notifyLeaveApproved(
     type: "LEAVE_APPROVED",
     title: "Leave Request Approved",
     message: `Your ${leaveDays}-day ${leaveType} request has been approved by ${approverName}`,
-    link: `/employee/my-leaves`,
+    link: `/employee/my-leaves/${leaveId}`,
   });
 }
 
@@ -112,7 +112,7 @@ export async function notifyLeaveRejected(
     type: "LEAVE_REJECTED",
     title: "Leave Request Rejected",
     message: `Your ${leaveDays}-day ${leaveType} request has been rejected by ${approverName}${reason ? `: ${reason}` : ""}`,
-    link: `/employee/my-leaves`,
+    link: `/employee/my-leaves/${leaveId}`,
   });
 }
 
@@ -120,7 +120,7 @@ export async function notifyLeaveRejected(
  * Notify managers when an employee cancels their leave
  */
 export async function notifyLeaveCancelled(
-  employeeId: string,
+  _employeeId: string,
   employeeName: string,
   leaveId: string,
   leaveDays: number,
@@ -135,17 +135,17 @@ export async function notifyLeaveCancelled(
     },
   });
 
-  const notifications = managers.map((manager) =>
-    createNotification({
-      userId: manager.user_id,
-      type: "LEAVE_CANCELLED",
-      title: "Leave Request Cancelled",
-      message: `${employeeName} has cancelled their ${leaveDays}-day ${leaveType} request`,
-      link: `/manager/leave-requests`,
-    })
+  await Promise.all(
+    managers.map((manager) =>
+      createNotification({
+        userId: manager.user_id,
+        type: "LEAVE_CANCELLED",
+        title: "Leave Request Cancelled",
+        message: `${employeeName} has cancelled their ${leaveDays}-day ${leaveType} request`,
+        link: `/manager/leave-requests/${leaveId}`,
+      })
+    )
   );
-
-  await Promise.all(notifications);
 }
 
 /**
@@ -165,17 +165,17 @@ export async function notifyDocumentExpiring(
     },
   });
 
-  const notifications = admins.map((admin) =>
-    createNotification({
-      userId: admin.user_id,
-      type: "DOCUMENT_EXPIRING",
-      title: "Document Expiring Soon",
-      message: `"${documentTitle}" will expire in ${daysUntilExpiry} days`,
-      link: `/documents`,
-    })
+  await Promise.all(
+    admins.map((admin) =>
+      createNotification({
+        userId: admin.user_id,
+        type: "DOCUMENT_EXPIRING",
+        title: "Document Expiring Soon",
+        message: `"${documentTitle}" will expire in ${daysUntilExpiry} days`,
+        link: `/documents/${documentId}`,
+      })
+    )
   );
-
-  await Promise.all(notifications);
 }
 
 /**
@@ -205,15 +205,15 @@ export async function notifyDocumentUploaded(
     where: whereClause,
   });
 
-  const notifications = users.map((user) =>
-    createNotification({
-      userId: user.user_id,
-      type: "DOCUMENT_UPLOADED",
-      title: "New Document Available",
-      message: `"${documentTitle}" has been uploaded by ${uploadedBy}`,
-      link: `/documents`,
-    })
+  await Promise.all(
+    users.map((user) =>
+      createNotification({
+        userId: user.user_id,
+        type: "DOCUMENT_UPLOADED",
+        title: "New Document Available",
+        message: `"${documentTitle}" has been uploaded by ${uploadedBy}`,
+        link: `/documents/${documentId}`,
+      })
+    )
   );
-
-  await Promise.all(notifications);
 }

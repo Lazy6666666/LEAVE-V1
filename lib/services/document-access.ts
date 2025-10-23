@@ -103,8 +103,15 @@ export async function canDeleteDocument(
 
     if (!profile) return false;
 
-    // Only ADMIN can delete documents
-    return profile.role === "ADMIN";
+    // ADMIN can delete any document
+    if (profile.role === "ADMIN") return true;
+
+    // Users can delete their own documents
+    const document = await prisma.companyDocument.findUnique({
+      where: { id: documentId },
+    });
+
+    return document?.uploaded_by === userId;
   } catch (error) {
     console.error("Error checking delete permission:", error);
     return false;
@@ -149,6 +156,11 @@ function checkDocumentAccess(
 
   // PUBLIC documents are accessible by all
   if (documentAccessLevel === "PUBLIC") {
+    return true;
+  }
+
+  // Users can access their own documents
+  if (documentUploadedBy === userId) {
     return true;
   }
 

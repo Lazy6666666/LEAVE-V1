@@ -43,9 +43,7 @@ export const DOCUMENT_CATEGORIES = [
 export const documentUploadSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title is too long"),
   description: z.string().max(1000, "Description is too long").optional(),
-  category: z.enum(DOCUMENT_CATEGORIES, {
-    errorMap: () => ({ message: "Invalid category" }),
-  }),
+  category: z.enum(DOCUMENT_CATEGORIES),
   tags: z
     .array(z.string().min(1).max(50))
     .max(10, "Maximum 10 tags allowed")

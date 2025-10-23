@@ -1,0 +1,456 @@
+openapi: 3.0.3
+info:
+  title: Leave Management System API
+  description: API for managing leave requests, approvals, documents, and notifications
+  version: 1.0.0
+
+servers:
+  - url: https://your-app.vercel.app/api
+    description: Production
+
+paths:
+  /auth/register:
+    post:
+      summary: Register new user
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+                department:
+                  type: string
+      responses:
+        "201":
+          description: User created
+        "400":
+          description: Invalid input
+
+  /leaves:
+    get:
+      summary: Get user's leave requests
+      tags: [Leaves]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+        - name: year
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of leave requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Leave"
+
+    post:
+      summary: Submit new leave request
+      tags: [Leaves]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [leaveTypeId, startDate, endDate]
+              properties:
+                leaveTypeId:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                reason:
+                  type: string
+      responses:
+        "201":
+          description: Leave request created
+        "400":
+          description: Validation error
+
+  /leaves/{id}/approve:
+    post:
+      summary: Approve leave request
+      tags: [Leaves]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comments:
+                  type: string
+      responses:
+        "200":
+          description: Leave approved
+        "403":
+          description: Not authorized
+
+  /leaves/{id}/reject:
+    post:
+      summary: Reject leave request
+      tags: [Leaves]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comments]
+              properties:
+                comments:
+                  type: string
+      responses:
+        "200":
+          description: Leave rejected
+        "400":
+          description: Comments required
+
+  /leaves/balance:
+    get:
+      summary: Get user's leave balances
+      tags: [Leaves]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Leave balances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaveBalance"
+
+  /calendar/team:
+    get:
+      summary: Get team calendar data
+      tags: [Calendar]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: department
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Calendar events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CalendarEvent"
+
+  /documents:
+    get:
+      summary: Get documents
+      tags: [Documents]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Document list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Document"
+
+    post:
+      summary: Upload document
+      tags: [Documents]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, title, category]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                expiryDate:
+                  type: string
+                  format: date
+                accessLevel:
+                  type: string
+                  enum: [PUBLIC, ROLE_RESTRICTED, PRIVATE]
+      responses:
+        "201":
+          description: Document uploaded
+        "400":
+          description: Invalid file
+
+  /notifications:
+    get:
+      summary: Get user notifications
+      tags: [Notifications]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /notifications/read-all:
+    post:
+      summary: Mark all notifications as read
+      tags: [Notifications]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All marked as read
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+        department:
+          type: string
+
+    UserRole:
+      type: string
+      enum: [EMPLOYEE, MANAGER, HR, ADMIN]
+
+    Leave:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        leaveType:
+          $ref: "#/components/schemas/LeaveType"
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        daysCount:
+          type: number
+        reason:
+          type: string
+        status:
+          $ref: "#/components/schemas/LeaveStatus"
+        manager:
+          $ref: "#/components/schemas/User"
+        managerComments:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type: string
+          format: date-time
+
+    LeaveStatus:
+      type: string
+      enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+
+    LeaveType:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        daysAllowed:
+          type: number
+        requiresApproval:
+          type: boolean
+
+    LeaveBalance:
+      type: object
+      properties:
+        leaveType:
+          $ref: "#/components/schemas/LeaveType"
+        totalAllocated:
+          type: number
+        daysUsed:
+          type: number
+        daysReserved:
+          type: number
+        available:
+          type: number
+        periodYear:
+          type: integer
+
+    CalendarEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        allDay:
+          type: boolean
+        color:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        leaveType:
+          type: string
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        fileName:
+          type: string
+        fileSize:
+          type: number
+        mimeType:
+          type: string
+        accessLevel:
+          type: string
+          enum: [PUBLIC, ROLE_RESTRICTED, PRIVATE]
+        uploadedBy:
+          $ref: "#/components/schemas/User"
+        expiryDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        isRead:
+          type: boolean
+        relatedEntityId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
-import format from "date-fns/format";
+import { format } from "date-fns";
 import {
   Card,
   CardContent,
@@ -25,14 +25,8 @@ import {
 import { LeaveStatusBadge } from "@/components/employee/LeaveStatusBadge";
 import { CancelLeaveDialog } from "@/components/employee/CancelLeaveDialog";
 import { Badge } from "@/components/ui/badge";
-import {
-  Loader2,
-  Calendar,
-  FileText,
-  User,
-  XCircle,
-  PlusCircle,
-} from "lucide-react";
+import { SkeletonList } from "@/components/ui/enhanced-skeleton";
+import { Calendar, FileText, User, XCircle, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
 interface Leave {
@@ -153,9 +147,7 @@ export default function EmployeeLeavesPage() {
 
       {/* Leaves List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
+        <SkeletonList items={5} showAvatar={false} />
       ) : leaves.length === 0 ? (
         <Card className="glass-card">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center">

@@ -97,13 +97,8 @@ export async function searchDocuments(
   const [documents, total] = await Promise.all([
     prisma.companyDocument.findMany({
       where,
-      include: {
-        uploader: {
-          include: {
-            profile: true,
-          },
-        },
-      },
+      // Note: uploader relation doesn't exist in schema, using uploaded_by field instead
+      // Could join with User/Profile if needed via separate query
       orderBy,
       skip,
       take: limit,
@@ -162,7 +157,7 @@ function buildOrderByClause(
  * Get popular search queries (for analytics)
  */
 export async function getPopularSearches(
-  limit: number = 10
+  _limit: number = 10
 ): Promise<string[]> {
   // This would require a separate search_logs table
   // For now, return empty array
@@ -172,7 +167,7 @@ export async function getPopularSearches(
 /**
  * Get available filter options (for UI)
  */
-export async function getFilterOptions(userId: string) {
+export async function getFilterOptions(_userId: string) {
   // Get distinct categories
   const categories = await prisma.companyDocument.findMany({
     select: { category: true },

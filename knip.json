@@ -1,0 +1,105 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["app/page.tsx", "app/layout.tsx", "app/client-layout.tsx"],
+  "project": ["package.json"],
+  "ignore": [
+    "node_modules/**",
+    ".next/**",
+    "coverage/**",
+    "dist/**",
+    "build/**",
+    ".git/**",
+    ".vscode/**",
+    "__tests__/**",
+    "tests/**",
+    "*.config.*",
+    "*.d.ts",
+    "prisma/migrations/**",
+    "playwright.config.ts",
+    "vitest.config.ts",
+    "jest.config.js",
+    "babel.config.js"
+  ],
+  "ignoreDependencies": [
+    "@types/node",
+    "@types/react",
+    "@types/react-dom",
+    "typescript",
+    "next",
+    "react",
+    "react-dom",
+    "@next/bundle-analyzer",
+    "@testing-library/jest-dom",
+    "@testing-library/react",
+    "@testing-library/user-event",
+    "jest",
+    "jest-environment-jsdom",
+    "@types/jest",
+    "babel-jest",
+    "@babel/preset-env",
+    "@babel/preset-react",
+    "@babel/preset-typescript",
+    "@jest/globals",
+    "jest-mock-extended",
+    "knip",
+    "@playwright/test",
+    "autoprefixer",
+    "postcss",
+    "tailwindcss",
+    "prettier",
+    "eslint",
+    "eslint-config-next",
+    "eslint-config-prettier",
+    "eslint-plugin-prettier"
+  ],
+  "rules": {
+    "dependencies": "error",
+    "devDependencies": "error",
+    "unlisted": "error",
+    "duplicates": "error",
+    "nsExports": "error",
+    "nsTypes": "error",
+    "types": "error",
+    "enumMembers": "error",
+    "classMembers": "error",
+    "exports": "error",
+    "paths": "error",
+    "routes": "off"
+  },
+  "ignoreBinaries": [
+    "next",
+    "npm",
+    "prisma",
+    "tsx",
+    "cross-env",
+    "jest",
+    "playwright",
+    "knip"
+  ],
+  "pathGroups": [
+    {
+      "pattern": "app/**",
+      "pathMode": "parent"
+    },
+    {
+      "pattern": "components/**",
+      "pathMode": "parent"
+    },
+    {
+      "pattern": "lib/**",
+      "pathMode": "parent"
+    }
+  ],
+  "workspaces": {
+    "ignore": ["**/node_modules/**"]
+  },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "syncExternals": true,
+  "includeEntryExports": true,
+  "reporter": "compact"
+}

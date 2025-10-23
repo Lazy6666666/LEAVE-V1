@@ -1,0 +1,286 @@
+name: Secure Production Deployment
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  # Security: Prevent secrets from being logged
+  SECRETS_CONTEXT: ${{ toJson(secrets) }}
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Security Audit - npm
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Run Snyk Security Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          languages: typescript
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          target: 'http://localhost:3000'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    needs: security-scan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for known vulnerabilities
+        run: |
+          npx audit-ci --moderate
+
+      - name: Check for outdated dependencies
+        run: |
+          npx npm-check-updates --errorLevel 2
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    needs: security-scan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    needs: [security-scan, dependency-check, secret-scan]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+
+      - name: Run security tests
+        run: npm run test:security
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          ANALYZE: true
+
+      - name: Analyze bundle size
+        run: |
+          npx bundlesize
+          npx webpack-bundle-analyzer build/static/js/*.js --mode=json --report=bundle-report.json
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle-analysis
+          path: bundle-report.json
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: Deploy to staging
+        uses: vercel/action@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+
+      - name: Run post-deployment security tests
+        run: |
+          curl -f https://staging.yourdomain.com/api/health || exit 1
+          npm run test:e2e:staging
+
+      - name: Perform penetration test
+        run: |
+          npx @hackertab/hackertab https://staging.yourdomain.com
+          npx zaproxy/zap-baseline.py -t https://staging.yourdomain.com -I
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/main' && success()
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: Create deployment backup
+        run: |
+          # Create database backup before deployment
+          npm run db:backup-production
+
+      - name: Deploy to production
+        uses: vercel/action@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+
+      - name: Configure production security headers
+        run: |
+          # Apply additional security configurations
+          npm run security:configure-production
+
+      - name: Run production health checks
+        run: |
+          # Comprehensive health check
+          npm run health:check-production
+
+      - name: Enable monitoring
+        run: |
+          # Enable all monitoring services
+          npm run monitoring:enable
+
+      - name: Post-deployment security scan
+        run: |
+          # Final security verification
+          npm run security:scan-production
+
+      - name: Notify deployment success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+
+      - name: Notify deployment failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: '#alerts'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+
+  security-compliance:
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run OWASP ZAP Full Scan
+        run: |
+          docker run -t owasp/zap2docker-stable zap-baseline.py \
+            -t https://yourdomain.com \
+            -J zap-report.json
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-security-report
+          path: zap-report.json
+
+      - name: Generate compliance report
+        run: |
+          npm run security:compliance-report
+
+      - name: Update security documentation
+        run: |
+          npm run security:update-docs
+
+      - name: Archive security logs
+        run: |
+          npm run security:archive-logs

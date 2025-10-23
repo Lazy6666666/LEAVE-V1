@@ -18,14 +18,14 @@ export function createClient() {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch {
             // Handle cookie setting errors in middleware
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: "", ...options });
-          } catch (error) {
+          } catch {
             // Handle cookie removal errors in middleware
           }
         },
@@ -33,3 +33,6 @@ export function createClient() {
     }
   );
 }
+
+// Re-export createServerClient for components that need it
+export { createServerClient };

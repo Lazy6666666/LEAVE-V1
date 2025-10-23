@@ -48,15 +48,18 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Configuration Details
 
 ### TypeScript (tsconfig.json)
+
 - Strict mode enabled
 - Additional strict checks: noUnusedLocals, noUnusedParameters, noFallthroughCasesInSwitch
-- Path aliases configured: @/* maps to ./*
+- Path aliases configured: @/_ maps to ./_
 
 ### ESLint (.eslintrc.json)
+
 - Extends: next/core-web-vitals, next/typescript, prettier
 - Rules: prettier/prettier, no-unused-vars, no-explicit-any
 
 ### Prettier (.prettierrc)
+
 - Semi: true
 - Single quotes: false
 - Print width: 80
@@ -64,6 +67,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 - End of line: lf
 
 ### Package Scripts
+
 - `npm run dev` - Development server
 - `npm run build` - Production build
 - `npm run start` - Production server
@@ -76,6 +80,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Dependencies
 
 ### Production
+
 - next@14 - Next.js framework
 - react@18 - React library
 - react-dom@18 - React DOM
@@ -86,6 +91,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 - eslint-config-next - Next.js ESLint config
 
 ### Development
+
 - eslint@8 - Linter
 - eslint-config-prettier - Prettier ESLint config
 - eslint-plugin-prettier - Prettier ESLint plugin

@@ -7,11 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
-import {
-  searchDocuments,
-  getFilterOptions,
-} from "@/lib/services/document-search";
+import { searchDocuments } from "@/lib/services/document-search";
 import { DocumentSearchParams } from "@/types/document";
 
 /**

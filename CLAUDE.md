@@ -1,4 +1,4 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -35,6 +35,7 @@ npm run validate         # Run type-check, lint, and format:check
 ## Architecture Overview
 
 ### Technology Stack
+
 - **Frontend**: Next.js 14 (App Router), React 18, TypeScript
 - **Backend**: Next.js API Routes, Server Actions
 - **Database**: PostgreSQL via Supabase with Prisma ORM
@@ -113,6 +114,7 @@ components/
 ### Database Schema
 
 Core tables with relationships:
+
 - `users` → `profiles` (1:1) - User authentication and profile data
 - `profiles` → `leaves` (1:many) - Users can have many leave requests
 - `leave_types` → `leaves` (1:many) - Leave type definitions
@@ -123,6 +125,7 @@ Core tables with relationships:
 ### Notification System
 
 Real-time notification system with:
+
 - 10 notification types (LEAVE_CREATED, LEAVE_APPROVED, etc.)
 - NotificationBell component with unread count badge
 - Supabase Realtime subscriptions for instant updates

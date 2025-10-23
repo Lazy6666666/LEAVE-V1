@@ -5,18 +5,21 @@ A modern, full-stack leave management system built with Next.js 14, Supabase, Pr
 ## Features
 
 ### Core Functionality
+
 - **Leave Management**: Request, approve, reject, and track employee leave
 - **Multiple Leave Types**: Annual, sick, personal, maternity, paternity, study, bereavement, and public holidays
 - **Leave Balance Tracking**: Automatic calculation of used and remaining leave days
 - **Approval Workflow**: Manager-based approval system with configurable rules
 
 ### Security & Access Control
+
 - **Authentication**: Secure email/password authentication via Supabase Auth
 - **Row Level Security (RLS)**: Database-level security policies
 - **Role-Based Access Control (RBAC)**: Four role levels (Employee, Manager, HR, Admin)
 - **Permission System**: Granular permissions for different operations
 
 ### Additional Features
+
 - **Document Management**: Upload and manage company documents with access level controls
 - **Notification System**: In-app notifications for leave requests and approvals
 - **Audit Logging**: Comprehensive audit trail for all system actions
@@ -57,6 +60,7 @@ npm install
 ### 3. Configure Environment Variables
 
 1. Copy `.env.local.example` to `.env.local`:
+
 ```bash
 cp .env.local.example .env.local
 ```
@@ -203,18 +207,21 @@ The system uses a comprehensive permission-based RBAC system. Permissions are de
 ## Security Features
 
 ### Authentication
+
 - Secure email/password authentication
 - Email verification support
 - Password reset functionality
 - Session management with automatic refresh
 
 ### Authorization
+
 - Role-based access control (RBAC)
 - Permission-based authorization
 - Row-level security (RLS) at database level
 - Middleware-based route protection
 
 ### Data Protection
+
 - Database-level security policies
 - Audit logging for all sensitive operations
 - Secure password hashing (handled by Supabase)
@@ -256,6 +263,7 @@ SMTP_FROM=noreply@yourcompany.com
 See [SETUP.md](./SETUP.md) for detailed troubleshooting guide.
 
 Common issues:
+
 - **Database connection errors**: Check your DATABASE_URL is correct
 - **Auth not working**: Verify Supabase credentials
 - **RLS policies blocking queries**: Ensure policies are properly applied
@@ -264,6 +272,7 @@ Common issues:
 ## Roadmap
 
 ### Phase 1 - Backend Foundation (COMPLETED ✅)
+
 - [x] Authentication and authorization
 - [x] Database schema with Prisma
 - [x] RBAC and permissions system
@@ -272,6 +281,7 @@ Common issues:
 - [x] Auth pages (login, register, reset password)
 
 ### Phase 2 - Frontend & Dashboard (NEXT)
+
 - [ ] Install and configure Tailwind CSS + shadcn/ui
 - [ ] Dashboard layouts and navigation
 - [ ] Leave request forms
@@ -280,6 +290,7 @@ Common issues:
 - [ ] Calendar view
 
 ### Phase 3 - Enhanced Features
+
 - [ ] Document upload with Supabase Storage
 - [ ] Email notifications
 - [ ] Reports and analytics
@@ -292,6 +303,7 @@ Common issues:
 For detailed setup instructions, see [SETUP.md](./SETUP.md)
 
 For issues, questions, or contributions:
+
 - Review [Supabase Documentation](https://supabase.com/docs)
 - Review [Prisma Documentation](https://www.prisma.io/docs)
 - Review [Next.js Documentation](https://nextjs.org/docs)

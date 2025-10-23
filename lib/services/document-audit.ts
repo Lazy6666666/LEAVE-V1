@@ -24,7 +24,7 @@ export async function logDocumentAccess(
         action: `DOCUMENT_${action}`,
         entity_type: "DOCUMENT",
         entity_id: documentId,
-        details: metadata || {},
+        new_values: metadata ? JSON.stringify(metadata) : null,
       },
     });
   } catch (error) {

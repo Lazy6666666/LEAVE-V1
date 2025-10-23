@@ -23,6 +23,7 @@ The system supports multiple leave types (annual, sick, personal, maternity, pat
 ## General Setup of this Repository
 
 ### Technology Stack
+
 - **Frontend**: Next.js 14 with App Router, React 18, TypeScript
 - **Backend**: Next.js API Routes and Server Actions
 - **Database**: PostgreSQL via Supabase with Prisma ORM
@@ -32,6 +33,7 @@ The system supports multiple leave types (annual, sick, personal, maternity, pat
 - **Form Handling**: React Hook Form with Zod validation
 
 ### Key Dependencies
+
 - `@prisma/client` & `@prisma/extension-accelerate` - Database ORM and acceleration
 - `@supabase/supabase-js` & `@supabase/ssr` - Supabase client and SSR support
 - `@tanstack/react-query` - Server state management
@@ -42,12 +44,14 @@ The system supports multiple leave types (annual, sick, personal, maternity, pat
 - `react-big-calendar` - Calendar component
 
 ### Development Tools
+
 - **Linting**: ESLint with Next.js and Prettier configurations
 - **Formatting**: Prettier with consistent code style
 - **Type Checking**: TypeScript with strict mode enabled
 - **Database**: Prisma CLI for migrations and schema management
 
 ### Environment Requirements
+
 - Node.js 18 or higher
 - Supabase account (free tier supported)
 - PostgreSQL database (via Supabase)
@@ -98,6 +102,7 @@ LEAVE-V1/
 ```
 
 ### Key Database Models
+
 - **User**: Supabase auth users
 - **Profile**: User profiles with roles (EMPLOYEE, MANAGER, HR, ADMIN)
 - **LeaveType**: Configurable leave types with balance rules
@@ -109,6 +114,7 @@ LEAVE-V1/
 - **CompanySettings**: System configuration
 
 ### Available Scripts
+
 ```bash
 # Development
 npm run dev              # Start development server
@@ -135,11 +141,13 @@ npm run db:reset         # Reset database with seed data
 ## CI/CD Configuration
 
 **Status**: No GitHub workflows configured
+
 - No `.github/workflows/` directory found
 - No automated CI/CD pipeline currently set up
 - Manual testing and deployment process
 
 **Recommended CI/CD Setup**:
+
 - Code quality checks (lint, format, type-check)
 - Automated testing (when test suite is implemented)
 - Database migration validation
@@ -151,6 +159,7 @@ npm run db:reset         # Reset database with seed data
 The project follows a phased development approach:
 
 ### Phase 1 - Backend Foundation (✅ COMPLETED)
+
 - Authentication and authorization system
 - Database schema with Prisma
 - RBAC and permissions system
@@ -159,6 +168,7 @@ The project follows a phased development approach:
 - Basic auth pages
 
 ### Phase 2 - Frontend & Dashboard (✅ COMPLETED)
+
 - Tailwind CSS + shadcn/ui integration
 - Dashboard layouts and navigation
 - Leave request forms and approval interface
@@ -166,6 +176,7 @@ The project follows a phased development approach:
 - Calendar view implementation
 
 ### Phase 3 - Enhanced Features (✅ COMPLETED)
+
 - Document upload with Supabase Storage
 - Notification system
 - Reports and analytics
@@ -173,6 +184,7 @@ The project follows a phased development approach:
 - Company settings UI
 
 ### Phase 4 - Production Ready (✅ COMPLETED)
+
 - Mobile responsive design
 - Performance optimizations
 - Security enhancements
@@ -188,6 +200,7 @@ The project follows a phased development approach:
 - **Data Validation**: Zod schema validation on forms and API endpoints
 
 ## Default Admin Access
+
 - Email: `admin@company.com`
 - Password: `admin123`
 - **⚠️ Important**: Change this password immediately in production!

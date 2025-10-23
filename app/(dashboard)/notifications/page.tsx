@@ -10,17 +10,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   Bell,
   CheckCircle,
-  Filter,
   Search,
-  Trash2,
   ChevronDown,
+  UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/ui/enhanced-skeleton";
 import {
   Select,
   SelectContent,
@@ -62,6 +60,7 @@ const iconMap: Record<NotificationType, LucideIcon> = {
   DOCUMENT_DELETED: FileX,
   SYSTEM_ANNOUNCEMENT: Megaphone,
   LEAVE_REQUEST_PENDING: Clock,
+  ROLE_CHANGED: UserCheck,
 };
 
 const typeOptions = [
@@ -269,21 +268,33 @@ export default function NotificationsPage() {
             <Bell className="h-8 w-8" aria-hidden="true" />
             Notifications
           </h1>
-          <p className="text-muted-foreground mt-1" role="status" aria-live="polite">
-            {unreadCount > 0 ? `${unreadCount} unread notifications` : "All caught up!"}
+          <p
+            className="text-muted-foreground mt-1"
+            role="status"
+            aria-live="polite"
+          >
+            {unreadCount > 0
+              ? `${unreadCount} unread notifications`
+              : "All caught up!"}
           </p>
         </div>
       </header>
 
       {/* Filters and Search */}
-      <section aria-label="Notification filters" className="bg-white rounded-lg border p-4 mb-6">
+      <section
+        aria-label="Notification filters"
+        className="bg-white rounded-lg border p-4 mb-6"
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div className="relative">
             <label htmlFor="notification-search" className="sr-only">
               Search notifications
             </label>
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+              aria-hidden="true"
+            />
             <Input
               id="notification-search"
               placeholder="Search notifications..."
@@ -300,7 +311,10 @@ export default function NotificationsPage() {
               Filter by notification type
             </label>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger id="type-filter" aria-label="Filter notifications by type">
+              <SelectTrigger
+                id="type-filter"
+                aria-label="Filter notifications by type"
+              >
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
               <SelectContent>
@@ -318,8 +332,14 @@ export default function NotificationsPage() {
             <label htmlFor="status-filter" className="sr-only">
               Filter by read status
             </label>
-            <Select value={readStatusFilter} onValueChange={setReadStatusFilter}>
-              <SelectTrigger id="status-filter" aria-label="Filter notifications by read status">
+            <Select
+              value={readStatusFilter}
+              onValueChange={setReadStatusFilter}
+            >
+              <SelectTrigger
+                id="status-filter"
+                aria-label="Filter notifications by read status"
+              >
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -335,9 +355,14 @@ export default function NotificationsPage() {
 
         {/* Bulk Actions */}
         {selectedIds.size > 0 && (
-          <div className="mt-4 flex items-center gap-4 p-3 bg-blue-50 rounded-md" role="status" aria-live="polite">
+          <div
+            className="mt-4 flex items-center gap-4 p-3 bg-blue-50 rounded-md"
+            role="status"
+            aria-live="polite"
+          >
             <p className="text-sm font-medium">
-              {selectedIds.size} notification{selectedIds.size !== 1 ? 's' : ''} selected
+              {selectedIds.size} notification{selectedIds.size !== 1 ? "s" : ""}{" "}
+              selected
             </p>
             <Button
               size="sm"
@@ -362,26 +387,26 @@ export default function NotificationsPage() {
       </section>
 
       {/* Notifications List */}
-      <section aria-label="Notifications list" className="bg-white rounded-lg border overflow-hidden">
+      <section
+        aria-label="Notifications list"
+        className="bg-white rounded-lg border overflow-hidden"
+      >
         {loading ? (
-          <div className="divide-y" role="status" aria-label="Loading notifications">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="p-4 flex gap-4">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <SkeletonList items={5} showAvatar={true} className="divide-y" />
         ) : filteredNotifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center" role="status">
+          <div
+            className="flex flex-col items-center justify-center py-16 text-center"
+            role="status"
+          >
             <div className="rounded-full bg-muted p-4 mb-4">
-              <Bell className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
+              <Bell
+                className="h-8 w-8 text-muted-foreground"
+                aria-hidden="true"
+              />
             </div>
-            <h2 className="text-lg font-semibold mb-1">No notifications found</h2>
+            <h2 className="text-lg font-semibold mb-1">
+              No notifications found
+            </h2>
             <p className="text-sm text-muted-foreground">
               {searchQuery || typeFilter !== "all" || readStatusFilter !== "all"
                 ? "Try adjusting your filters"
@@ -479,7 +504,7 @@ function NotificationRow({
       )}
       onClick={handleClick}
       role="listitem"
-      aria-label={`${notification.title}. ${notification.message}. ${notification.read ? 'Read' : 'Unread'}. ${formatRelativeTime(notification.created_at)}`}
+      aria-label={`${notification.title}. ${notification.message}. ${notification.read ? "Read" : "Unread"}. ${formatRelativeTime(notification.created_at)}`}
     >
       {/* Checkbox */}
       <Checkbox
@@ -490,7 +515,10 @@ function NotificationRow({
       />
 
       {/* Icon */}
-      <div className={cn("rounded-full p-2.5 h-fit", colors.bg)} aria-hidden="true">
+      <div
+        className={cn("rounded-full p-2.5 h-fit", colors.bg)}
+        aria-hidden="true"
+      >
         <Icon className={cn("h-5 w-5", colors.icon)} />
       </div>
 

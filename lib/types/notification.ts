@@ -12,6 +12,7 @@ export interface Notification {
   read: boolean;
   link: string | null;
   created_at: string;
+  createdAt: string; // Add this for compatibility
 }
 
 export type NotificationType =
@@ -24,7 +25,8 @@ export type NotificationType =
   | "DOCUMENT_EXPIRED"
   | "DOCUMENT_DELETED"
   | "SYSTEM_ANNOUNCEMENT"
-  | "LEAVE_REQUEST_PENDING"; // For managers
+  | "LEAVE_REQUEST_PENDING" // For managers
+  | "ROLE_CHANGED";
 
 export interface NotificationResponse {
   notifications: Notification[];
@@ -50,6 +52,7 @@ export const NotificationIcons: Record<NotificationType, string> = {
   DOCUMENT_DELETED: "file-x",
   SYSTEM_ANNOUNCEMENT: "megaphone",
   LEAVE_REQUEST_PENDING: "clock",
+  ROLE_CHANGED: "user-check",
 };
 
 export const NotificationColors: Record<
@@ -105,5 +108,10 @@ export const NotificationColors: Record<
     bg: "bg-amber-100",
     text: "text-amber-800",
     icon: "text-amber-600",
+  },
+  ROLE_CHANGED: {
+    bg: "bg-purple-100",
+    text: "text-purple-800",
+    icon: "text-purple-600",
   },
 };

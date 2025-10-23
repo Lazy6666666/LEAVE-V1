@@ -29,8 +29,15 @@ export async function POST(
     const validation = leaveCancellationSchema.safeParse(body);
 
     if (!validation.success) {
+      const flattened = validation.error.flatten();
       return NextResponse.json(
-        { error: "Validation failed", details: validation.error.errors },
+        {
+          error: "Validation failed",
+          details: {
+            fieldErrors: flattened.fieldErrors,
+            formErrors: flattened.formErrors,
+          },
+        },
         { status: 400 }
       );
     }
@@ -141,12 +148,13 @@ export async function POST(
         action: "LEAVE_CANCELLED",
         entity_type: "LEAVE",
         entity_id: leaveId,
-        details: {
-          leave_type: leave.leave_type.name,
-          days_count: leave.days_count,
-          previous_status: leave.status,
+        old_values: JSON.stringify({
+          status: leave.status,
+        }),
+        new_values: JSON.stringify({
+          status: "CANCELLED",
           cancellation_reason: data.cancellation_reason,
-        },
+        }),
       },
     });
 

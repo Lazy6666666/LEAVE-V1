@@ -1,0 +1,76 @@
+/* Skip link styles - hidden until focused */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 9999;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Base layout styles */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-layout main {
+  flex: 1;
+  padding: var(--spacing-lg);
+}
+
+/* Loading state */
+.app-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.app-loading::after {
+  content: "";
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-muted);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.app-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+
+.app-error h1 {
+  color: var(--color-destructive);
+  margin-bottom: var(--spacing-md);
+}
+
+.app-error p {
+  color: var(--color-muted-foreground);
+  margin-bottom: var(--spacing-lg);
+}

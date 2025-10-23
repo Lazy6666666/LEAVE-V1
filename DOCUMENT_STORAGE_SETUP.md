@@ -5,6 +5,7 @@
 ### ✅ Completed Tasks
 
 #### T-020: Supabase Storage Bucket Setup
+
 - **Status**: ✅ Complete
 - **Bucket Name**: `company-documents`
 - **Configuration**:
@@ -25,6 +26,7 @@
   - S3 Protocol: Yes
 
 #### T-022: Document Upload API
+
 - **Status**: ✅ Complete
 - **Endpoint**: `POST /api/documents`
 - **Access Control**: Admin and HR only
@@ -50,6 +52,7 @@
 **Request Format**: `multipart/form-data`
 
 **Parameters**:
+
 ```typescript
 {
   file: File,                    // The file to upload
@@ -65,24 +68,29 @@
 ```
 
 **Example Request** (JavaScript/Fetch):
+
 ```javascript
 const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-formData.append('metadata', JSON.stringify({
-  title: 'Employee Handbook 2024',
-  description: 'Updated policies and procedures',
-  category: 'Policy',
-  tags: ['hr', 'policies', '2024'],
-  access_level: 'EMPLOYEE'
-}));
+formData.append("file", fileInput.files[0]);
+formData.append(
+  "metadata",
+  JSON.stringify({
+    title: "Employee Handbook 2024",
+    description: "Updated policies and procedures",
+    category: "Policy",
+    tags: ["hr", "policies", "2024"],
+    access_level: "EMPLOYEE",
+  })
+);
 
-const response = await fetch('/api/documents', {
-  method: 'POST',
-  body: formData
+const response = await fetch("/api/documents", {
+  method: "POST",
+  body: formData,
 });
 ```
 
 **Success Response** (201 Created):
+
 ```json
 {
   "message": "Document uploaded successfully",
@@ -99,6 +107,7 @@ const response = await fetch('/api/documents', {
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: User not authenticated
 - `403 Forbidden`: User is not Admin/HR
 - `400 Bad Request`: Validation errors (invalid file type, size, or metadata)
@@ -113,6 +122,7 @@ const response = await fetch('/api/documents', {
 **Authentication**: Required (all authenticated users)
 
 **Query Parameters**:
+
 ```
 category      - Filter by category (Policy, Procedure, etc.)
 tags          - Comma-separated tags to filter by
@@ -123,17 +133,20 @@ offset        - Pagination offset (default: 0)
 ```
 
 **Access Control**:
+
 - **EMPLOYEE**: Can see PUBLIC and EMPLOYEE documents
 - **MANAGER**: Can see PUBLIC, EMPLOYEE, and MANAGER documents
 - **HR**: Can see PUBLIC, EMPLOYEE, MANAGER, and HR documents
 - **ADMIN**: Can see all documents
 
 **Example Request**:
+
 ```
 GET /api/documents?category=Policy&tags=hr,policies&limit=20&offset=0
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "documents": [
@@ -184,21 +197,25 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Security Features
 
 ### 1. Authentication & Authorization
+
 - ✅ User authentication required for all operations
 - ✅ Role-based access control (Admin/HR only for uploads)
 - ✅ Access level filtering on document listing
 
 ### 2. File Validation
+
 - ✅ File type validation (whitelist only)
 - ✅ File size validation (10MB max for upload, 50MB bucket limit)
 - ✅ Filename sanitization (prevent path traversal)
 
 ### 3. Secure Storage
+
 - ✅ Unique file paths with UUID
 - ✅ Private bucket (signed URLs for access)
 - ✅ Automatic cleanup on failure
 
 ### 4. Data Integrity
+
 - ✅ Transaction-like behavior (cleanup on DB failure)
 - ✅ Audit logging for all uploads
 - ✅ Notification creation
@@ -208,11 +225,13 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Validation Rules
 
 ### File Validation
+
 - **Allowed Types**: PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG, GIF
 - **Max Size**: 10MB per upload
 - **Filename**: Sanitized, max 255 characters
 
 ### Metadata Validation
+
 - **Title**: Required, 1-200 characters
 - **Description**: Optional, max 1000 characters
 - **Category**: Must be one of predefined categories
@@ -225,11 +244,13 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Error Handling
 
 ### Upload Failures
+
 1. **Storage failure**: Returns error, no database entry
 2. **URL generation failure**: Cleans up uploaded file
 3. **Database failure**: Cleans up uploaded file
 
 ### Automatic Cleanup
+
 - Files are removed from storage if database insertion fails
 - Ensures no orphaned files in storage
 
@@ -238,6 +259,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Next Steps (For Frontend Agent)
 
 ### Frontend Implementation Needed:
+
 1. **Upload Component**:
    - File input with drag-and-drop
    - Form for metadata (title, category, tags, etc.)
@@ -256,6 +278,7 @@ C:\Users\Twisted\Desktop\LEAVE\
    - Display access level badges
 
 ### Example Upload Component Structure:
+
 ```tsx
 // components/documents/DocumentUploadForm.tsx
 - File input with validation
@@ -266,6 +289,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 ```
 
 ### Example List Component Structure:
+
 ```tsx
 // components/documents/DocumentList.tsx
 - Search bar
@@ -281,6 +305,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 ## Testing Checklist
 
 ### ✅ Completed (Backend):
+
 - [x] Storage bucket configured with correct settings
 - [x] File type validation working
 - [x] File size validation working
@@ -298,6 +323,7 @@ C:\Users\Twisted\Desktop\LEAVE\
 - [x] Expired document filtering
 
 ### ⏳ Pending (Frontend Integration):
+
 - [ ] Upload form UI
 - [ ] File validation feedback
 - [ ] Upload progress indicator
@@ -351,6 +377,7 @@ DIRECT_URL="postgresql://..."
 ## Storage Bucket Policy (Already Applied)
 
 The `company-documents` bucket is configured with:
+
 - **Private access**: Files require signed URLs
 - **RLS Policies**: Managed through Supabase Dashboard
 - **Image Transformation**: Enabled for image processing
@@ -361,6 +388,7 @@ The `company-documents` bucket is configured with:
 ## Success Metrics
 
 ✅ **All Phase 4 Backend Tasks Complete**:
+
 - Storage bucket configured and operational
 - Upload API fully functional with all security checks
 - File validation and sanitization implemented

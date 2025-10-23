@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { leaveRejectionSchema } from "@/lib/validations/leave";
+import { auditLeaveRejected } from "@/lib/services/audit";
 
 export async function POST(
   request: NextRequest,
@@ -41,8 +42,15 @@ export async function POST(
     const validation = leaveRejectionSchema.safeParse(body);
 
     if (!validation.success) {
+      const flattened = validation.error.flatten();
       return NextResponse.json(
-        { error: "Validation failed", details: validation.error.errors },
+        {
+          error: "Validation failed",
+          details: {
+            fieldErrors: flattened.fieldErrors,
+            formErrors: flattened.formErrors,
+          },
+        },
         { status: 400 }
       );
     }
@@ -106,22 +114,8 @@ export async function POST(
       },
     });
 
-    // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        user_id: user.id,
-        action: "LEAVE_REJECTED",
-        entity_type: "LEAVE",
-        entity_id: leaveId,
-        details: {
-          employee_id: leave.user_id,
-          employee_name: leave.user.profile?.full_name,
-          leave_type: leave.leave_type.name,
-          days_count: leave.days_count,
-          rejection_reason: data.manager_comment,
-        },
-      },
-    });
+    // Create comprehensive audit log
+    await auditLeaveRejected(user.id, leaveId, data.manager_comment);
 
     return NextResponse.json({
       message: "Leave rejected successfully",

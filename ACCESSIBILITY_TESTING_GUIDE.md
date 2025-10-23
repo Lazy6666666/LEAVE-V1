@@ -50,14 +50,15 @@ Then open: http://localhost:3000
 
 **Common Issues**:
 
-| Issue | Fix |
-|-------|-----|
-| "Image elements do not have [alt] attributes" | Add `alt="description"` to all images |
-| "Form elements do not have associated labels" | Add `<label htmlFor="id">` for each input |
-| "Background and foreground colors do not have sufficient contrast" | Adjust colors to meet 4.5:1 ratio |
-| "Heading elements are not in a sequentially-descending order" | Fix heading hierarchy (h1 → h2 → h3) |
+| Issue                                                              | Fix                                       |
+| ------------------------------------------------------------------ | ----------------------------------------- |
+| "Image elements do not have [alt] attributes"                      | Add `alt="description"` to all images     |
+| "Form elements do not have associated labels"                      | Add `<label htmlFor="id">` for each input |
+| "Background and foreground colors do not have sufficient contrast" | Adjust colors to meet 4.5:1 ratio         |
+| "Heading elements are not in a sequentially-descending order"      | Fix heading hierarchy (h1 → h2 → h3)      |
 
 **Save the Report**:
+
 - Click the download icon in top-right
 - Save as JSON for comparison
 - Compare scores over time
@@ -120,14 +121,15 @@ Then open: http://localhost:3000
 
 **What to Check**:
 
-| Icon | Meaning | Action |
-|------|---------|--------|
-| Red ❌ | Errors | Fix immediately |
-| Yellow ⚠️ | Alerts | Review and fix if needed |
-| Green ✅ | Features | Accessibility features detected |
-| Blue ℹ️ | Structure | Verify correct usage |
+| Icon      | Meaning   | Action                          |
+| --------- | --------- | ------------------------------- |
+| Red ❌    | Errors    | Fix immediately                 |
+| Yellow ⚠️ | Alerts    | Review and fix if needed        |
+| Green ✅  | Features  | Accessibility features detected |
+| Blue ℹ️   | Structure | Verify correct usage            |
 
 **Contrast Tab**:
+
 - Shows all text with contrast ratios
 - Red = Fails WCAG AA (must fix)
 - Yellow = Fails WCAG AAA (optional)
@@ -145,18 +147,19 @@ Then open: http://localhost:3000
 
 ### Keyboard Commands
 
-| Key | Action |
-|-----|--------|
-| Tab | Move to next interactive element |
-| Shift + Tab | Move to previous element |
-| Enter | Activate button/link, submit form |
-| Space | Activate button, toggle checkbox |
-| Escape | Close modal/dialog/tooltip |
-| Arrow Keys | Navigate within select/radio group |
+| Key         | Action                             |
+| ----------- | ---------------------------------- |
+| Tab         | Move to next interactive element   |
+| Shift + Tab | Move to previous element           |
+| Enter       | Activate button/link, submit form  |
+| Space       | Activate button, toggle checkbox   |
+| Escape      | Close modal/dialog/tooltip         |
+| Arrow Keys  | Navigate within select/radio group |
 
 ### Test Checklist
 
 **Every Page**:
+
 - [ ] Press Tab - skip link appears and works
 - [ ] Tab through all interactive elements
 - [ ] Focus indicator visible on each element
@@ -165,6 +168,7 @@ Then open: http://localhost:3000
 - [ ] No keyboard traps (can Tab away from everything)
 
 **Forms**:
+
 - [ ] Tab to first input
 - [ ] Label announced by screen reader
 - [ ] Fill out form with keyboard only
@@ -173,6 +177,7 @@ Then open: http://localhost:3000
 - [ ] Errors appear and focus moves to first error
 
 **Modals/Dialogs**:
+
 - [ ] Tab opens the modal trigger
 - [ ] Enter opens the modal
 - [ ] Focus moves into modal
@@ -181,6 +186,7 @@ Then open: http://localhost:3000
 - [ ] Focus returns to trigger element
 
 **Dropdowns/Selects**:
+
 - [ ] Tab to select
 - [ ] Enter or Space opens dropdown
 - [ ] Arrow keys navigate options
@@ -188,6 +194,7 @@ Then open: http://localhost:3000
 - [ ] Escape closes dropdown
 
 **Calendar**:
+
 - [ ] Tab to calendar
 - [ ] Arrow keys navigate dates
 - [ ] Enter selects date
@@ -195,13 +202,13 @@ Then open: http://localhost:3000
 
 ### Common Issues
 
-| Issue | Fix |
-|-------|-----|
-| Focus not visible | Check focus-visible styles in CSS |
-| Wrong tab order | Ensure no positive tabindex values |
-| Can't Tab to element | Add tabindex="0" or use <button> |
-| Keyboard trap in modal | Implement focus trap correctly |
-| Skip link doesn't work | Ensure id="main-content" exists |
+| Issue                  | Fix                                |
+| ---------------------- | ---------------------------------- |
+| Focus not visible      | Check focus-visible styles in CSS  |
+| Wrong tab order        | Ensure no positive tabindex values |
+| Can't Tab to element   | Add tabindex="0" or use <button>   |
+| Keyboard trap in modal | Implement focus trap correctly     |
+| Skip link doesn't work | Ensure id="main-content" exists    |
 
 ---
 
@@ -210,28 +217,30 @@ Then open: http://localhost:3000
 ### Windows (NVDA)
 
 **Install**:
+
 1. Download: https://www.nvaccess.org/
 2. Install and run
 3. Press **Ctrl+Alt+N** to start
 
 **Basic Commands**:
 
-| Key | Action |
-|-----|--------|
-| ↓ Arrow | Next item |
-| ↑ Arrow | Previous item |
-| Tab | Next interactive element |
-| H | Next heading |
-| Shift+H | Previous heading |
-| F | Next form field |
-| B | Next button |
-| L | Next list |
-| K | Next link |
-| R | Next region (landmark) |
+| Key        | Action                   |
+| ---------- | ------------------------ |
+| ↓ Arrow    | Next item                |
+| ↑ Arrow    | Previous item            |
+| Tab        | Next interactive element |
+| H          | Next heading             |
+| Shift+H    | Previous heading         |
+| F          | Next form field          |
+| B          | Next button              |
+| L          | Next list                |
+| K          | Next link                |
+| R          | Next region (landmark)   |
 | NVDA+Space | Toggle focus/browse mode |
-| Insert+↓ | Read all |
+| Insert+↓   | Read all                 |
 
 **Test Checklist**:
+
 - [ ] Press H repeatedly - heading hierarchy makes sense
 - [ ] Press F - all form fields have labels
 - [ ] Press B - all buttons describe their action
@@ -244,23 +253,25 @@ Then open: http://localhost:3000
 ### Mac (VoiceOver)
 
 **Enable**:
+
 - Press **Cmd+F5**
 
 **Basic Commands**:
 
-| Key | Action |
-|-----|--------|
-| VO+→ | Next item (VO = Control+Option) |
-| VO+← | Previous item |
-| VO+U | Open rotor (quick navigation) |
-| VO+A | Read all |
-| VO+Space | Activate item |
-| Tab | Next interactive element |
-| VO+Cmd+H | Next heading |
-| VO+Cmd+J | Next form control |
-| VO+Cmd+L | Next link |
+| Key      | Action                          |
+| -------- | ------------------------------- |
+| VO+→     | Next item (VO = Control+Option) |
+| VO+←     | Previous item                   |
+| VO+U     | Open rotor (quick navigation)   |
+| VO+A     | Read all                        |
+| VO+Space | Activate item                   |
+| Tab      | Next interactive element        |
+| VO+Cmd+H | Next heading                    |
+| VO+Cmd+J | Next form control               |
+| VO+Cmd+L | Next link                       |
 
 **Test Checklist**:
+
 - [ ] VO+A reads entire page correctly
 - [ ] VO+U shows rotor with headings, links, forms
 - [ ] All headings in logical order
@@ -272,6 +283,7 @@ Then open: http://localhost:3000
 ### What to Listen For
 
 **Good Announcements**:
+
 - "Link, Dashboard" (not just "Dashboard")
 - "Edit, button, Opens leave request edit form"
 - "Email, text field, required"
@@ -281,6 +293,7 @@ Then open: http://localhost:3000
 - "Loading notifications, status"
 
 **Bad Announcements**:
+
 - "Clickable, clickable, clickable" (divs with onClick)
 - "Button" (no description)
 - "Image" (no alt text)
@@ -304,17 +317,18 @@ Then open: http://localhost:3000
 
 **Requirements**:
 
-| Element Type | Minimum Ratio |
-|--------------|---------------|
-| Normal text (< 18pt) | 4.5:1 |
-| Large text (≥ 18pt or ≥ 14pt bold) | 3:1 |
-| UI components (buttons, borders) | 3:1 |
-| Focus indicators | 3:1 |
+| Element Type                       | Minimum Ratio |
+| ---------------------------------- | ------------- |
+| Normal text (< 18pt)               | 4.5:1         |
+| Large text (≥ 18pt or ≥ 14pt bold) | 3:1           |
+| UI components (buttons, borders)   | 3:1           |
+| Focus indicators                   | 3:1           |
 
 **Test All Combinations**:
 
 ```markdown
 # Text on Backgrounds
+
 - Normal text on white background
 - Normal text on light gray background
 - Normal text on colored background
@@ -325,6 +339,7 @@ Then open: http://localhost:3000
 - Muted text on muted background
 
 # UI Components
+
 - Button borders
 - Input borders
 - Focus indicators
@@ -333,6 +348,7 @@ Then open: http://localhost:3000
 - Icons with meaning
 
 # States
+
 - Default state
 - Hover state
 - Focus state
@@ -343,6 +359,7 @@ Then open: http://localhost:3000
 ### Browser DevTools Contrast Checker
 
 **Chrome/Edge**:
+
 1. Inspect element
 2. Look at Styles panel
 3. Click the color square next to color value
@@ -356,11 +373,13 @@ Then open: http://localhost:3000
 ### 200% Zoom Test
 
 **Steps**:
+
 1. Press **Ctrl/Cmd + 0** to reset zoom
 2. Press **Ctrl/Cmd + +** (plus) five times (200%)
 3. Test the page
 
 **Checklist**:
+
 - [ ] All text readable
 - [ ] No horizontal scrolling (except data tables)
 - [ ] All buttons clickable
@@ -372,11 +391,13 @@ Then open: http://localhost:3000
 ### 400% Zoom Test (Reflow)
 
 **Steps**:
+
 1. Set viewport to 1280px width
 2. Zoom to 400%
 3. Effective width = 320px
 
 **Checklist**:
+
 - [ ] Content reflows (stacks vertically)
 - [ ] No 2D scrolling required
 - [ ] All content accessible
@@ -385,11 +406,13 @@ Then open: http://localhost:3000
 ### Mobile Responsive Test
 
 **Devices to Test**:
+
 - Mobile: 320px, 375px, 414px
 - Tablet: 768px, 1024px
 - Desktop: 1366px, 1920px
 
 **Checklist**:
+
 - [ ] Touch targets ≥ 44×44px
 - [ ] Sufficient spacing between elements
 - [ ] No pinch zoom required
@@ -403,13 +426,15 @@ Then open: http://localhost:3000
 ### Form Checklist
 
 **Labels**:
+
 - [ ] Every input has a label
 - [ ] Label is associated (htmlFor matches id)
 - [ ] Label is visible (not just placeholder)
-- [ ] Required fields marked with * and aria-required
+- [ ] Required fields marked with \* and aria-required
 - [ ] Optional fields clearly indicated
 
 **Error Handling**:
+
 - [ ] Errors identified in text (not just color)
 - [ ] Error summary at top of form
 - [ ] aria-invalid on error fields
@@ -418,6 +443,7 @@ Then open: http://localhost:3000
 - [ ] Error messages provide helpful suggestions
 
 **Helpful Text**:
+
 - [ ] Hints provided for complex inputs
 - [ ] Format requirements explained
 - [ ] Character limits shown
@@ -425,6 +451,7 @@ Then open: http://localhost:3000
 - [ ] Examples provided where helpful
 
 **Keyboard**:
+
 - [ ] Can fill entire form with keyboard
 - [ ] Tab order is logical
 - [ ] Can submit with Enter key
@@ -432,6 +459,7 @@ Then open: http://localhost:3000
 - [ ] Date pickers keyboard accessible
 
 **Screen Reader**:
+
 - [ ] Labels announced with inputs
 - [ ] Required status announced
 - [ ] Error messages announced
@@ -445,6 +473,7 @@ Then open: http://localhost:3000
 ### Daily Development
 
 1. **Before Committing**:
+
    ```bash
    # Quick check
    - Run Lighthouse (1 min)
@@ -453,6 +482,7 @@ Then open: http://localhost:3000
    ```
 
 2. **For New Components**:
+
    ```bash
    - Run axe DevTools scan (2 min)
    - Test keyboard navigation (5 min)
@@ -495,6 +525,7 @@ Then open: http://localhost:3000
 ## Common Fixes Cheat Sheet
 
 ### Missing Alt Text
+
 ```tsx
 // Before
 <img src="/chart.png" />
@@ -504,6 +535,7 @@ Then open: http://localhost:3000
 ```
 
 ### Icon-Only Button
+
 ```tsx
 // Before
 <button onClick={handleClose}>
@@ -517,6 +549,7 @@ Then open: http://localhost:3000
 ```
 
 ### Form Input Without Label
+
 ```tsx
 // Before
 <input type="email" placeholder="Email" />
@@ -527,6 +560,7 @@ Then open: http://localhost:3000
 ```
 
 ### Form Error
+
 ```tsx
 // Before
 <input type="text" className="error" />
@@ -545,6 +579,7 @@ Then open: http://localhost:3000
 ```
 
 ### Clickable Div
+
 ```tsx
 // Before
 <div onClick={handleClick} className="cursor-pointer">
@@ -558,6 +593,7 @@ Then open: http://localhost:3000
 ```
 
 ### Skip Link
+
 ```tsx
 // Add to layout
 <a href="#main-content" className="skip-link">
@@ -571,6 +607,7 @@ Then open: http://localhost:3000
 ```
 
 ### Live Region Update
+
 ```tsx
 // Before
 <p>{notificationCount} notifications</p>
@@ -582,6 +619,7 @@ Then open: http://localhost:3000
 ```
 
 ### Decorative Image
+
 ```tsx
 // Before
 <img src="/decoration.svg" alt="decoration" />
@@ -595,22 +633,26 @@ Then open: http://localhost:3000
 ## Resources
 
 ### Browser Extensions
+
 - **axe DevTools**: https://www.deque.com/axe/devtools/
 - **WAVE**: https://wave.webaim.org/extension/
 - **ANDI**: https://www.ssa.gov/accessibility/andi/help/install.html
 
 ### Screen Readers
+
 - **NVDA (Windows)**: https://www.nvaccess.org/
 - **JAWS (Windows)**: https://www.freedomscientific.com/products/software/jaws/
 - **VoiceOver (Mac)**: Built-in (Cmd+F5)
 - **TalkBack (Android)**: Built-in
 
 ### Online Tools
+
 - **Contrast Checker**: https://webaim.org/resources/contrastchecker/
 - **Color Contrast Analyzer**: https://www.tpgi.com/color-contrast-checker/
 - **Accessible Colors**: https://accessible-colors.com/
 
 ### Documentation
+
 - **WCAG 2.1**: https://www.w3.org/WAI/WCAG21/quickref/
 - **ARIA Authoring Practices**: https://www.w3.org/WAI/ARIA/apg/
 - **WebAIM**: https://webaim.org/

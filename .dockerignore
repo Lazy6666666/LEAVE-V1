@@ -1,0 +1,114 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Build outputs
+.next
+out
+build
+dist
+.turbo
+.vite
+.output
+
+# Cache directories
+.cache
+.parcel-cache
+.eslintcache
+.stylelintcache
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.tmp
+.temp/
+
+# Testing
+test-results/
+playwright-report/
+blob-report/
+
+# Database
+*.sqlite
+*.db
+*.sqlite3
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+docs/
+
+# Scripts
+scripts/
+
+# Config files that should be copied manually
+.prettierrc*
+.eslintrc*
+tsconfig.json
+
+# Development files
+__tests__/
+tests/
+*.test.*
+*.spec.*
+mocks/
+fixtures/
+
+# Package management
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional development files
+.editorconfig
+.nvmrc

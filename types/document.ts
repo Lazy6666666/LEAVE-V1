@@ -3,18 +3,18 @@
 
 // Enums from Prisma
 enum Role {
-  EMPLOYEE = 'EMPLOYEE',
-  MANAGER = 'MANAGER',
-  ADMIN = 'ADMIN',
-  HR = 'HR'
+  EMPLOYEE = "EMPLOYEE",
+  MANAGER = "MANAGER",
+  ADMIN = "ADMIN",
+  HR = "HR",
 }
 
 enum AccessLevel {
-  PUBLIC = 'PUBLIC',
-  EMPLOYEE = 'EMPLOYEE', 
-  MANAGER = 'MANAGER',
-  ADMIN = 'ADMIN',
-  HR = 'HR'
+  PUBLIC = "PUBLIC",
+  EMPLOYEE = "EMPLOYEE",
+  MANAGER = "MANAGER",
+  ADMIN = "ADMIN",
+  HR = "HR",
 }
 
 // Core Document Interface

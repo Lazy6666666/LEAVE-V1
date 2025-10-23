@@ -7,3 +7,45 @@ dist
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Build artifacts
+.turbo
+.vite
+.output
+.temp
+.tmp
+
+# Cache
+.cache
+.eslintcache
+.stylelintcache
+
+# Testing
+test-results/
+playwright-report/
+blob-report/
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+
+# Generated files
+*.tsbuildinfo
+*.min.js
+*.map
+
+# Database
+*.sqlite
+*.db
+*.sqlite3
+
+# Documentation
+docs/build/
+
+# Public assets
+public/
+
+# Config files that shouldn't be formatted
+.env*

@@ -5,6 +5,7 @@
 ### 1️⃣ Get Your Direct Database URL
 
 **From Supabase Dashboard:**
+
 1. Go to https://app.supabase.com
 2. Click **Settings** → **Database**
 3. Find **Connection String** section
@@ -43,12 +44,14 @@ If you see **no database errors** when visiting http://localhost:3000, you're al
 ## ⚡ Your Current Setup
 
 ### Already Configured ✅
+
 - ✅ `@prisma/extension-accelerate` installed
 - ✅ `lib/prisma.ts` created with Accelerate
 - ✅ `prisma/schema.prisma` updated with `directUrl`
 - ✅ `DATABASE_URL` with Accelerate API key
 
 ### You Need to Add ❌
+
 - ❌ `DIRECT_URL` in `.env.local`
 
 ---

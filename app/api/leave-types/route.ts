@@ -3,14 +3,14 @@
  * Get all active leave types
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 
 /**
  * GET /api/leave-types - Get all active leave types
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Authenticate user
     const supabase = createClient();

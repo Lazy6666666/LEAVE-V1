@@ -1,20 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get('q') || '';
-    const type = searchParams.get('type'); // leave, document, user, calendar
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const query = searchParams.get("q") || "";
+    const type = searchParams.get("type"); // leave, document, user, calendar
+    const limit = parseInt(searchParams.get("limit") || "20");
 
     if (!query.trim()) {
       return NextResponse.json({ results: [] });
@@ -23,96 +25,95 @@ export async function GET(request: NextRequest) {
     const results = [];
 
     // Search leaves
-    if (!type || type === 'leave') {
+    if (!type || type === "leave") {
       const leaves = await prisma.leave.findMany({
         where: {
-          OR: [
-            { reason: { contains: query, mode: 'insensitive' } },
-            { status: { contains: query, mode: 'insensitive' } },
-          ],
-          userId: user.id,
+          OR: [{ reason: { contains: query, mode: "insensitive" } }],
+          user_id: user.id,
         },
         take: limit,
         include: {
-          leaveType: true,
+          leave_type: true,
           user: {
-            select: {
-              id: true,
-              email: true,
-              fullName: true,
+            include: {
+              profile: true,
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: "desc" },
       });
 
       results.push(
         ...leaves.map((leave) => ({
           id: leave.id,
-          type: 'leave' as const,
-          title: `${leave.leaveType.name} - ${leave.status}`,
-          description: `${new Date(leave.startDate).toLocaleDateString()} - ${new Date(leave.endDate).toLocaleDateString()}`,
+          type: "leave" as const,
+          title: `${leave.leave_type.name} - ${leave.status}`,
+          description: `${new Date(leave.start_date).toLocaleDateString()} - ${new Date(leave.end_date).toLocaleDateString()}`,
           url: `/employee/leaves`,
           metadata: {
             status: leave.status,
-            days: leave.days,
+            days: leave.days_count,
           },
         }))
       );
     }
 
     // Search documents
-    if (!type || type === 'document') {
+    if (!type || type === "document") {
       const documents = await prisma.companyDocument.findMany({
         where: {
           OR: [
-            { title: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-            { category: { contains: query, mode: 'insensitive' } },
+            { title: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+            { category: { contains: query, mode: "insensitive" } },
           ],
         },
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: "desc" },
       });
 
       results.push(
         ...documents.map((doc) => ({
           id: doc.id,
-          type: 'document' as const,
+          type: "document" as const,
           title: doc.title,
           description: doc.description || doc.category,
           url: `/documents`,
           metadata: {
             category: doc.category,
-            fileSize: doc.fileSize,
+            fileSize: doc.file_size,
           },
         }))
       );
     }
 
     // Search users (if admin/manager)
-    if (!type || type === 'user') {
-      const profile = await prisma.userProfile.findUnique({
-        where: { userId: user.id },
+    if (!type || type === "user") {
+      const profile = await prisma.profile.findUnique({
+        where: { user_id: user.id },
       });
 
-      if (profile?.role === 'ADMIN' || profile?.role === 'HR' || profile?.role === 'MANAGER') {
-        const users = await prisma.userProfile.findMany({
+      if (
+        profile?.role === "ADMIN" ||
+        profile?.role === "HR" ||
+        profile?.role === "MANAGER"
+      ) {
+        const users = await prisma.profile.findMany({
           where: {
             OR: [
-              { fullName: { contains: query, mode: 'insensitive' } },
-              { department: { contains: query, mode: 'insensitive' } },
+              { full_name: { contains: query, mode: "insensitive" } },
+              { department: { contains: query, mode: "insensitive" } },
             ],
           },
           take: limit,
-          orderBy: { fullName: 'asc' },
+          orderBy: { full_name: "asc" },
         });
 
         results.push(
           ...users.map((user) => ({
             id: user.id,
-            type: 'user' as const,
-            title: user.fullName,
+            type: "user" as const,
+            title: user.full_name,
             description: `${user.department} - ${user.role}`,
             url: `/admin/users`,
             metadata: {
@@ -125,37 +126,43 @@ export async function GET(request: NextRequest) {
     }
 
     // Search calendar events
-    if (!type || type === 'calendar') {
+    if (!type || type === "calendar") {
       const calendarEvents = await prisma.leave.findMany({
         where: {
-          status: 'APPROVED',
+          status: "APPROVED",
           OR: [
-            { user: { fullName: { contains: query, mode: 'insensitive' } } },
-            { leaveType: { name: { contains: query, mode: 'insensitive' } } },
+            {
+              user: {
+                profile: {
+                  full_name: { contains: query, mode: "insensitive" },
+                },
+              },
+            },
+            { leave_type: { name: { contains: query, mode: "insensitive" } } },
           ],
         },
         take: limit,
         include: {
           user: {
-            select: {
-              fullName: true,
+            include: {
+              profile: true,
             },
           },
-          leaveType: true,
+          leave_type: true,
         },
-        orderBy: { startDate: 'desc' },
+        orderBy: { start_date: "desc" },
       });
 
       results.push(
         ...calendarEvents.map((event) => ({
           id: event.id,
-          type: 'calendar' as const,
-          title: `${event.user.fullName} - ${event.leaveType.name}`,
-          description: `${new Date(event.startDate).toLocaleDateString()} - ${new Date(event.endDate).toLocaleDateString()}`,
+          type: "calendar" as const,
+          title: `${event.user.profile?.full_name} - ${event.leave_type.name}`,
+          description: `${new Date(event.start_date).toLocaleDateString()} - ${new Date(event.end_date).toLocaleDateString()}`,
           url: `/calendar`,
           metadata: {
-            days: event.days,
-            leaveType: event.leaveType.name,
+            days: event.days_count,
+            leaveType: event.leave_type.name,
           },
         }))
       );
@@ -175,9 +182,9 @@ export async function GET(request: NextRequest) {
       total: sortedResults.length,
     });
   } catch (error) {
-    console.error('Search error:', error);
+    console.error("Search error:", error);
     return NextResponse.json(
-      { error: 'Failed to perform search' },
+      { error: "Failed to perform search" },
       { status: 500 }
     );
   }

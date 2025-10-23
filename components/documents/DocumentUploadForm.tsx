@@ -25,7 +25,7 @@ enum AccessLevel {
   ADMIN = "ADMIN",
   HR = "HR",
 }
-import { DOCUMENT_CATEGORIES, type DocumentCategory } from "@/types/document";
+import { DOCUMENT_CATEGORIES } from "@/types/document";
 
 // Allowed file types and size
 const ALLOWED_FILE_TYPES = [
@@ -55,7 +55,7 @@ const uploadFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title is too long"),
   description: z.string().max(1000, "Description is too long").optional(),
   category: z.string().min(1, "Please select a category"),
-  tags: z.array(z.string()).default([]),
+  tags: z.array(z.string()),
   expiry_date: z.string().optional(),
   access_level: z.nativeEnum(AccessLevel),
 });
@@ -80,6 +80,8 @@ export function DocumentUploadForm({ onCancel }: DocumentUploadFormProps) {
   const form = useForm<UploadFormValues>({
     resolver: zodResolver(uploadFormSchema),
     defaultValues: {
+      title: "",
+      category: "",
       access_level: AccessLevel.PUBLIC,
       tags: [],
     },

@@ -8,6 +8,7 @@
 ## ✅ What's Been Done
 
 ### 1. Prisma Client with Accelerate Extension Created
+
 **File**: `lib/prisma.ts`
 
 ```typescript
@@ -23,9 +24,11 @@ export const prisma = new PrismaClient().$extends(withAccelerate());
 - Production-ready configuration
 
 ### 2. Prisma Schema Updated
+
 **File**: `prisma/schema.prisma`
 
 Added `directUrl` configuration:
+
 ```prisma
 datasource db {
   provider  = "postgresql"
@@ -35,18 +38,22 @@ datasource db {
 ```
 
 ### 3. Environment Template Updated
+
 **File**: `.env.local.example`
 
 Added both required URLs:
+
 - `DATABASE_URL`: Prisma Accelerate connection
 - `DIRECT_URL`: Direct PostgreSQL connection
 
 ### 4. Dependencies Installed
+
 ```bash
 ✅ @prisma/extension-accelerate@1.2.1
 ```
 
 ### 5. Documentation Created
+
 - ✅ `PRISMA_ACCELERATE_SETUP.md` - Complete setup guide
 - ✅ `setup-prisma-accelerate.sh` - Automated setup script
 
@@ -87,6 +94,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 **⚠️ IMPORTANT**: Replace:
+
 - `[YOUR_PASSWORD]` with your Supabase database password
 - `[YOUR_PROJECT]` with your Supabase project ID
 
@@ -134,12 +142,15 @@ If everything is configured correctly, your app should start without database co
 ## 📋 Your Current Setup
 
 ### DATABASE_URL (Accelerate) ✅
+
 You already have this in your `.env.local`:
+
 ```
 prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGci...
 ```
 
 ### DIRECT_URL ❌
+
 **You need to add this** - Get it from Supabase Dashboard
 
 ---
@@ -147,19 +158,25 @@ prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGci...
 ## 🚨 Common Issues & Solutions
 
 ### Issue 1: "directUrl is required"
+
 **Solution**: Add `DIRECT_URL` to `.env.local`
 
 ### Issue 2: "Can't reach database server"
+
 **Solution**:
+
 - Verify `DIRECT_URL` is correct
 - Check Supabase project is active
 - Ensure password has no special characters (URL encode if needed)
 
 ### Issue 3: "Invalid API key"
+
 **Solution**: Regenerate Accelerate API key in Prisma Console
 
 ### Issue 4: Migrations fail
+
 **Solution**:
+
 - Ensure `DIRECT_URL` is correct
 - Check you're using Session mode connection string
 - Verify database user has migration permissions
@@ -169,18 +186,21 @@ prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGci...
 ## 💡 How This Works
 
 ### Runtime Queries (Your App)
+
 ```
 Your App → DATABASE_URL (Accelerate) → Connection Pool → Database
          └─> Fast queries with caching
 ```
 
 ### Migrations
+
 ```
 Prisma Migrate → DIRECT_URL → Direct Database Connection
               └─> Schema changes applied directly
 ```
 
 **Why separate URLs?**
+
 - **Accelerate** is optimized for queries (fast, cached, pooled)
 - **Direct** is needed for schema operations (migrations, introspection)
 
@@ -189,22 +209,26 @@ Prisma Migrate → DIRECT_URL → Direct Database Connection
 ## 🎓 Using Accelerate Features
 
 ### Basic Query (No caching)
+
 ```typescript
 const users = await prisma.user.findMany();
 ```
 
 ### With Caching (Recommended for static data)
+
 ```typescript
 const leaveTypes = await prisma.leaveType.findMany({
   cacheStrategy: {
-    ttl: 300,  // Cache for 5 minutes
-    swr: 60,   // Stale-while-revalidate
+    ttl: 300, // Cache for 5 minutes
+    swr: 60, // Stale-while-revalidate
   },
 });
 ```
 
 ### Performance Monitoring
+
 Check your Prisma Console for:
+
 - Query performance metrics
 - Cache hit rates
 - Connection pool usage

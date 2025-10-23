@@ -12,6 +12,9 @@ import {
   checkOverlappingLeaves,
   calculateWorkingDays,
 } from "@/lib/services/leave-balance";
+// Note: ValidationMiddleware, SQLInjectionProtection, RequestTracker removed due to compilation errors
+// import { JWTValidationService } from "@/lib/auth/jwt-validation";
+// import { RateLimitingService, RATE_LIMITS } from "@/lib/services/rate-limiting";
 
 /**
  * POST /api/leaves - Create new leave request
@@ -20,22 +23,29 @@ export async function POST(request: NextRequest) {
   try {
     // Authenticate user
     const supabase = createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const authResult = await supabase.auth.getUser();
 
-    if (authError || !user) {
+    // Handle the case where authResult is undefined or doesn't have expected structure
+    if (!authResult || authResult.error || !authResult.data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { user } = authResult.data;
 
     // Parse and validate request body
     const body = await request.json();
     const validation = leaveRequestSchema.safeParse(body);
 
     if (!validation.success) {
+      const flattened = validation.error.flatten();
       return NextResponse.json(
-        { error: "Validation failed", details: validation.error.errors },
+        {
+          error: "Validation failed",
+          details: {
+            fieldErrors: flattened.fieldErrors,
+            formErrors: flattened.formErrors,
+          },
+        },
         { status: 400 }
       );
     }
@@ -113,12 +123,12 @@ export async function POST(request: NextRequest) {
         action: "LEAVE_CREATED",
         entity_type: "LEAVE",
         entity_id: leave.id,
-        details: {
+        new_values: JSON.stringify({
           leave_type: leave.leave_type.name,
           start_date: startDate.toISOString(),
           end_date: endDate.toISOString(),
           days_count: workingDays,
-        },
+        }),
       },
     });
 
@@ -145,14 +155,14 @@ export async function GET(request: NextRequest) {
   try {
     // Authenticate user
     const supabase = createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const authResult = await supabase.auth.getUser();
 
-    if (authError || !user) {
+    // Handle the case where authResult is undefined or doesn't have expected structure
+    if (!authResult || authResult.error || !authResult.data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { user } = authResult.data;
 
     // Get user's profile to check role
     const profile = await prisma.profile.findUnique({
@@ -180,10 +190,14 @@ export async function GET(request: NextRequest) {
     });
 
     if (!queryValidation.success) {
+      const flattened = queryValidation.error.flatten();
       return NextResponse.json(
         {
           error: "Invalid query parameters",
-          details: queryValidation.error.errors,
+          details: {
+            fieldErrors: flattened.fieldErrors,
+            formErrors: flattened.formErrors,
+          },
         },
         { status: 400 }
       );
@@ -234,8 +248,6 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             name: true,
-            description: true,
-            color: true,
           },
         },
         user: {

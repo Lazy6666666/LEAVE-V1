@@ -51,11 +51,12 @@ export default function ResetPasswordPage() {
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative">
           <strong className="font-bold">Check your email!</strong>
           <p className="mt-2">
-            We've sent you an email with instructions to reset your password.
+            We&apos;ve sent you an email with instructions to reset your
+            password.
           </p>
           <p className="mt-2 text-sm">
-            If you don't receive it within a few minutes, please check your spam
-            folder.
+            If you don&apos;t receive it within a few minutes, please check your
+            spam folder.
           </p>
         </div>
 
@@ -77,8 +78,8 @@ export default function ResetPasswordPage() {
         Reset your password
       </h2>
       <p className="text-sm text-gray-600 mb-6">
-        Enter your email address and we'll send you instructions to reset your
-        password.
+        Enter your email address and we&apos;ll send you instructions to reset
+        your password.
       </p>
 
       {error && (

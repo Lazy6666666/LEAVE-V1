@@ -46,6 +46,7 @@ export default function DashboardLayout({
 ### 2. That's It!
 
 The NotificationBell component is fully self-contained and will:
+
 - Automatically fetch notifications on mount
 - Subscribe to real-time updates via Supabase
 - Show unread count badge
@@ -62,7 +63,7 @@ Use the notification service helpers:
 import {
   notifyLeaveApproved,
   notifyLeaveRejected,
-  createNotification
+  createNotification,
 } from "@/lib/services/notification";
 
 // Example: Notify when leave is approved
@@ -80,7 +81,7 @@ await createNotification({
   type: "SYSTEM_ANNOUNCEMENT",
   title: "System Maintenance",
   message: "The system will be down for maintenance on Sunday",
-  link: "/announcements" // Optional
+  link: "/announcements", // Optional
 });
 ```
 
@@ -114,15 +115,18 @@ Available notification types (from `lib/types/notification.ts`):
 ## API Endpoints
 
 ### GET /api/notifications
+
 Fetch user's notifications
 
 Query Parameters:
+
 - `limit` (number, default: 10) - Number of notifications to fetch
 - `offset` (number, default: 0) - Pagination offset
 - `unreadOnly` (boolean) - Only fetch unread notifications
 - `type` (NotificationType) - Filter by notification type
 
 Response:
+
 ```json
 {
   "notifications": [...],
@@ -132,9 +136,11 @@ Response:
 ```
 
 ### PATCH /api/notifications/[id]/read
+
 Mark a single notification as read
 
 Response:
+
 ```json
 {
   "message": "Notification marked as read",
@@ -143,9 +149,11 @@ Response:
 ```
 
 ### POST /api/notifications/read-all
+
 Mark all user's notifications as read
 
 Response:
+
 ```json
 {
   "message": "All notifications marked as read",
@@ -206,6 +214,7 @@ Add sound or toast notifications in `NotificationBell.tsx`:
 ### Notifications Not Appearing
 
 1. **Check Supabase RLS Policies**: Ensure users can read their own notifications
+
    ```sql
    -- Example RLS policy
    CREATE POLICY "Users can view own notifications"
@@ -260,6 +269,7 @@ Add sound or toast notifications in `NotificationBell.tsx`:
 ## Support
 
 For issues or questions:
+
 1. Check the troubleshooting section above
 2. Review the Supabase Realtime documentation
 3. Examine the notification_logs table schema

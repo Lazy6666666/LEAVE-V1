@@ -12,14 +12,14 @@ export async function GET(request: NextRequest) {
   try {
     // Authenticate user
     const supabase = createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const authResult = await supabase.auth.getUser();
 
-    if (authError || !user) {
+    // Handle the case where authResult is undefined or doesn't have expected structure
+    if (!authResult || authResult.error || !authResult.data?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { user } = authResult.data;
 
     // Parse query parameters
     const { searchParams } = new URL(request.url);

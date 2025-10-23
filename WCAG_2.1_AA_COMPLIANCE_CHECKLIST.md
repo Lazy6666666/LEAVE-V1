@@ -24,11 +24,12 @@ Information and user interface components must be presentable to users in ways t
 
 Provide text alternatives for any non-text content so that it can be changed into other forms people need, such as large print, braille, speech, symbols or simpler language.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 1.1.1 Non-text Content | A | ⚠️ | All icons marked aria-hidden, need to verify images have alt text |
+| Criterion              | Level | Status | Notes                                                             |
+| ---------------------- | ----- | ------ | ----------------------------------------------------------------- |
+| 1.1.1 Non-text Content | A     | ⚠️     | All icons marked aria-hidden, need to verify images have alt text |
 
 **Implementation**:
+
 ```tsx
 // Decorative icons
 <Bell className="h-8 w-8" aria-hidden="true" />
@@ -43,6 +44,7 @@ Provide text alternatives for any non-text content so that it can be changed int
 ```
 
 **Testing**:
+
 - [ ] All images have appropriate alt text
 - [x] Decorative elements marked aria-hidden
 - [x] Icon-only buttons have aria-label
@@ -53,13 +55,13 @@ Provide text alternatives for any non-text content so that it can be changed int
 
 Provide alternatives for time-based media.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 1.2.1 Audio-only and Video-only | A | N/A | No audio/video content |
-| 1.2.2 Captions | A | N/A | No audio/video content |
-| 1.2.3 Audio Description or Media Alternative | A | N/A | No audio/video content |
-| 1.2.4 Captions (Live) | AA | N/A | No live audio/video |
-| 1.2.5 Audio Description | AA | N/A | No video content |
+| Criterion                                    | Level | Status | Notes                  |
+| -------------------------------------------- | ----- | ------ | ---------------------- |
+| 1.2.1 Audio-only and Video-only              | A     | N/A    | No audio/video content |
+| 1.2.2 Captions                               | A     | N/A    | No audio/video content |
+| 1.2.3 Audio Description or Media Alternative | A     | N/A    | No audio/video content |
+| 1.2.4 Captions (Live)                        | AA    | N/A    | No live audio/video    |
+| 1.2.5 Audio Description                      | AA    | N/A    | No video content       |
 
 ---
 
@@ -67,13 +69,13 @@ Provide alternatives for time-based media.
 
 Create content that can be presented in different ways (for example simpler layout) without losing information or structure.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 1.3.1 Info and Relationships | A | ✅ | Semantic HTML, proper landmarks, ARIA roles |
-| 1.3.2 Meaningful Sequence | A | ✅ | Logical tab order, proper content flow |
-| 1.3.3 Sensory Characteristics | A | ✅ | Instructions don't rely on shape/position alone |
-| 1.3.4 Orientation | AA | ✅ | Responsive design, no orientation lock |
-| 1.3.5 Identify Input Purpose | AA | ⚠️ | Need to add autocomplete attributes to forms |
+| Criterion                     | Level | Status | Notes                                           |
+| ----------------------------- | ----- | ------ | ----------------------------------------------- |
+| 1.3.1 Info and Relationships  | A     | ✅     | Semantic HTML, proper landmarks, ARIA roles     |
+| 1.3.2 Meaningful Sequence     | A     | ✅     | Logical tab order, proper content flow          |
+| 1.3.3 Sensory Characteristics | A     | ✅     | Instructions don't rely on shape/position alone |
+| 1.3.4 Orientation             | AA    | ✅     | Responsive design, no orientation lock          |
+| 1.3.5 Identify Input Purpose  | AA    | ⚠️     | Need to add autocomplete attributes to forms    |
 
 **Implementation Examples**:
 
@@ -98,6 +100,7 @@ Create content that can be presented in different ways (for example simpler layo
 ```
 
 **Testing**:
+
 - [x] Semantic HTML5 elements used
 - [x] Heading hierarchy (h1 → h2 → h3)
 - [x] ARIA landmarks (main, header, nav, section)
@@ -110,37 +113,39 @@ Create content that can be presented in different ways (for example simpler layo
 
 Make it easier for users to see and hear content including separating foreground from background.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 1.4.1 Use of Color | A | ✅ | Information not conveyed by color alone |
-| 1.4.2 Audio Control | A | N/A | No auto-playing audio |
-| 1.4.3 Contrast (Minimum) | AA | ⚠️ | Colors designed for AA, needs testing |
-| 1.4.4 Resize Text | AA | ✅ | Text resizable to 200% without loss |
-| 1.4.5 Images of Text | AA | ✅ | Real text used, not images of text |
-| 1.4.10 Reflow | AA | ✅ | Responsive design, no 2D scrolling |
-| 1.4.11 Non-text Contrast | AA | ⚠️ | UI components designed for 3:1, needs verification |
-| 1.4.12 Text Spacing | AA | ✅ | Line height 1.5, proper spacing |
-| 1.4.13 Content on Hover/Focus | AA | ⚠️ | Tooltips need to be dismissible with Escape |
+| Criterion                     | Level | Status | Notes                                              |
+| ----------------------------- | ----- | ------ | -------------------------------------------------- |
+| 1.4.1 Use of Color            | A     | ✅     | Information not conveyed by color alone            |
+| 1.4.2 Audio Control           | A     | N/A    | No auto-playing audio                              |
+| 1.4.3 Contrast (Minimum)      | AA    | ⚠️     | Colors designed for AA, needs testing              |
+| 1.4.4 Resize Text             | AA    | ✅     | Text resizable to 200% without loss                |
+| 1.4.5 Images of Text          | AA    | ✅     | Real text used, not images of text                 |
+| 1.4.10 Reflow                 | AA    | ✅     | Responsive design, no 2D scrolling                 |
+| 1.4.11 Non-text Contrast      | AA    | ⚠️     | UI components designed for 3:1, needs verification |
+| 1.4.12 Text Spacing           | AA    | ✅     | Line height 1.5, proper spacing                    |
+| 1.4.13 Content on Hover/Focus | AA    | ⚠️     | Tooltips need to be dismissible with Escape        |
 
 **Color Contrast Requirements**:
 
-| Element | Foreground | Background | Ratio Required | Ratio Actual | Status |
-|---------|------------|------------|----------------|--------------|--------|
-| Normal Text | #111827 | #FFFFFF | 4.5:1 | 16.28:1 | ✅ |
-| Primary Button | #FFFFFF | #3B82F6 | 4.5:1 | 4.54:1 | ✅ |
-| Destructive Text | #EF4444 | #FFFFFF | 4.5:1 | 4.51:1 | ✅ |
-| Muted Text | #374151 | #F3F4F6 | 4.5:1 | 10.36:1 | ✅ |
-| Focus Indicator | #3B82F6 | #FFFFFF | 3:1 | 4.54:1 | ✅ |
-| Success Status | #FFFFFF | #16A34A | 4.5:1 | ? | ⚠️ |
-| Warning Status | #1F2937 | #FACC15 | 4.5:1 | ? | ⚠️ |
+| Element          | Foreground | Background | Ratio Required | Ratio Actual | Status |
+| ---------------- | ---------- | ---------- | -------------- | ------------ | ------ |
+| Normal Text      | #111827    | #FFFFFF    | 4.5:1          | 16.28:1      | ✅     |
+| Primary Button   | #FFFFFF    | #3B82F6    | 4.5:1          | 4.54:1       | ✅     |
+| Destructive Text | #EF4444    | #FFFFFF    | 4.5:1          | 4.51:1       | ✅     |
+| Muted Text       | #374151    | #F3F4F6    | 4.5:1          | 10.36:1      | ✅     |
+| Focus Indicator  | #3B82F6    | #FFFFFF    | 3:1            | 4.54:1       | ✅     |
+| Success Status   | #FFFFFF    | #16A34A    | 4.5:1          | ?            | ⚠️     |
+| Warning Status   | #1F2937    | #FACC15    | 4.5:1          | ?            | ⚠️     |
 
 **Testing with WebAIM Contrast Checker**:
+
 1. Go to: https://webaim.org/resources/contrastchecker/
 2. Test each color combination above
 3. Update "Ratio Actual" column
 4. Fix any failures
 
 **Test Cases**:
+
 - [ ] All text meets 4.5:1 ratio (normal text)
 - [ ] Large text (18pt+) meets 3:1 ratio
 - [ ] UI components meet 3:1 ratio
@@ -159,11 +164,11 @@ User interface components and navigation must be operable.
 
 Make all functionality available from a keyboard.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 2.1.1 Keyboard | A | ⚠️ | Most functionality keyboard accessible |
-| 2.1.2 No Keyboard Trap | A | ⚠️ | Needs testing for modals/dialogs |
-| 2.1.4 Character Key Shortcuts | A | N/A | No single-key shortcuts implemented |
+| Criterion                     | Level | Status | Notes                                  |
+| ----------------------------- | ----- | ------ | -------------------------------------- |
+| 2.1.1 Keyboard                | A     | ⚠️     | Most functionality keyboard accessible |
+| 2.1.2 No Keyboard Trap        | A     | ⚠️     | Needs testing for modals/dialogs       |
+| 2.1.4 Character Key Shortcuts | A     | N/A    | No single-key shortcuts implemented    |
 
 **Keyboard Navigation Test Checklist**:
 
@@ -203,10 +208,10 @@ Make all functionality available from a keyboard.
 
 Provide users enough time to read and use content.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 2.2.1 Timing Adjustable | A | N/A | No time limits on user actions |
-| 2.2.2 Pause, Stop, Hide | A | N/A | No auto-updating content |
+| Criterion               | Level | Status | Notes                          |
+| ----------------------- | ----- | ------ | ------------------------------ |
+| 2.2.1 Timing Adjustable | A     | N/A    | No time limits on user actions |
+| 2.2.2 Pause, Stop, Hide | A     | N/A    | No auto-updating content       |
 
 ---
 
@@ -214,9 +219,9 @@ Provide users enough time to read and use content.
 
 Do not design content in a way that is known to cause seizures or physical reactions.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 2.3.1 Three Flashes or Below | A | ✅ | No flashing content |
+| Criterion                    | Level | Status | Notes               |
+| ---------------------------- | ----- | ------ | ------------------- |
+| 2.3.1 Three Flashes or Below | A     | ✅     | No flashing content |
 
 ---
 
@@ -224,17 +229,18 @@ Do not design content in a way that is known to cause seizures or physical react
 
 Provide ways to help users navigate, find content, and determine where they are.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 2.4.1 Bypass Blocks | A | ✅ | Skip to main content link implemented |
-| 2.4.2 Page Titled | A | ✅ | All pages have descriptive titles |
-| 2.4.3 Focus Order | A | ✅ | Logical focus order maintained |
-| 2.4.4 Link Purpose | A | ⚠️ | Most links descriptive, needs audit |
-| 2.4.5 Multiple Ways | AA | ✅ | Navigation menu, search, direct URLs |
-| 2.4.6 Headings and Labels | AA | ✅ | Descriptive headings and labels |
-| 2.4.7 Focus Visible | AA | ✅ | 2px outline on all interactive elements |
+| Criterion                 | Level | Status | Notes                                   |
+| ------------------------- | ----- | ------ | --------------------------------------- |
+| 2.4.1 Bypass Blocks       | A     | ✅     | Skip to main content link implemented   |
+| 2.4.2 Page Titled         | A     | ✅     | All pages have descriptive titles       |
+| 2.4.3 Focus Order         | A     | ✅     | Logical focus order maintained          |
+| 2.4.4 Link Purpose        | A     | ⚠️     | Most links descriptive, needs audit     |
+| 2.4.5 Multiple Ways       | AA    | ✅     | Navigation menu, search, direct URLs    |
+| 2.4.6 Headings and Labels | AA    | ✅     | Descriptive headings and labels         |
+| 2.4.7 Focus Visible       | AA    | ✅     | 2px outline on all interactive elements |
 
 **Focus Indicator Checklist**:
+
 - [x] Visible on all interactive elements
 - [x] 2px solid outline
 - [x] 2px offset for visibility
@@ -248,12 +254,12 @@ Provide ways to help users navigate, find content, and determine where they are.
 
 Make it easier for users to operate functionality through various inputs beyond keyboard.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 2.5.1 Pointer Gestures | A | ⚠️ | Calendar drag/drop may need review |
-| 2.5.2 Pointer Cancellation | A | ✅ | Click events on up event |
-| 2.5.3 Label in Name | A | ✅ | Visible labels match accessible names |
-| 2.5.4 Motion Actuation | A | ✅ | Reduced motion preference supported |
+| Criterion                  | Level | Status | Notes                                 |
+| -------------------------- | ----- | ------ | ------------------------------------- |
+| 2.5.1 Pointer Gestures     | A     | ⚠️     | Calendar drag/drop may need review    |
+| 2.5.2 Pointer Cancellation | A     | ✅     | Click events on up event              |
+| 2.5.3 Label in Name        | A     | ✅     | Visible labels match accessible names |
+| 2.5.4 Motion Actuation     | A     | ✅     | Reduced motion preference supported   |
 
 ---
 
@@ -265,10 +271,10 @@ Information and the operation of user interface must be understandable.
 
 Make text content readable and understandable.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 3.1.1 Language of Page | A | ✅ | `<html lang="en">` set |
-| 3.1.2 Language of Parts | AA | N/A | All content in English |
+| Criterion               | Level | Status | Notes                  |
+| ----------------------- | ----- | ------ | ---------------------- |
+| 3.1.1 Language of Page  | A     | ✅     | `<html lang="en">` set |
+| 3.1.2 Language of Parts | AA    | N/A    | All content in English |
 
 ---
 
@@ -276,12 +282,12 @@ Make text content readable and understandable.
 
 Make Web pages appear and operate in predictable ways.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 3.2.1 On Focus | A | ✅ | No unexpected context changes on focus |
-| 3.2.2 On Input | A | ✅ | No unexpected context changes on input |
-| 3.2.3 Consistent Navigation | AA | ✅ | Same navigation on all pages |
-| 3.2.4 Consistent Identification | AA | ✅ | Consistent icons and labels |
+| Criterion                       | Level | Status | Notes                                  |
+| ------------------------------- | ----- | ------ | -------------------------------------- |
+| 3.2.1 On Focus                  | A     | ✅     | No unexpected context changes on focus |
+| 3.2.2 On Input                  | A     | ✅     | No unexpected context changes on input |
+| 3.2.3 Consistent Navigation     | AA    | ✅     | Same navigation on all pages           |
+| 3.2.4 Consistent Identification | AA    | ✅     | Consistent icons and labels            |
 
 ---
 
@@ -289,19 +295,19 @@ Make Web pages appear and operate in predictable ways.
 
 Help users avoid and correct mistakes.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 3.3.1 Error Identification | A | ⚠️ | Error messages present, needs testing |
-| 3.3.2 Labels or Instructions | A | ✅ | All form fields have labels |
-| 3.3.3 Error Suggestion | AA | ⚠️ | Error messages suggest corrections |
-| 3.3.4 Error Prevention | AA | ❌ | Need confirmation for destructive actions |
+| Criterion                    | Level | Status | Notes                                     |
+| ---------------------------- | ----- | ------ | ----------------------------------------- |
+| 3.3.1 Error Identification   | A     | ⚠️     | Error messages present, needs testing     |
+| 3.3.2 Labels or Instructions | A     | ✅     | All form fields have labels               |
+| 3.3.3 Error Suggestion       | AA    | ⚠️     | Error messages suggest corrections        |
+| 3.3.4 Error Prevention       | AA    | ❌     | Need confirmation for destructive actions |
 
 **Form Accessibility Checklist**:
 
 1. **Labels**
    - [ ] Every input has a label (visible or sr-only)
    - [ ] Labels associated with inputs (htmlFor/id)
-   - [ ] Required fields marked with * and aria-required
+   - [ ] Required fields marked with \* and aria-required
    - [ ] Optional fields clearly marked
 
 2. **Error Handling**
@@ -375,11 +381,11 @@ Content must be robust enough that it can be interpreted reliably by a wide vari
 
 Maximize compatibility with current and future user agents, including assistive technologies.
 
-| Criterion | Level | Status | Notes |
-|-----------|-------|--------|-------|
-| 4.1.1 Parsing | A | ✅ | Valid HTML, no duplicate IDs |
-| 4.1.2 Name, Role, Value | A | ✅ | Proper ARIA, semantic HTML |
-| 4.1.3 Status Messages | AA | ✅ | aria-live regions for dynamic updates |
+| Criterion               | Level | Status | Notes                                 |
+| ----------------------- | ----- | ------ | ------------------------------------- |
+| 4.1.1 Parsing           | A     | ✅     | Valid HTML, no duplicate IDs          |
+| 4.1.2 Name, Role, Value | A     | ✅     | Proper ARIA, semantic HTML            |
+| 4.1.3 Status Messages   | AA    | ✅     | aria-live regions for dynamic updates |
 
 **ARIA Implementation Checklist**:
 
@@ -419,6 +425,7 @@ Maximize compatibility with current and future user agents, including assistive 
 #### 1. Lighthouse Accessibility Audit
 
 **Steps**:
+
 1. Open Chrome DevTools (F12)
 2. Click "Lighthouse" tab
 3. Select "Accessibility" category only
@@ -428,6 +435,7 @@ Maximize compatibility with current and future user agents, including assistive 
 **Target Score**: ≥90 (Aim for 95-100)
 
 **Common Issues to Fix**:
+
 - Missing alt text
 - Low color contrast
 - Missing form labels
@@ -437,6 +445,7 @@ Maximize compatibility with current and future user agents, including assistive 
 #### 2. axe DevTools Extension
 
 **Steps**:
+
 1. Install: [axe DevTools](https://www.deque.com/axe/devtools/)
 2. Open DevTools
 3. Click "axe DevTools" tab
@@ -446,6 +455,7 @@ Maximize compatibility with current and future user agents, including assistive 
 **Target**: 0 violations
 
 **Priority Levels**:
+
 - Critical: Must fix
 - Serious: Should fix
 - Moderate: Consider fixing
@@ -454,12 +464,14 @@ Maximize compatibility with current and future user agents, including assistive 
 #### 3. WAVE Browser Extension
 
 **Steps**:
+
 1. Install: [WAVE](https://wave.webaim.org/extension/)
 2. Click WAVE icon in browser toolbar
 3. Review errors and alerts
 4. Check contrast tab
 
 **What to Check**:
+
 - Errors (red): Must fix
 - Alerts (yellow): Review carefully
 - Contrast errors: Must fix
@@ -472,11 +484,13 @@ Maximize compatibility with current and future user agents, including assistive 
 #### Keyboard Navigation Test
 
 **Steps**:
+
 1. Close all mouse/trackpad
 2. Use only keyboard
 3. Complete these tasks:
 
 **Test Tasks**:
+
 - [ ] Navigate to login page using Tab
 - [ ] Use skip link (press Tab once)
 - [ ] Navigate through main menu
@@ -488,6 +502,7 @@ Maximize compatibility with current and future user agents, including assistive 
 - [ ] Open and close modals/dialogs
 
 **Keys to Test**:
+
 - Tab: Move forward
 - Shift+Tab: Move backward
 - Enter: Activate links/buttons
@@ -496,6 +511,7 @@ Maximize compatibility with current and future user agents, including assistive 
 - Arrow keys: Navigate within components
 
 **Success Criteria**:
+
 - All tasks completable with keyboard only
 - Focus visible at all times
 - No keyboard traps
@@ -531,6 +547,7 @@ Maximize compatibility with current and future user agents, including assistive 
    - Tab: Next interactive element
 
 **Test Checklist**:
+
 - [ ] Page title announced
 - [ ] Heading hierarchy makes sense
 - [ ] All text content read
@@ -588,13 +605,13 @@ Maximize compatibility with current and future user agents, including assistive 
 
 ### Current Status
 
-| Category | Total Criteria | Completed | Partial | Not Started | Compliance % |
-|----------|----------------|-----------|---------|-------------|--------------|
-| Perceivable | 13 | 8 | 5 | 0 | 62% |
-| Operable | 13 | 8 | 4 | 1 | 62% |
-| Understandable | 8 | 6 | 2 | 0 | 75% |
-| Robust | 3 | 3 | 0 | 0 | 100% |
-| **Total** | **37** | **25** | **11** | **1** | **68%** |
+| Category       | Total Criteria | Completed | Partial | Not Started | Compliance % |
+| -------------- | -------------- | --------- | ------- | ----------- | ------------ |
+| Perceivable    | 13             | 8         | 5       | 0           | 62%          |
+| Operable       | 13             | 8         | 4       | 1           | 62%          |
+| Understandable | 8              | 6         | 2       | 0           | 75%          |
+| Robust         | 3              | 3         | 0       | 0           | 100%         |
+| **Total**      | **37**         | **25**    | **11**  | **1**       | **68%**      |
 
 ### Priority Fixes Needed
 
@@ -621,24 +638,24 @@ Maximize compatibility with current and future user agents, including assistive 
 
 ### Testing Completed By
 
-| Test Type | Tester Name | Date | Result | Notes |
-|-----------|-------------|------|--------|-------|
-| Automated (Lighthouse) | - | - | - | Score: /100 |
-| Automated (axe DevTools) | - | - | - | Violations: |
-| Keyboard Navigation | - | - | - | All pages tested |
-| Screen Reader (NVDA) | - | - | - | Major flows tested |
-| Screen Reader (VoiceOver) | - | - | - | Major flows tested |
-| Color Contrast | - | - | - | All combinations |
-| Zoom Test | - | - | - | 200% zoom |
-| Mobile Test | - | - | - | Touch targets |
+| Test Type                 | Tester Name | Date | Result | Notes              |
+| ------------------------- | ----------- | ---- | ------ | ------------------ |
+| Automated (Lighthouse)    | -           | -    | -      | Score: /100        |
+| Automated (axe DevTools)  | -           | -    | -      | Violations:        |
+| Keyboard Navigation       | -           | -    | -      | All pages tested   |
+| Screen Reader (NVDA)      | -           | -    | -      | Major flows tested |
+| Screen Reader (VoiceOver) | -           | -    | -      | Major flows tested |
+| Color Contrast            | -           | -    | -      | All combinations   |
+| Zoom Test                 | -           | -    | -      | 200% zoom          |
+| Mobile Test               | -           | -    | -      | Touch targets      |
 
 ### Approval
 
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| Accessibility Lead | - | - | - |
-| QA Manager | - | - | - |
-| Project Manager | - | - | - |
+| Role               | Name | Signature | Date |
+| ------------------ | ---- | --------- | ---- |
+| Accessibility Lead | -    | -         | -    |
+| QA Manager         | -    | -         | -    |
+| Project Manager    | -    | -         | -    |
 
 ---
 

@@ -16,7 +16,7 @@ import { logDocumentAccess } from "@/lib/services/document-audit";
  * Returns a signed URL for downloading the document
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

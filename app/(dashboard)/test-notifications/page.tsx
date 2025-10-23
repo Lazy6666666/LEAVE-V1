@@ -36,12 +36,11 @@ const notificationTypes: NotificationType[] = [
 ];
 
 export default function TestNotificationsPage() {
-  const [selectedType, setSelectedType] =
-    useState<NotificationType>("SYSTEM_ANNOUNCEMENT");
-  const [title, setTitle] = useState("Test Notification");
-  const [message, setMessage] = useState(
-    "This is a test notification message"
+  const [selectedType, setSelectedType] = useState<NotificationType>(
+    "SYSTEM_ANNOUNCEMENT"
   );
+  const [title, setTitle] = useState("Test Notification");
+  const [message, setMessage] = useState("This is a test notification message");
   const [link, setLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
@@ -71,7 +70,8 @@ export default function TestNotificationsPage() {
 
       setResult({
         type: "success",
-        message: "Notification created successfully! Check the bell icon above.",
+        message:
+          "Notification created successfully! Check the bell icon above.",
       });
 
       // Reset form
@@ -123,7 +123,7 @@ export default function TestNotificationsPage() {
     },
   ];
 
-  const runQuickTest = async (test: typeof quickTests[0]) => {
+  const runQuickTest = async (test: (typeof quickTests)[0]) => {
     setSelectedType(test.type);
     setTitle(test.title);
     setMessage(test.message);

@@ -1,0 +1,529 @@
+# Test Contracts - Leave Management System
+
+**Purpose**: Define test requirements and coverage contracts for QA implementation
+
+## Unit Test Contracts
+
+### Service Layer Tests
+
+#### leave-balance.service.test.ts
+```typescript
+describe('Leave Balance Service', () => {
+  // Contract: Calculate leave balance accurately
+  it('should calculate available balance correctly', () => {
+    // Given: User with 20 allocated, 5 used, 2 pending
+    // When: Calculate balance
+    // Then: Available = 20 - 5 - 2 = 13
+  })
+
+  // Contract: Validate sufficient balance before request
+  it('should validate sufficient balance for new request', () => {
+    // Given: User with 10 available days
+    // When: Requesting 5 days
+    // Then: Should approve
+    // When: Requesting 15 days
+    // Then: Should reject with insufficient balance error
+  })
+
+  // Contract: Handle carry-over correctly
+  it('should calculate carry-over from previous year', () => {
+    // Given: Previous year balance with carry-over
+    // When: Calculating new year balance
+    // Then: Should include carry-over up to policy limits
+  })
+})
+```
+
+#### notification.service.test.ts
+```typescript
+describe('Notification Service', () => {
+  // Contract: Create notification for leave events
+  it('should create notification when leave is submitted', () => {
+    // Given: New leave submitted
+    // When: Processing event
+    // Then: Should create LEAVE_SUBMITTED notification for manager
+  })
+
+  // Contract: Batch notifications
+  it('should send batch notifications for multiple recipients', () => {
+    // Given: System announcement
+    // When: Sending to all users
+    // Then: Should create notifications for each user
+  })
+})
+```
+
+#### conflict-detection.service.test.ts
+```typescript
+describe('Conflict Detection Service', () => {
+  // Contract: Detect overlapping leave
+  it('should detect overlapping leave requests', () => {
+    // Given: Existing approved leave
+    // When: New request overlaps
+    // Then: Should return conflict
+  })
+
+  // Contract: Check team coverage
+  it('should warn about insufficient team coverage', () => {
+    // Given: Multiple team members on leave
+    // When: Below minimum coverage threshold
+    // Then: Should return coverage warning
+  })
+})
+```
+
+### Component Tests
+
+#### LeaveRequestForm.test.tsx
+```typescript
+describe('LeaveRequestForm', () => {
+  // Contract: Form validation
+  it('should validate required fields', async () => {
+    // Given: Empty form
+    // When: Submitting
+    // Then: Should show validation errors
+  })
+
+  // Contract: Date range validation
+  it('should prevent end date before start date', () => {
+    // Given: Invalid date range
+    // When: Selecting dates
+    // Then: Should show error
+  })
+
+  // Contract: Attachment upload
+  it('should handle file upload within limits', async () => {
+    // Given: Valid file < 10MB
+    // When: Uploading
+    // Then: Should accept file
+    // Given: File > 10MB
+    // When: Uploading
+    // Then: Should reject with size error
+  })
+})
+```
+
+## Integration Test Contracts
+
+### API Endpoint Tests
+
+#### /api/leaves.test.ts
+```typescript
+describe('/api/leaves', () => {
+  // Contract: Authentication required
+  it('should require authentication', async () => {
+    // Given: No auth token
+    // When: GET /api/leaves
+    // Then: Should return 401
+  })
+
+  // Contract: Role-based access
+  it('should return user\'s own leaves for employee', async () => {
+    // Given: Employee role
+    // When: GET /api/leaves
+    // Then: Should only return user's leaves
+  })
+
+  // Contract: Manager sees team leaves
+  it('should return team leaves for manager', async () => {
+    // Given: Manager role
+    // When: GET /api/leaves
+    // Then: Should return team's leaves
+  })
+})
+```
+
+#### /api/leaves/{id}/approve.test.ts
+```typescript
+describe('/api/leaves/{id}/approve', () => {
+  // Contract: Only managers can approve
+  it('should allow manager to approve leave', async () => {
+    // Given: Manager role and pending leave
+    // When: POST /api/leaves/{id}/approve
+    // Then: Should approve and update balance
+  })
+
+  // Contract: Cannot approve own leave
+  it('should prevent approving own leave', async () => {
+    // Given: User trying to approve own leave
+    // When: POST /api/leaves/{id}/approve
+    // Then: Should return 403
+  })
+})
+```
+
+### Database Integration Tests
+
+#### leave-balance.integration.test.ts
+```typescript
+describe('Leave Balance Integration', () => {
+  // Contract: Transactional updates
+  it('should update balance atomically on approval', async () => {
+    // Given: Approved leave
+    // When: Updating balance
+    // Then: Should update used_days and available_days atomically
+  })
+
+  // Contract: Rollback on error
+  it('should rollback on balance update failure', async () => {
+    // Given: Simulated database error
+    // When: Updating balance
+    // Then: Should rollback all changes
+  })
+})
+```
+
+## E2E Test Contracts
+
+### User Journey Tests
+
+#### employee-leave-journey.spec.ts
+```typescript
+describe('Employee Leave Journey', () => {
+  // Contract: Complete leave request flow
+  it('should submit leave request successfully', async ({ page }) => {
+    // Given: Logged in employee
+    // When: Complete leave request form
+    // Then: Should see success message and pending status
+  })
+
+  // Contract: View leave balance
+  it('should display accurate leave balance', async ({ page }) => {
+    // Given: Employee with balance
+    // When: Viewing dashboard
+    // Then: Should see correct available days
+  })
+
+  // Contract: Cancel own leave
+  it('should allow cancelling pending leave', async ({ page }) => {
+    // Given: Pending leave request
+    // When: Canceling request
+    // Then: Should cancel and show updated status
+  })
+})
+```
+
+#### manager-approval-journey.spec.ts
+```typescript
+describe('Manager Approval Journey', () => {
+  // Contract: Review and approve
+  it('should review and approve team leave', async ({ page }) => {
+    // Given: Manager with pending requests
+    // When: Approving request
+    // Then: Should update status and notify employee
+  })
+
+  // Contract: View team calendar
+  it('should display team calendar with conflicts', async ({ page }) => {
+    // Given: Multiple team leave
+    // When: Viewing calendar
+    // Then: Should show conflicts clearly
+  })
+})
+```
+
+### Accessibility Tests
+
+#### accessibility.spec.ts
+```typescript
+describe('Accessibility Compliance', () => {
+  // Contract: WCAG 2.1 AA compliance
+  it('should pass axe-core accessibility checks', async ({ page }) => {
+    // Given: Any page
+    // When: Running axe checks
+    // Then: Should have no violations
+  })
+
+  // Contract: Keyboard navigation
+  it('should be fully navigable by keyboard', async ({ page }) => {
+    // Given: Page loaded
+    // When: Tabbing through elements
+    // Then: All interactive elements reachable
+  })
+
+  // Contract: Screen reader compatibility
+  it('should have proper ARIA labels', async ({ page }) => {
+    // Given: Forms and buttons
+    // When: Checking with screen reader
+    // Then: All elements have descriptive labels
+  })
+})
+```
+
+## Performance Test Contracts
+
+### Load Tests
+
+#### api-load.test.ts
+```typescript
+describe('API Load Testing', () => {
+  // Contract: Handle concurrent users
+  it('should handle 500 concurrent users', async () => {
+    // Given: 500 concurrent requests
+    // When: Making requests
+    // Then: 95% should complete within 2 seconds
+  })
+
+  // Contract: Database performance
+  it('should maintain query performance under load', async () => {
+    // Given: Heavy query load
+    // When: Executing queries
+    // Then: Average response time < 100ms
+  })
+})
+```
+
+### Frontend Performance
+
+#### bundle-size.test.ts
+```typescript
+describe('Bundle Size Limits', () => {
+  // Contract: Initial bundle size
+  it('should keep initial bundle under 1MB', () => {
+    // Given: Production build
+    // When: Analyzing bundle
+    // Then: Initial load < 1MB gzipped
+  })
+
+  // Contract: Component lazy loading
+  it('should lazy load heavy components', () => {
+    // Given: Calendar component
+    // When: Loading page
+    // Then: Should not include calendar in initial bundle
+  })
+})
+```
+
+## Security Test Contracts
+
+### Authentication Tests
+
+#### auth-security.test.ts
+```typescript
+describe('Authentication Security', () => {
+  // Contract: JWT token validation
+  it('should reject expired tokens', async () => {
+    // Given: Expired JWT
+    // When: Making API call
+    // Then: Should return 401
+  })
+
+  // Contract: Role enforcement
+  it('should enforce role-based access', async () => {
+    // Given: Employee role
+    // When: Accessing admin endpoint
+    // Then: Should return 403
+  })
+
+  // Contract: Rate limiting
+  it('should limit login attempts', async () => {
+    // Given: Multiple failed attempts
+    // When: Exceeding limit
+    // Then: Should lock account temporarily
+  })
+})
+```
+
+### Data Protection Tests
+
+#### data-protection.test.ts
+```typescript
+describe('Data Protection', () => {
+  // Contract: RLS enforcement
+  it('should enforce row level security', async () => {
+    // Given: User trying to access other's data
+    // When: Querying directly
+    // Then: Should return empty result
+  })
+
+  // Contract: SQL injection prevention
+  it('should prevent SQL injection', async () => {
+    // Given: Malicious input
+    // When: Submitting in forms
+    // Then: Should be safely escaped
+  })
+})
+```
+
+## Coverage Requirements
+
+### Minimum Coverage Thresholds
+
+```yaml
+coverage:
+  statements: 80
+  branches: 80
+  functions: 80
+  lines: 80
+  exclude:
+    - "**/*.test.ts"
+    - "**/*.test.tsx"
+    - "**/*.config.ts"
+    - "**/*.spec.ts"
+    - "migrations/**"
+```
+
+### Critical Path Coverage
+
+```yaml
+critical_paths:
+  - Authentication flow: 100%
+  - Leave request submission: 100%
+  - Leave approval process: 100%
+  - Balance calculations: 100%
+  - Notification delivery: 90%
+  - Document access control: 100%
+```
+
+## Test Data Requirements
+
+### Test Factories
+
+```typescript
+// Factory for creating test data
+export const testFactories = {
+  user: (overrides = {}) => ({
+    id: faker.datatype.uuid(),
+    email: faker.internet.email(),
+    role: 'EMPLOYEE',
+    ...overrides
+  }),
+
+  leaveRequest: (overrides = {}) => ({
+    id: faker.datatype.uuid(),
+    startDate: faker.date.future(),
+    endDate: faker.date.future(),
+    status: 'PENDING',
+    ...overrides
+  }),
+
+  document: (overrides = {}) => ({
+    id: faker.datatype.uuid(),
+    title: faker.lorem.words(),
+    category: 'HR',
+    accessLevel: 'MANAGER',
+    ...overrides
+  })
+}
+```
+
+### Seed Data Sets
+
+```typescript
+// Consistent test data across all tests
+export const seedData = {
+  leaveTypes: [
+    { name: 'Annual Leave', defaultDays: 20, requiresApproval: true },
+    { name: 'Sick Leave', defaultDays: 10, requiresApproval: false },
+    { name: 'Personal Leave', defaultDays: 5, requiresApproval: true }
+  ],
+
+  users: {
+    employee: { email: 'employee@test.com', role: 'EMPLOYEE' },
+    manager: { email: 'manager@test.com', role: 'MANAGER' },
+    hr: { email: 'hr@test.com', role: 'HR' },
+    admin: { email: 'admin@test.com', role: 'ADMIN' }
+  }
+}
+```
+
+## Test Environment Requirements
+
+### Database Isolation
+
+```typescript
+// Each test suite gets isolated database
+export const testDatabaseConfig = {
+  schema: 'test_schema_' + process.env.TEST_RUN_ID,
+  resetStrategy: 'drop_and_recreate',
+  seedData: 'minimal',
+  cleanup: 'always'
+}
+```
+
+### Mock Configuration
+
+```typescript
+// Consistent mocks across tests
+export const mockConfig = {
+  supabase: {
+    enabled: true,
+    responses: 'realistic',
+    latency: { min: 10, max: 100 }
+  },
+
+  externalApis: {
+    email: 'mock',
+    storage: 'local',
+    notifications: 'mock'
+  }
+}
+```
+
+## Continuous Integration
+
+### Pre-commit Hooks
+
+```yaml
+pre-commit:
+  - run: npm run type-check
+  - run: npm run lint
+  - run: npm run test:unit
+  - run: npm run test:coverage -- --threshold 80
+
+pre-push:
+  - run: npm run test:integration
+  - run: npm run test:e2e -- --project=chrome
+```
+
+### CI Pipeline
+
+```yaml
+ci_pipeline:
+  stage_test:
+    - unit_tests
+    - integration_tests
+    - type_check
+    - lint_check
+    - coverage_check
+
+  stage_e2e:
+    - e2e_tests_all_browsers
+    - accessibility_tests
+    - performance_tests
+
+  stage_security:
+    - security_scan
+    - dependency_audit
+    - vulnerability_check
+```
+
+## Test Execution Requirements
+
+### Parallel Execution
+
+```typescript
+// Test runner configuration
+export const testRunnerConfig = {
+  maxWorkers: '50%',
+  testTimeout: 10000,
+  hookTimeout: 10000,
+  isolate: true,
+  shuffle: true,
+  reporter: ['verbose', 'json', 'junit']
+}
+```
+
+### Test Reporting
+
+```typescript
+// Comprehensive test reporting
+export const reportingConfig = {
+  formats: ['html', 'json', 'junit', 'lcov'],
+  destination: './test-results',
+  includePassed: true,
+  includeFailed: true,
+  includeSkipped: false,
+  coverageReports: ['text', 'html', 'lcov', 'json']
+}
+```

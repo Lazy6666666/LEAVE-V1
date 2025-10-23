@@ -87,13 +87,8 @@ export async function getExpiringDocuments(daysAhead: number = 30) {
         lte: futureDate,
       },
     },
-    include: {
-      uploader: {
-        include: {
-          profile: true,
-        },
-      },
-    },
+    // Note: uploader relation doesn't exist in schema, using uploaded_by field instead
+    // Could join with User/Profile if needed via separate query
     orderBy: {
       expiry_date: "asc",
     },
@@ -112,13 +107,8 @@ export async function getExpiredDocuments() {
         lt: now,
       },
     },
-    include: {
-      uploader: {
-        include: {
-          profile: true,
-        },
-      },
-    },
+    // Note: uploader relation doesn't exist in schema, using uploaded_by field instead
+    // Could join with User/Profile if needed via separate query
     orderBy: {
       expiry_date: "desc",
     },
@@ -147,13 +137,8 @@ export async function getDocumentsByExpiryStatus(
         not: null,
       },
     },
-    include: {
-      uploader: {
-        include: {
-          profile: true,
-        },
-      },
-    },
+    // Note: uploader relation doesn't exist in schema, using uploaded_by field instead
+    // Could join with User/Profile if needed via separate query
     orderBy: {
       expiry_date: "asc",
     },
@@ -171,13 +156,6 @@ export async function sendExpiryNotification(
     // Get document details
     const document = await prisma.companyDocument.findUnique({
       where: { id: documentId },
-      include: {
-        uploader: {
-          include: {
-            profile: true,
-          },
-        },
-      },
     });
 
     if (!document) return;
