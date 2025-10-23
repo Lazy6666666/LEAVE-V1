@@ -1,290 +1,162 @@
 /**
  * Leave Management API Routes
- * T-011: Leave Request Submission and Listing
+ * Refactored with clean architecture and separation of concerns
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { createSuccessResponse, createErrorResponse, APIErrors, withAPIMiddleware } from "@/lib/api";
+import { LeaveRepository } from "@/lib/repositories/leave-repository";
 import { leaveRequestSchema, leaveQuerySchema } from "@/lib/validations/leave";
 import {
   validateLeaveRequest,
   checkOverlappingLeaves,
   calculateWorkingDays,
 } from "@/lib/services/leave-balance";
-// Note: ValidationMiddleware, SQLInjectionProtection, RequestTracker removed due to compilation errors
-// import { JWTValidationService } from "@/lib/auth/jwt-validation";
-// import { RateLimitingService, RATE_LIMITS } from "@/lib/services/rate-limiting";
+
+// Initialize repository
+const leaveRepository = new LeaveRepository();
+
+/**
+ * GET /api/leaves - List leaves with filtering
+ */
+async function GET(request: NextRequest) {
+  try {
+    // Authenticate user
+    const supabase = createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      throw APIErrors.unauthorized();
+    }
+
+    // Parse query parameters
+    const { searchParams } = new URL(request.url);
+    const queryOptions = {
+      limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined,
+      offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : undefined,
+      userId: searchParams.get('userId') || undefined,
+      status: searchParams.get('status') as any || undefined,
+      leaveTypeId: searchParams.get('leaveTypeId') || undefined,
+      startDate: searchParams.get('startDate') ? new Date(searchParams.get('startDate')!) : undefined,
+      endDate: searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : undefined,
+      includeUser: searchParams.get('includeUser') === 'true',
+      includeLeaveType: searchParams.get('includeLeaveType') === 'true',
+    };
+
+    // Validate query options
+    const validation = leaveQuerySchema.safeParse(queryOptions);
+    if (!validation.success) {
+      throw APIErrors.validationError('Invalid query parameters', validation.error.flatten());
+    }
+
+    // Check permissions - users can only see their own leaves unless they're managers/admins
+    if (queryOptions.userId && queryOptions.userId !== user.id) {
+      // TODO: Check if user is manager/admin
+      // For now, only allow users to see their own leaves
+      queryOptions.userId = user.id;
+    } else if (!queryOptions.userId) {
+      queryOptions.userId = user.id;
+    }
+
+    // Fetch leaves
+    const [leaves, total] = await Promise.all([
+      leaveRepository.findMany(queryOptions),
+      leaveRepository.count(queryOptions),
+    ]);
+
+    return createSuccessResponse(leaves, {
+      pagination: {
+        total,
+        limit: queryOptions.limit,
+        page: queryOptions.offset && queryOptions.limit
+          ? Math.floor(queryOptions.offset / queryOptions.limit) + 1
+          : 1,
+        totalPages: queryOptions.limit
+          ? Math.ceil(total / queryOptions.limit)
+          : 1,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
 
 /**
  * POST /api/leaves - Create new leave request
  */
-export async function POST(request: NextRequest) {
+async function POST(request: NextRequest) {
   try {
     // Authenticate user
     const supabase = createClient();
-    const authResult = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    // Handle the case where authResult is undefined or doesn't have expected structure
-    if (!authResult || authResult.error || !authResult.data?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (authError || !user) {
+      throw APIErrors.unauthorized();
     }
-
-    const { user } = authResult.data;
 
     // Parse and validate request body
     const body = await request.json();
     const validation = leaveRequestSchema.safeParse(body);
 
     if (!validation.success) {
-      const flattened = validation.error.flatten();
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: {
-            fieldErrors: flattened.fieldErrors,
-            formErrors: flattened.formErrors,
-          },
-        },
-        { status: 400 }
-      );
+      throw APIErrors.validationError('Validation failed', validation.error.flatten());
     }
 
-    const data = validation.data;
-    const startDate = new Date(data.start_date);
-    const endDate = new Date(data.end_date);
+    const leaveData = validation.data;
 
-    // Recalculate working days (server-side validation)
-    const workingDays = calculateWorkingDays(startDate, endDate);
+    // Set the user ID from authenticated user
+    leaveData.userId = user.id;
+
+    // Validate leave request
+    const validationResult = await validateLeaveRequest(leaveData);
+    if (!validationResult.isValid) {
+      throw APIErrors.validationError(validationResult.error || 'Validation failed');
+    }
 
     // Check for overlapping leaves
-    const hasOverlap = await checkOverlappingLeaves(
-      user.id,
-      startDate,
-      endDate
+    const overlappingLeaves = await checkOverlappingLeaves(
+      leaveData.userId,
+      new Date(leaveData.startDate),
+      new Date(leaveData.endDate)
     );
 
-    if (hasOverlap) {
-      return NextResponse.json(
-        { error: "You have overlapping leave requests for these dates" },
-        { status: 409 }
-      );
+    if (overlappingLeaves.length > 0) {
+      throw APIErrors.leaveConflict('Leave dates conflict with existing leave requests');
     }
 
-    // Validate leave balance
-    const balanceValidation = await validateLeaveRequest(
-      user.id,
-      data.leave_type_id,
-      workingDays,
-      startDate.getFullYear()
+    // Calculate working days
+    const workingDays = calculateWorkingDays(
+      new Date(leaveData.startDate),
+      new Date(leaveData.endDate)
     );
 
-    if (!balanceValidation.isValid) {
-      return NextResponse.json(
-        {
-          error: balanceValidation.message,
-          availableBalance: balanceValidation.availableBalance,
-        },
-        { status: 400 }
-      );
-    }
-
-    // Create leave request
-    const leave = await prisma.leave.create({
-      data: {
-        user_id: user.id,
-        leave_type_id: data.leave_type_id,
-        start_date: startDate,
-        end_date: endDate,
-        days_count: workingDays,
-        reason: data.reason || null,
-        status: "PENDING",
-      },
-      include: {
-        leave_type: true,
-      },
+    // Create the leave request
+    const leave = await leaveRepository.create({
+      ...leaveData,
+      startDate: new Date(leaveData.startDate),
+      endDate: new Date(leaveData.endDate),
     });
 
-    // Create notification (to be implemented with notification system)
-    await prisma.notificationLog.create({
-      data: {
-        user_id: user.id,
-        type: "LEAVE_CREATED",
-        title: "Leave Request Submitted",
-        message: `Your leave request for ${workingDays} days has been submitted`,
-        read: false,
-      },
-    });
-
-    // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        user_id: user.id,
-        action: "LEAVE_CREATED",
-        entity_type: "LEAVE",
-        entity_id: leave.id,
-        new_values: JSON.stringify({
-          leave_type: leave.leave_type.name,
-          start_date: startDate.toISOString(),
-          end_date: endDate.toISOString(),
-          days_count: workingDays,
-        }),
-      },
-    });
-
-    return NextResponse.json(
-      {
-        message: "Leave request created successfully",
-        leave,
-      },
-      { status: 201 }
+    // Update leave balance
+    await leaveRepository.updateBalance(
+      leave.userId,
+      leave.leaveTypeId,
+      new Date().getFullYear(),
+      workingDays
     );
+
+    // TODO: Send notification to manager
+    // await notificationService.notifyManager(leave);
+
+    return createSuccessResponse(leave, {
+      message: 'Leave request created successfully',
+    });
   } catch (error) {
-    console.error("Error creating leave request:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    throw error;
   }
 }
 
-/**
- * GET /api/leaves - Get user's leave requests
- */
-export async function GET(request: NextRequest) {
-  try {
-    // Authenticate user
-    const supabase = createClient();
-    const authResult = await supabase.auth.getUser();
-
-    // Handle the case where authResult is undefined or doesn't have expected structure
-    if (!authResult || authResult.error || !authResult.data?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { user } = authResult.data;
-
-    // Get user's profile to check role
-    const profile = await prisma.profile.findUnique({
-      where: { user_id: user.id },
-    });
-
-    if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
-    }
-
-    // Parse query parameters
-    const { searchParams } = new URL(request.url);
-    const queryValidation = leaveQuerySchema.safeParse({
-      status: searchParams.get("status"),
-      start_date: searchParams.get("start_date"),
-      end_date: searchParams.get("end_date"),
-      leave_type_id: searchParams.get("leave_type_id"),
-      user_id: searchParams.get("user_id"),
-      limit: searchParams.get("limit")
-        ? parseInt(searchParams.get("limit")!)
-        : undefined,
-      offset: searchParams.get("offset")
-        ? parseInt(searchParams.get("offset")!)
-        : undefined,
-    });
-
-    if (!queryValidation.success) {
-      const flattened = queryValidation.error.flatten();
-      return NextResponse.json(
-        {
-          error: "Invalid query parameters",
-          details: {
-            fieldErrors: flattened.fieldErrors,
-            formErrors: flattened.formErrors,
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    const query = queryValidation.data;
-
-    // Build where clause based on role
-    const where: any = {};
-
-    // Employees can only see their own leaves
-    // Managers can see team leaves (implement manager_id logic later)
-    // HR and Admin can see all leaves
-    if (profile.role === "EMPLOYEE") {
-      where.user_id = user.id;
-    } else if (profile.role === "MANAGER") {
-      // For now, managers see all (TODO: implement team filtering)
-      // where.user_id = { in: teamMemberIds };
-    }
-    // HR and ADMIN see all
-
-    // Apply filters
-    if (query.status) {
-      where.status = query.status;
-    }
-
-    if (query.leave_type_id) {
-      where.leave_type_id = query.leave_type_id;
-    }
-
-    if (query.user_id && ["HR", "ADMIN", "MANAGER"].includes(profile.role)) {
-      where.user_id = query.user_id;
-    }
-
-    if (query.start_date) {
-      where.start_date = { gte: new Date(query.start_date) };
-    }
-
-    if (query.end_date) {
-      where.end_date = { lte: new Date(query.end_date) };
-    }
-
-    // Fetch leaves with optimized select
-    const leaves = await prisma.leave.findMany({
-      where,
-      include: {
-        leave_type: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            email: true,
-            profile: {
-              select: {
-                full_name: true,
-                avatar_url: true,
-                department: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        created_at: "desc",
-      },
-      take: query.limit,
-      skip: query.offset,
-    });
-
-    // Get total count
-    const total = await prisma.leave.count({ where });
-
-    return NextResponse.json({
-      leaves,
-      total,
-      limit: query.limit,
-      offset: query.offset,
-    });
-  } catch (error) {
-    console.error("Error fetching leaves:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
+// Apply middleware to handlers
+export const GET = withAPIMiddleware(GET);
+export const POST = withAPIMiddleware(POST);
