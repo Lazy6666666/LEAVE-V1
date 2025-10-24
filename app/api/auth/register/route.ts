@@ -5,13 +5,15 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import {
   ValidationMiddleware,
   SQLInjectionProtection,
   RequestTracker,
 } from "@/lib/middleware/validation-middleware";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 // Registration schema
 const registrationSchema = z.object({
@@ -45,6 +47,9 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-validated-body") || "{}"
     );
     const { userId, fullName, department, email } = validatedBody;
+
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
 
     // Additional security check for SQL injection
     if (
