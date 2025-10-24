@@ -5,7 +5,6 @@
  * Handles all database operations related to leaves.
  */
 
-import { prisma } from "@/lib/prisma";
 import { Leave } from "@prisma/client";
 import {
   ILeaveRepository,
@@ -21,6 +20,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Create a new leave request
    */
   async create(data: LeaveCreateData): Promise<Leave> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     // Calculate days count
     const startDate = new Date(data.startDate);
     const endDate = new Date(data.endDate);
@@ -63,6 +65,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Find a leave by ID
    */
   async findById(id: string): Promise<Leave | null> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     return await prisma.leave.findUnique({
       where: { id },
       include: {
@@ -89,6 +94,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Update a leave request
    */
   async update(id: string, data: LeaveUpdateData): Promise<Leave> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const updateData: any = {};
 
     if (data.status !== undefined) {
@@ -128,6 +136,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Delete a leave request
    */
   async delete(id: string): Promise<void> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     await prisma.leave.delete({
       where: { id },
     });
@@ -137,6 +148,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Find multiple leaves based on query options
    */
   async findMany(options: LeaveQueryOptions): Promise<Leave[]> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const where: any = {};
 
     if (options.userId) where.user_id = options.userId;
@@ -184,6 +198,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Count leaves based on query options
    */
   async count(options: LeaveQueryOptions): Promise<number> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const where: any = {};
 
     if (options.userId) where.user_id = options.userId;
@@ -207,6 +224,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Find pending leaves for a manager
    */
   async findPendingForManager(managerId: string): Promise<Leave[]> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     // Get team members for this manager
     const teamMembers = await prisma.profile.findMany({
       where: { manager_id: managerId },
@@ -245,6 +265,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Find leaves for a specific user in a year
    */
   async findByUser(userId: string, year: number): Promise<Leave[]> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const startDate = new Date(year, 0, 1);
     const endDate = new Date(year, 11, 31);
 
@@ -271,6 +294,9 @@ export class LeaveRepository implements ILeaveRepository {
    * Check for conflicting leave dates
    */
   async findConflicts(conflict: ConflictCheck): Promise<Leave[]> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const where: any = {
       user_id: conflict.userId,
       status: { in: ["PENDING", "APPROVED"] },
@@ -305,6 +331,9 @@ export class LeaveRepository implements ILeaveRepository {
     leaveTypeId: string,
     year: number
   ): Promise<LeaveBalance | null> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const balance = await prisma.leaveBalance.findUnique({
       where: {
         user_id_leave_type_id_year: {
@@ -336,6 +365,9 @@ export class LeaveRepository implements ILeaveRepository {
     year: number,
     days: number
   ): Promise<LeaveBalance> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     // Ensure the balance record exists
     await prisma.leaveBalance.upsert({
       where: {
@@ -397,6 +429,9 @@ export class LeaveRepository implements ILeaveRepository {
     approved: number;
     rejected: number;
   }> {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const where = userId ? { user_id: userId } : {};
 
     const [total, pending, approved, rejected] = await Promise.all([
