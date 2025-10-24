@@ -1,7 +1,6 @@
 // Calendar service for fetching and formatting calendar events
 // Enhanced with performance optimizations and caching
 
-import prisma, { readOnlyPrisma } from "@/lib/prisma";
 import {
   CalendarEvent,
   CalendarFilters,
@@ -35,6 +34,9 @@ function generateCacheKey(filters: CalendarFilters): string {
 export async function getCalendarEvents(
   filters: CalendarFilters
 ): Promise<CalendarEvent[]> {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Generate cache key
   const cacheKey = generateCacheKey(filters);
 
@@ -84,7 +86,8 @@ export async function getCalendarEvents(
   }
 
   // Use read replica for dashboard queries if available
-  const client = readOnlyPrisma || prisma;
+  // For now, just use the main prisma client
+  const client = prisma;
 
   // Fetch leaves with optimized query to prevent N+1 problems
   const leaves = await client.leave.findMany({
@@ -170,6 +173,9 @@ export function formatEventForCalendar(leave: any): CalendarEvent {
  * Get team members for filter dropdown with caching
  */
 export async function getTeamMembers(userId?: string) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   const where: any = {};
 
   // If userId provided, filter by department
