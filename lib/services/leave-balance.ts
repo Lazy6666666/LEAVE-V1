@@ -158,6 +158,9 @@ export async function checkOverlappingLeaves(
   excludeLeaveId?: string
 ): Promise<boolean> {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const overlapping = await prisma.leave.findFirst({
       where: {
         user_id: userId,

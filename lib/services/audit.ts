@@ -13,6 +13,9 @@ interface AuditLogParams {
  * Create an audit log entry
  */
 export async function createAuditLog({
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   userId,
   action,
   entityType,
@@ -57,6 +60,9 @@ export async function auditLeaveSubmitted(
   leaveId: string,
   leaveData: Record<string, any>
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "LEAVE_SUBMITTED",
@@ -80,6 +86,9 @@ export async function auditLeaveApproved(
   leaveId: string,
   _leaveData: Record<string, any>
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "LEAVE_APPROVED",
@@ -101,6 +110,9 @@ export async function auditLeaveRejected(
   leaveId: string,
   reason?: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "LEAVE_REJECTED",
@@ -123,6 +135,9 @@ export async function auditLeaveCancelled(
   leaveId: string,
   previousStatus: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "LEAVE_CANCELLED",
@@ -148,6 +163,9 @@ export async function auditRoleChanged(
   oldRole: string,
   newRole: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "ROLE_ASSIGNED",
@@ -172,6 +190,9 @@ export async function auditDocumentUploaded(
   documentId: string,
   documentData: Record<string, any>
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "DOCUMENT_UPLOADED",
@@ -196,6 +217,9 @@ export async function auditDocumentAccessed(
   documentId: string,
   action: "VIEWED" | "DOWNLOADED" = "VIEWED"
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "DOCUMENT_ACCESSED",
@@ -216,6 +240,9 @@ export async function auditDocumentDeleted(
   documentId: string,
   documentTitle: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: "DOCUMENT_DELETED",
@@ -238,6 +265,9 @@ export async function auditLoginAttempt(
   ipAddress?: string,
   userAgent?: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return createAuditLog({
     userId,
     action: success ? "LOGIN_SUCCESS" : "LOGIN_FAILED",
@@ -262,6 +292,9 @@ export async function getAuditLogs(
   entityId: string,
   limit = 50
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   try {
     // Import Prisma dynamically
     const { prisma } = await import("@/lib/prisma");
@@ -304,6 +337,9 @@ export async function getUserAuditLogs(
   limit = 100,
   offset = 0
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   try {
     // Import Prisma dynamically
     const { prisma } = await import("@/lib/prisma");
