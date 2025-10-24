@@ -5,7 +5,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
 import { auditLoginAttempt } from "@/lib/services/audit";
 
 export async function POST(request: NextRequest) {
