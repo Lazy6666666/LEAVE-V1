@@ -4,7 +4,6 @@
  * Helper functions for creating notifications
  */
 
-import { prisma } from "@/lib/prisma";
 import { NotificationType } from "@/lib/types/notification";
 
 interface CreateNotificationParams {
@@ -25,6 +24,9 @@ export async function createNotification({
   message,
   link,
 }: CreateNotificationParams) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   try {
     const notification = await prisma.notificationLog.create({
       data: {
@@ -54,6 +56,9 @@ export async function notifyLeaveRequestCreated(
   leaveDays: number,
   leaveType: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Get managers (for now, notify all HR and Admins)
   // TODO: Implement proper manager hierarchy
   const managers = await prisma.profile.findMany({
@@ -87,6 +92,9 @@ export async function notifyLeaveApproved(
   leaveType: string,
   approverName: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   await createNotification({
     userId: employeeId,
     type: "LEAVE_APPROVED",
@@ -107,6 +115,9 @@ export async function notifyLeaveRejected(
   approverName: string,
   reason?: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   await createNotification({
     userId: employeeId,
     type: "LEAVE_REJECTED",
@@ -126,6 +137,9 @@ export async function notifyLeaveCancelled(
   leaveDays: number,
   leaveType: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Get managers
   const managers = await prisma.profile.findMany({
     where: {
@@ -156,6 +170,9 @@ export async function notifyDocumentExpiring(
   documentId: string,
   daysUntilExpiry: number
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Notify all HR and Admins
   const admins = await prisma.profile.findMany({
     where: {
@@ -187,6 +204,9 @@ export async function notifyDocumentUploaded(
   uploadedBy: string,
   accessLevel: string
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Notify based on access level
   let whereClause: any = {};
 

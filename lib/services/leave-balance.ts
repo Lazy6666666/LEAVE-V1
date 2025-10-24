@@ -3,8 +3,6 @@
  * T-010: Leave Balance Management
  */
 
-import { prisma } from "@/lib/prisma";
-
 export interface LeaveBalance {
   leaveTypeId: string;
   leaveTypeName: string;

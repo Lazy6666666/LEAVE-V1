@@ -42,6 +42,9 @@ export async function getDocumentAccessHistory(
   documentId: string,
   limit: number = 50
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return await prisma.auditLog.findMany({
     where: {
       entity_type: "DOCUMENT",
@@ -61,6 +64,9 @@ export async function getUserDocumentAccessHistory(
   userId: string,
   limit: number = 50
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   return await prisma.auditLog.findMany({
     where: {
       user_id: userId,
@@ -77,6 +83,9 @@ export async function getUserDocumentAccessHistory(
  * Get recent access denied attempts (security monitoring)
  */
 export async function getAccessDeniedAttempts(hours: number = 24) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   const since = new Date(Date.now() - hours * 60 * 60 * 1000);
 
   return await prisma.auditLog.findMany({

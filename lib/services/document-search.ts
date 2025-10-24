@@ -170,6 +170,9 @@ export async function getPopularSearches(
  * Get available filter options (for UI)
  */
 export async function getFilterOptions(_userId: string) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Get distinct categories
   const categories = await prisma.companyDocument.findMany({
     select: { category: true },
@@ -214,6 +217,9 @@ export async function getFilterOptions(_userId: string) {
  * Get document statistics (for dashboard)
  */
 export async function getDocumentStatistics() {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   const now = new Date();
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 30);

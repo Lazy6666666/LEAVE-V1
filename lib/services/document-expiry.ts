@@ -75,6 +75,9 @@ export function getExpiryStatus(expiryDate: Date | null): DocumentExpiryStatus {
  * Get documents expiring within specified days
  */
 export async function getExpiringDocuments(daysAhead: number = 30) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   const now = new Date();
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + daysAhead);
@@ -98,6 +101,9 @@ export async function getExpiringDocuments(daysAhead: number = 30) {
  * Get expired documents
  */
 export async function getExpiredDocuments() {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   const now = new Date();
 
   return await prisma.companyDocument.findMany({
@@ -121,6 +127,9 @@ export async function getDocumentsByExpiryStatus(
   status: "expiring" | "expired" | "all",
   daysAhead: number = 30
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   if (status === "expired") {
     return await getExpiredDocuments();
   }

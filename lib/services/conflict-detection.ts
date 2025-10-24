@@ -1,6 +1,5 @@
 // Conflict detection service for leave requests
 
-import prisma from "@/lib/prisma";
 import { ConflictDetection, ConflictDetail } from "@/types/calendar";
 
 /**
@@ -13,6 +12,9 @@ export async function detectConflicts(
   endDate: string,
   department?: string
 ): Promise<ConflictDetection> {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   // Get conflict threshold from settings (default: 2)
   const threshold = await getConflictThreshold();
 
@@ -124,6 +126,9 @@ export async function detectConflicts(
  */
 export async function getConflictThreshold(): Promise<number> {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const setting = await prisma.companySettings.findUnique({
       where: { key: "conflict_threshold" },
     });
