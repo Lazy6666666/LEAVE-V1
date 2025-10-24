@@ -5,7 +5,6 @@
  * Handles advanced search and filtering for documents
  */
 
-import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { DocumentSearchParams, DocumentSearchResult } from "@/types/document";
 import { canAccessDocument } from "./document-access";
@@ -17,6 +16,9 @@ export async function searchDocuments(
   userId: string,
   params: DocumentSearchParams
 ): Promise<DocumentSearchResult> {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   const {
     query,
     categories,
