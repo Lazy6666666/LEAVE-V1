@@ -211,7 +211,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center" suppressHydrationWarning> bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden" suppressHydrationWarning>
       {/* Background decoration */}
       <div className="background-decoration">
         <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
@@ -496,8 +496,9 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+      </div>
 
-      
+
     </div>
   );
 }

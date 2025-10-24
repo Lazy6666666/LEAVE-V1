@@ -183,7 +183,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-6" suppressHydrationWarning> relative content-layer">
+    <div className="space-y-6 relative content-layer" suppressHydrationWarning>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
