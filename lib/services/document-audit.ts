@@ -5,7 +5,6 @@
  * Logs all document access events for security audit trail
  */
 
-import { prisma } from "@/lib/prisma";
 import { DocumentAuditAction } from "@/types/document";
 
 /**
@@ -18,6 +17,9 @@ export async function logDocumentAccess(
   metadata?: Record<string, any>
 ): Promise<void> {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     await prisma.auditLog.create({
       data: {
         user_id: userId,

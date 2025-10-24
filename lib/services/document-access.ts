@@ -5,7 +5,6 @@
  * Handles all document access control logic
  */
 
-import { prisma } from "@/lib/prisma";
 import { Role, AccessLevel } from "@prisma/client";
 import { DocumentAccessCheck } from "@/types/document";
 import { logDocumentAccess } from "./document-audit";
@@ -18,6 +17,9 @@ export async function canAccessDocument(
   documentId: string
 ): Promise<boolean> {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     // Get user profile
     const profile = await prisma.profile.findUnique({
       where: { user_id: userId },
