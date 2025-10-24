@@ -6,7 +6,9 @@ const filesToFix = [
   'app/api/documents/[id]/route.ts',
   'app/api/leaves/[id]/approve/route.ts',
   'app/api/leaves/[id]/cancel/route.ts',
-  'app/api/leaves/[id]/reject/route.ts'
+  'app/api/leaves/[id]/reject/route.ts',
+  'app/api/notifications/[id]/read/route.ts',
+  'app/api/notifications/read-all/route.ts'
 ];
 
 console.log('🔧 Fixing syntax errors in API routes...\n');
