@@ -1,5 +1,3 @@
-import { prisma } from "@/lib/prisma";
-
 interface AuditLogParams {
   userId: string;
   action: string;
@@ -25,6 +23,9 @@ export async function createAuditLog({
   userAgent,
 }: AuditLogParams) {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const auditLog = await prisma.auditLog.create({
       data: {
         user_id: userId,
@@ -262,6 +263,9 @@ export async function getAuditLogs(
   limit = 50
 ) {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const logs = await prisma.auditLog.findMany({
       where: {
         entity_type: entityType,
@@ -301,6 +305,9 @@ export async function getUserAuditLogs(
   offset = 0
 ) {
   try {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
     const logs = await prisma.auditLog.findMany({
       where: {
         user_id: userId,
