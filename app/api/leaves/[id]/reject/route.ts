@@ -5,13 +5,18 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
 import { leaveRejectionSchema } from "@/lib/validations/leave";
 import { auditLeaveRejected } from "@/lib/services/audit";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
 ) {
   try {
     // Authenticate user

@@ -7,7 +7,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
 import {
   getExpiringDocuments,
   getExpiredDocuments,
@@ -20,7 +19,13 @@ import {
  *  - status: "expiring" | "expired" | "all"
  *  - days: number (for expiring status, default 30)
  */
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
   try {
     const supabase = createClient();
     const {

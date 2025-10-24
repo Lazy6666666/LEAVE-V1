@@ -9,7 +9,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
 import {
   canAccessDocument,
   canEditDocument,
@@ -20,9 +19,15 @@ import { logDocumentAccess } from "@/lib/services/document-audit";
 /**
  * GET /api/documents/[id] - Get single document with access check
  */
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
 ) {
   try {
     const supabase = createClient();

@@ -5,12 +5,16 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
-
 /**
  * GET /api/leave-types - Get all active leave types
  */
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
   try {
     // Authenticate user
     const supabase = createClient();

@@ -2,14 +2,19 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import prisma from "@/lib/prisma";
 import {
   ConflictDetection,
   ConflictCheckRequest,
   ConflictDetail,
 } from "@/types/calendar";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
   try {
     // Get authenticated user
     const supabase = await createClient();

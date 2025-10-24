@@ -6,9 +6,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export async function POST(_request: NextRequest) {
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
+
   try {
     // Authenticate user
     const supabase = createClient();
