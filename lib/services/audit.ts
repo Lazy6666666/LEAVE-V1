@@ -13,9 +13,6 @@ interface AuditLogParams {
  * Create an audit log entry
  */
 export async function createAuditLog({
-  // Import Prisma dynamically
-  const { prisma } = await import("@/lib/prisma");
-
   userId,
   action,
   entityType,

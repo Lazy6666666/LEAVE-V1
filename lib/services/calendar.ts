@@ -176,9 +176,6 @@ export async function getTeamMembers(userId?: string) {
   // Import Prisma dynamically
   const { prisma } = await import("@/lib/prisma");
 
-  // Import Prisma dynamically
-  const { prisma } = await import("@/lib/prisma");
-
   const where: any = {};
 
   // If userId provided, filter by department
