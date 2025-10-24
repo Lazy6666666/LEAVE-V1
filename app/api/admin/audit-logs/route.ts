@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { auditLoginAttempt } from "@/lib/services/audit";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // Authenticate user
@@ -19,6 +22,9 @@ export async function POST(request: NextRequest) {
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Import Prisma dynamically
+    const { prisma } = await import("@/lib/prisma");
 
     // Check if user has admin role
     const profile = await prisma.profile.findUnique({
