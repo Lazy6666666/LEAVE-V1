@@ -13,13 +13,15 @@ export interface MFAEnrollmentData {
 }
 
 export class MFAService {
-  private supabase = createClient();
+  private getSupabase() {
+    return createClient();
+  }
 
   /**
    * Enroll a new TOTP (Time-based One-Time Password) factor
    */
   async enrollTOTP(factorName: string): Promise<MFAEnrollmentData> {
-    const { data, error } = await this.supabase.auth.mfa.enroll({
+    const { data, error } = await this.getSupabase().auth.mfa.enroll({
       factorType: "totp",
       friendlyName: factorName,
     });
@@ -46,12 +48,12 @@ export class MFAService {
    * Verify and activate a TOTP factor
    */
   async verifyTOTPChallenge(factorId: string, code: string) {
-    const challengeResult = await this.supabase.auth.mfa.challenge({
+    const challengeResult = await this.getSupabase().auth.mfa.challenge({
       factorId,
     });
     if (challengeResult.error) throw challengeResult.error;
 
-    const { data, error } = await this.supabase.auth.mfa.verify({
+    const { data, error } = await this.getSupabase().auth.mfa.verify({
       factorId,
       challengeId: challengeResult.data?.id || "",
       code,
@@ -65,7 +67,7 @@ export class MFAService {
    * Challenge a TOTP factor
    */
   async challengeTOTP(factorId: string) {
-    const { data, error } = await this.supabase.auth.mfa.challenge({
+    const { data, error } = await this.getSupabase().auth.mfa.challenge({
       factorId,
     });
 
@@ -77,7 +79,7 @@ export class MFAService {
    * List all MFA factors for the current user
    */
   async listFactors() {
-    const { data, error } = await this.supabase.auth.mfa.listFactors();
+    const { data, error } = await this.getSupabase().auth.mfa.listFactors();
 
     if (error) throw error;
     return data;
@@ -87,7 +89,7 @@ export class MFAService {
    * Unenroll (remove) an MFA factor
    */
   async unenrollFactor(factorId: string) {
-    const { data, error } = await this.supabase.auth.mfa.unenroll({
+    const { data, error } = await this.getSupabase().auth.mfa.unenroll({
       factorId,
     });
 
@@ -100,7 +102,7 @@ export class MFAService {
    */
   async getAAL() {
     const { data, error } =
-      await this.supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      await this.getSupabase().auth.mfa.getAuthenticatorAssuranceLevel();
 
     if (error) throw error;
     return data;
