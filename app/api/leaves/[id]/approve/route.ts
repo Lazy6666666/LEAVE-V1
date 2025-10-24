@@ -12,12 +12,12 @@ import { auditLeaveApproved } from "@/lib/services/audit";
 export const dynamic = 'force-dynamic';
 
 export async function POST(
-  request: NextRequest,
+    request: NextRequest,
   { params }: { params: { id: string } }
-    // Import Prisma dynamically
-    const { prisma } = await import("@/lib/prisma");
-
+    
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
   try {
     // Authenticate user
     const supabase = createClient();

@@ -20,10 +20,10 @@ export const dynamic = 'force-dynamic';
 export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
-    // Import Prisma dynamically
-    const { prisma } = await import("@/lib/prisma");
-
 ) {
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
+
   try {
     const supabase = createClient();
     const {
