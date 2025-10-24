@@ -62,7 +62,7 @@ export default function DashboardPage() {
       type: "Personal Leave",
       used: 1,
       total: 5,
-      color: "bg-purple-500",
+      color: "bg-indigo-500",
       icon: UserCheck,
     },
     {
@@ -183,7 +183,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" suppressHydrationWarning> relative content-layer">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

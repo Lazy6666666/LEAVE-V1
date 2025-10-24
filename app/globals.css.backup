@@ -308,68 +308,11 @@ a:hover {
       padding: 0 2rem;
     }
   }
-
-  /* Z-index management for proper layering */
-  .background-decoration {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
   }
 
-  .content-layer {
-    position: relative;
-    z-index: 10;
-  }
 
-  .card-layer {
-    position: relative;
-    z-index: 20;
-  }
 
-  .overlay-layer {
-    position: relative;
-    z-index: 30;
-  }
 
-  .modal-layer {
-    position: relative;
-    z-index: 40;
-  }
-
-  .notification-layer {
-    position: relative;
-    z-index: 50;
-  }
-
-  /* Prevent content overflow */
-  .overflow-hidden {
-    overflow: hidden;
-  }
-
-  .overflow-visible {
-    overflow: visible;
-  }
-
-  .overflow-scroll {
-    overflow: scroll;
-  }
-
-  /* Fix absolute positioning issues */
-  .absolute-container {
-    position: relative;
-  }
-
-  .absolute-element {
-    position: absolute;
-  }
-
-  /* Fix spacing and prevent collapses */
-  .spacing-fix {
-    clear: both;
-    display: block;
-    content: "";
-  }
 
   /* Form input styling */
   .form-input {
@@ -432,6 +375,68 @@ a:hover {
       transform: rotate(360deg);
     }
   }
+
+  /* Z-index management for proper layering */
+  .background-decoration {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .content-layer {
+    position: relative;
+    z-index: 10;
+  }
+
+  .card-layer {
+    position: relative;
+    z-index: 20;
+  }
+
+  .overlay-layer {
+    position: relative;
+    z-index: 30;
+  }
+
+  .modal-layer {
+    position: relative;
+    z-index: 40;
+  }
+
+  .notification-layer {
+    position: relative;
+    z-index: 50;
+  }
+
+  /* Prevent content overflow */
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .overflow-visible {
+    overflow: visible;
+  }
+
+  .overflow-scroll {
+    overflow: scroll;
+  }
+
+  /* Fix absolute positioning issues */
+  .absolute-container {
+    position: relative;
+  }
+
+  .absolute-element {
+    position: absolute;
+  }
+
+  /* Fix spacing and prevent collapses */
+  .spacing-fix {
+    clear: both;
+    display: block;
+    content: "";
+  }
 }
 
 /* =================================================================
@@ -449,6 +454,14 @@ a:hover {
 
   h2 {
     font-size: var(--font-size-2xl);
+  }
+
+  .flex-container {
+    flex-direction: column;
+  }
+
+  .grid-responsive {
+    grid-template-columns: 1fr;
   }
 }
 

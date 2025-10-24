@@ -165,7 +165,7 @@ export default function CalendarPage() {
       case "Sick Leave":
         return "text-green-600 bg-green-50";
       case "Personal Leave":
-        return "text-purple-600 bg-purple-50";
+        return "text-blue-600 bg-blue-50";
       case "Maternity/Paternity":
         return "text-pink-600 bg-pink-50";
       case "Study Leave":

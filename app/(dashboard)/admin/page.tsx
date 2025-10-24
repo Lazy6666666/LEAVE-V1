@@ -106,7 +106,7 @@ export default function AdminDashboard() {
       description: "Update system configuration",
       icon: Settings,
       href: "/admin/settings",
-      color: "bg-purple-500",
+      color: "bg-blue-500",
     },
     {
       title: "View Audit Logs",

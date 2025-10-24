@@ -24,7 +24,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-white text-container" suppressHydrationWarning>
       {/* Navigation */}
       <nav className="border-b border-border/50 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -55,9 +55,8 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-purple-50/50"></div>
-        <div className="container mx-auto relative">
+      <section className="hero-bg relative overflow-hidden py-20 px-4">
+        <div className="container mx-auto relative content-layer">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors badge-glow">
               <Zap className="w-3 h-3 mr-1" />
@@ -68,12 +67,12 @@ export default function Home() {
               <br />
               for Modern Teams
             </h1>
-            <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed text-container">
               Transform how your team manages time off. Request, approve, and
               track leave with our intuitive platform designed for the modern
               workplace.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex-container gap-4 justify-center mb-12">
               <Link href="/register">
                 <Button
                   size="lg"

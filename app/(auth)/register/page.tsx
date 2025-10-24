@@ -139,17 +139,24 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden" suppressHydrationWarning>
+      {/* Background decoration */}
+      <div className="background-decoration">
+        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="content-layer relative w-full max-w-lg mx-auto">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-green-400/20 to-teal-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-emerald-400/20 to-cyan-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative w-full max-w-lg">
         {/* Logo and branding */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-600 rounded-2xl shadow-xl mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl mb-4 feature-icon">
             <UserPlus className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -158,7 +165,7 @@ export default function RegisterPage() {
           <p className="text-gray-600">Join the leave management system</p>
         </div>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+        <Card className="card-layer shadow-xl border-0 bg-white/90 backdrop-blur-sm card-hover">
           <CardHeader className="space-y-1 pb-4">
             <CardTitle className="text-2xl font-bold text-center">
               Sign Up
@@ -189,7 +196,7 @@ export default function RegisterPage() {
                     placeholder="John"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="h-11"
+                    className="form-input"
                     disabled={isLoading}
                   />
                   {errors.firstName && (
@@ -208,7 +215,7 @@ export default function RegisterPage() {
                     placeholder="Doe"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="h-11"
+                    className="form-input"
                     disabled={isLoading}
                   />
                   {errors.lastName && (
@@ -232,7 +239,7 @@ export default function RegisterPage() {
                   placeholder="john.doe@company.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="h-11"
+                  className="form-input"
                   disabled={isLoading}
                 />
                 {errors.email && (
@@ -252,7 +259,7 @@ export default function RegisterPage() {
                     value={formData.role}
                     onChange={handleInputChange}
                     disabled={isLoading}
-                    className="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="form-input"
                   >
                     <option value="">Select role</option>
                     <option value="EMPLOYEE">Employee</option>
@@ -275,7 +282,7 @@ export default function RegisterPage() {
                     value={formData.department}
                     onChange={handleInputChange}
                     disabled={isLoading}
-                    className="flex h-11 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="form-input"
                   >
                     <option value="">Select department</option>
                     <option value="engineering">Engineering</option>
@@ -307,7 +314,7 @@ export default function RegisterPage() {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="h-11 pr-10"
+                    className="form-input pr-10"
                     disabled={isLoading}
                   />
                   <Button
@@ -345,7 +352,7 @@ export default function RegisterPage() {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="h-11 pr-10"
+                    className="form-input pr-10"
                     disabled={isLoading}
                   />
                   <Button
@@ -404,7 +411,7 @@ export default function RegisterPage() {
             <CardFooter className="space-y-4">
               <Button
                 type="submit"
-                className="w-full h-11 text-base font-medium"
+                className="w-full h-12 text-base font-medium btn-hover-primary"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -434,11 +441,11 @@ export default function RegisterPage() {
         </Card>
 
         {/* Password requirements */}
-        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm font-medium text-amber-800 mb-2">
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg relative z-10">
+          <p className="text-sm font-medium text-blue-800 mb-2">
             Password Requirements:
           </p>
-          <ul className="text-xs text-amber-700 space-y-1">
+          <ul className="text-xs text-blue-700 space-y-1">
             <li>• At least 8 characters long</li>
             <li>• Contains uppercase and lowercase letters</li>
             <li>• Contains at least one number</li>

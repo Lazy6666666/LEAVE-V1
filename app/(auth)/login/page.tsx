@@ -211,13 +211,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 p-4 relative overflow-hidden">
-      {/* Enhanced background with animated gradient */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-pink-600/10 animate-pulse" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full filter blur-3xl animate-blob" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-500/20 rounded-full filter blur-3xl animate-blob animation-delay-4000" />
+    <div className="min-h-screen flex items-center justify-center" suppressHydrationWarning> bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="background-decoration">
+        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="content-layer relative w-full max-w-6xl mx-auto">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
       </div>
 
       {/* Skip link for accessibility */}
@@ -226,23 +231,23 @@ export default function LoginPage() {
       </a>
 
       <div className="relative w-full max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 items-center relative z-10">
           {/* Left side - Welcome Section */}
           <div className="text-center lg:text-left space-y-8">
             {/* Logo and branding */}
             <div className="space-y-4">
               <div className="inline-flex items-center justify-center lg:justify-start gap-3">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl flex items-center justify-center">
                   <Shield className="w-8 h-8 text-white" />
                 </div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-white">
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
                   Leave Management
                 </h1>
               </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-gradient mb-4">
+              <h2 className="text-4xl lg:text-5xl font-bold text-gradient-primary mb-4">
                 Welcome Back
               </h2>
-              <p className="text-xl text-gray-300 max-w-lg">
+              <p className="text-xl text-gray-600 max-w-lg">
                 Secure access to your leave management dashboard with
                 enterprise-grade protection.
               </p>
@@ -260,26 +265,26 @@ export default function LoginPage() {
 
             {/* Features */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 max-w-md lg:max-w-none mx-auto lg:mx-0">
-              <div className="flex items-center gap-3 text-gray-300">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-blue-400" />
+              <div className="flex items-center gap-3 text-gray-600">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
                   <p className="font-semibold text-white">
                     Secure Authentication
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-gray-500">
                     Enterprise-grade security
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-gray-300">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-purple-400" />
+              <div className="flex items-center gap-3 text-gray-600">
+                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-indigo-600" />
                 </div>
                 <div>
                   <p className="font-semibold text-white">Smart Dashboard</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-gray-500">
                     Intuitive leave management
                   </p>
                 </div>
@@ -289,15 +294,15 @@ export default function LoginPage() {
 
           {/* Right side - Login Form */}
           <div className="max-w-md w-full mx-auto lg:mx-0">
-            <Card className="glass-card-enhanced p-8 relative overflow-hidden">
+            <Card className="card-layer shadow-xl border-0 bg-white/90 backdrop-blur-sm card-hover p-8 relative overflow-hidden">
               {/* Gradient accent */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
 
               <CardHeader className="space-y-2 pb-6">
-                <CardTitle className="text-2xl font-bold text-center text-white">
+                <CardTitle className="text-2xl font-bold text-center text-gray-900">
                   Sign In
                 </CardTitle>
-                <CardDescription className="text-center text-gray-300">
+                <CardDescription className="text-center text-gray-600">
                   Enter your credentials to access your account
                 </CardDescription>
               </CardHeader>
@@ -317,7 +322,7 @@ export default function LoginPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="email"
-                      className="text-sm font-medium text-gray-200 flex items-center gap-2"
+                      className="text-sm font-medium text-gray-700 flex items-center gap-2"
                     >
                       <Mail className="w-4 h-4" />
                       Email Address
@@ -345,7 +350,7 @@ export default function LoginPage() {
                     {errors.email && (
                       <p
                         id="email-error"
-                        className="text-sm text-red-400 flex items-center gap-1"
+                        className="text-sm text-red-600 flex items-center gap-1"
                         role="alert"
                       >
                         {errors.email}
@@ -357,7 +362,7 @@ export default function LoginPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="password"
-                      className="text-sm font-medium text-gray-200 flex items-center gap-2"
+                      className="text-sm font-medium text-gray-700 flex items-center gap-2"
                     >
                       <Shield className="w-4 h-4" />
                       Password
@@ -404,7 +409,7 @@ export default function LoginPage() {
                     {errors.password && (
                       <p
                         id="password-error"
-                        className="text-sm text-red-400 flex items-center gap-1"
+                        className="text-sm text-red-600 flex items-center gap-1"
                         role="alert"
                       >
                         {errors.password}
@@ -429,7 +434,7 @@ export default function LoginPage() {
                       />
                       <Label
                         htmlFor="remember"
-                        className="text-sm font-normal text-gray-300 cursor-pointer"
+                        className="text-sm font-normal text-gray-700 cursor-pointer"
                       >
                         Remember me
                       </Label>
@@ -446,7 +451,7 @@ export default function LoginPage() {
                 <CardFooter className="space-y-4 pt-0">
                   <Button
                     type="submit"
-                    className="btn-primary w-full h-12 text-base font-semibold relative group"
+                    className="w-full h-12 text-base font-medium btn-hover-primary"
                     disabled={isLoading}
                     aria-describedby={isLoading ? "loading-status" : undefined}
                   >
@@ -482,9 +487,9 @@ export default function LoginPage() {
             </Card>
 
             {/* Demo credentials */}
-            <div className="mt-6 p-4 glass-card text-center">
-              <p className="text-sm text-gray-300">
-                <strong className="text-white">Demo Account:</strong> Use any
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+              <p className="text-sm text-blue-700">
+                <strong className="text-gray-900">Demo Account:</strong> Use any
                 email and password (min. 6 characters) to access the dashboard
               </p>
             </div>
@@ -492,32 +497,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Blob animation styles */}
-      <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
+      
     </div>
   );
 }

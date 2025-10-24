@@ -130,7 +130,7 @@ export default function UserManagement() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "Admin":
-        return "bg-purple-100 text-purple-800";
+        return "bg-blue-100 text-blue-800";
       case "HR":
         return "bg-blue-100 text-blue-800";
       case "Manager":
@@ -317,7 +317,7 @@ export default function UserManagement() {
         </Card>
         <Card className="p-4">
           <div className="flex items-center space-x-3">
-            <Shield className="w-8 h-8 text-purple-600" />
+            <Shield className="w-8 h-8 text-blue-600" />
             <div>
               <p className="text-2xl font-bold">
                 {
