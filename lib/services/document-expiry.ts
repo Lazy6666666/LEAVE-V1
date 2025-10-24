@@ -5,7 +5,6 @@
  * Handles document expiry checking and notifications
  */
 
-import { prisma } from "@/lib/prisma";
 import { DocumentExpiryStatus, EXPIRY_THRESHOLDS } from "@/types/document";
 
 /**
