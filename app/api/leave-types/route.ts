@@ -9,11 +9,11 @@ import { createClient } from "@/lib/supabase/server";
  * GET /api/leave-types - Get all active leave types
  */
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
-    // Import Prisma dynamically
-    const { prisma } = await import("@/lib/prisma");
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
 
   try {
     // Authenticate user

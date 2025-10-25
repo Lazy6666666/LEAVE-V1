@@ -9,11 +9,11 @@ import { createClient } from "@/lib/supabase/server";
 import { NotificationType } from "@/lib/types/notification";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-    // Import Prisma dynamically
-    const { prisma } = await import("@/lib/prisma");
+  // Import Prisma dynamically
+  const { prisma } = await import("@/lib/prisma");
 
   try {
     // Authenticate user

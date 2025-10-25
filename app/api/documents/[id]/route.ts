@@ -20,12 +20,11 @@ import { logDocumentAccess } from "@/lib/services/document-audit";
  * GET /api/documents/[id] - Get single document with access check
  */
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(
-    _request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
-    
 ) {
   // Import Prisma dynamically
   const { prisma } = await import("@/lib/prisma");

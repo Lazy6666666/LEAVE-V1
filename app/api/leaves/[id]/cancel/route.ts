@@ -8,12 +8,11 @@ import { createClient } from "@/lib/supabase/server";
 import { leaveCancellationSchema } from "@/lib/validations/leave";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(
-    request: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
-    
 ) {
   // Import Prisma dynamically
   const { prisma } = await import("@/lib/prisma");

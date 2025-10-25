@@ -211,16 +211,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden" suppressHydrationWarning>
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden"
+      suppressHydrationWarning
+    >
       {/* Background decoration */}
       <div className="background-decoration">
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="content-layer relative w-full max-w-6xl mx-auto">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
       </div>
@@ -230,24 +226,24 @@ export default function LoginPage() {
         Skip to main content
       </a>
 
-      <div className="relative w-full max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-8 items-center relative z-10">
+      <div className="content-layer relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center relative z-10">
           {/* Left side - Welcome Section */}
-          <div className="text-center lg:text-left space-y-8">
+          <div className="text-center lg:text-left space-y-6 lg:space-y-8 hidden lg:block">
             {/* Logo and branding */}
             <div className="space-y-4">
               <div className="inline-flex items-center justify-center lg:justify-start gap-3">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl flex items-center justify-center">
-                  <Shield className="w-8 h-8 text-white" />
+                <div className="w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl flex items-center justify-center">
+                  <Shield className="w-7 h-7 lg:w-8 lg:h-8 text-white" />
                 </div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
+                <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 break-words">
                   Leave Management
                 </h1>
               </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-gradient-primary mb-4">
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-primary mb-4 break-words">
                 Welcome Back
               </h2>
-              <p className="text-xl text-gray-600 max-w-lg">
+              <p className="text-lg lg:text-xl text-gray-600 max-w-lg break-words">
                 Secure access to your leave management dashboard with
                 enterprise-grade protection.
               </p>
@@ -264,13 +260,13 @@ export default function LoginPage() {
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 max-w-md lg:max-w-none mx-auto lg:mx-0">
-              <div className="flex items-center gap-3 text-gray-600">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="grid grid-cols-1 gap-4 max-w-md lg:max-w-none mx-auto lg:mx-0">
+              <div className="flex items-center gap-3 text-gray-700">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Shield className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-gray-900">
                     Secure Authentication
                   </p>
                   <p className="text-sm text-gray-500">
@@ -278,12 +274,12 @@ export default function LoginPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-gray-600">
-                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <div className="flex items-center gap-3 text-gray-700">
+                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Sparkles className="w-5 h-5 text-indigo-600" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Smart Dashboard</p>
+                  <p className="font-semibold text-gray-900">Smart Dashboard</p>
                   <p className="text-sm text-gray-500">
                     Intuitive leave management
                   </p>
@@ -293,12 +289,12 @@ export default function LoginPage() {
           </div>
 
           {/* Right side - Login Form */}
-          <div className="max-w-md w-full mx-auto lg:mx-0">
-            <Card className="card-layer shadow-xl border-0 bg-white/90 backdrop-blur-sm card-hover p-8 relative overflow-hidden">
+          <div className="max-w-md w-full mx-auto lg:mx-0" id="main-content">
+            <Card className="card-layer shadow-xl border-0 bg-white/90 backdrop-blur-sm card-hover relative overflow-hidden">
               {/* Gradient accent */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
 
-              <CardHeader className="space-y-2 pb-6">
+              <CardHeader className="space-y-2 pb-6 px-6 sm:px-8 pt-8">
                 <CardTitle className="text-2xl font-bold text-center text-gray-900">
                   Sign In
                 </CardTitle>
@@ -308,10 +304,10 @@ export default function LoginPage() {
               </CardHeader>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <CardContent className="space-y-5 pb-6">
+                <CardContent className="space-y-5 pb-6 px-6 sm:px-8">
                   {errors.general && (
                     <div
-                      className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
+                      className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"
                       role="alert"
                     >
                       {errors.general}
@@ -338,7 +334,7 @@ export default function LoginPage() {
                       onFocus={() => handleInputFocus("email")}
                       onBlur={handleInputBlur}
                       className={`
-                        modern-input text-white placeholder-gray-400
+                        form-input
                         ${errors.email ? "border-red-500 focus:border-red-500" : ""}
                       `}
                       disabled={isLoading}
@@ -379,7 +375,7 @@ export default function LoginPage() {
                         onFocus={() => handleInputFocus("password")}
                         onBlur={handleInputBlur}
                         className={`
-                          modern-input pr-12 text-white placeholder-gray-400
+                          form-input pr-12
                           ${errors.password ? "border-red-500 focus:border-red-500" : ""}
                         `}
                         disabled={isLoading}
@@ -392,7 +388,7 @@ export default function LoginPage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-full w-12 text-gray-400 hover:text-white transition-colors"
+                        className="absolute right-0 top-0 h-full w-12 text-gray-400 hover:text-gray-900 transition-colors"
                         onClick={handlePasswordToggle}
                         disabled={isLoading}
                         aria-label={
@@ -418,7 +414,7 @@ export default function LoginPage() {
                   </div>
 
                   {/* Remember me & Forgot password */}
-                  <div className="flex items-center justify-between pt-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="remember"
@@ -430,7 +426,7 @@ export default function LoginPage() {
                           }))
                         }
                         disabled={isLoading}
-                        className="border-gray-500 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                        className="border-gray-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                       />
                       <Label
                         htmlFor="remember"
@@ -441,14 +437,14 @@ export default function LoginPage() {
                     </div>
                     <Link
                       href="/auth/reset-password"
-                      className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                      className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
                     >
                       Forgot password?
                     </Link>
                   </div>
                 </CardContent>
 
-                <CardFooter className="space-y-4 pt-0">
+                <CardFooter className="space-y-4 pt-0 px-6 sm:px-8 pb-8">
                   <Button
                     type="submit"
                     className="w-full h-12 text-base font-medium btn-hover-primary"
@@ -459,7 +455,7 @@ export default function LoginPage() {
                       <div className="flex items-center gap-2">
                         <div
                           id="loading-status"
-                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin loading-spinner"
+                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
                           role="status"
                           aria-label="Loading"
                         ></div>
@@ -473,11 +469,11 @@ export default function LoginPage() {
                     )}
                   </Button>
 
-                  <div className="text-center text-sm text-gray-400 pt-2">
+                  <div className="text-center text-sm text-gray-600 pt-2">
                     Don&apos;t have an account?{" "}
                     <Link
-                      href="/auth/register"
-                      className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                      href="/register"
+                      className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
                     >
                       Create account
                     </Link>
@@ -496,9 +492,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      </div>
-
-
     </div>
   );
 }

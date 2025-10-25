@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { auditLoginAttempt } from "@/lib/services/audit";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {

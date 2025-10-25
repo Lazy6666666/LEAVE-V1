@@ -15,7 +15,7 @@ import { logDocumentAccess } from "@/lib/services/document-audit";
  * Returns a signed URL for downloading the document
  */
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(
   _request: NextRequest,

@@ -139,7 +139,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden" suppressHydrationWarning>
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4 relative overflow-hidden"
+      suppressHydrationWarning
+    >
       {/* Background decoration */}
       <div className="background-decoration">
         <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
@@ -147,313 +150,319 @@ export default function RegisterPage() {
       </div>
 
       <div className="content-layer relative w-full max-w-lg mx-auto">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
-      </div>
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+        </div>
 
-      <div className="relative w-full max-w-lg">
-        {/* Logo and branding */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl mb-4 feature-icon">
-            <UserPlus className="w-8 h-8 text-white" />
+        <div className="relative w-full max-w-lg">
+          {/* Logo and branding */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl mb-4 feature-icon">
+              <UserPlus className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Create your account
+            </h1>
+            <p className="text-gray-600">Join the leave management system</p>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Create your account
-          </h1>
-          <p className="text-gray-600">Join the leave management system</p>
-        </div>
 
-        <Card className="card-layer shadow-xl border-0 bg-white/90 backdrop-blur-sm card-hover">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl font-bold text-center">
-              Sign Up
-            </CardTitle>
-            <CardDescription className="text-center">
-              Fill in your information to get started
-            </CardDescription>
-          </CardHeader>
+          <Card className="card-layer shadow-xl border-0 bg-white/90 backdrop-blur-sm card-hover">
+            <CardHeader className="space-y-1 pb-4">
+              <CardTitle className="text-2xl font-bold text-center">
+                Sign Up
+              </CardTitle>
+              <CardDescription className="text-center">
+                Fill in your information to get started
+              </CardDescription>
+            </CardHeader>
 
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4 pb-4">
-              {errors.general && (
-                <div className="p-3 rounded-md bg-red-50 border border-red-200 text-red-600 text-sm">
-                  {errors.general}
-                </div>
-              )}
-
-              {/* Name fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-sm font-medium">
-                    First Name
-                  </Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    placeholder="John"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="form-input"
-                    disabled={isLoading}
-                  />
-                  {errors.firstName && (
-                    <p className="text-sm text-red-600">{errors.firstName}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-sm font-medium">
-                    Last Name
-                  </Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    placeholder="Doe"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="form-input"
-                    disabled={isLoading}
-                  />
-                  {errors.lastName && (
-                    <p className="text-sm text-red-600">{errors.lastName}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="text-sm font-medium flex items-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
-                  Email Address
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="john.doe@company.com"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  disabled={isLoading}
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-600">{errors.email}</p>
+            <form onSubmit={handleSubmit}>
+              <CardContent className="space-y-4 pb-4">
+                {errors.general && (
+                  <div className="p-3 rounded-md bg-red-50 border border-red-200 text-red-600 text-sm">
+                    {errors.general}
+                  </div>
                 )}
-              </div>
 
-              {/* Role and Department */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="role" className="text-sm font-medium">
-                    Role
-                  </Label>
-                  <select
-                    id="role"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleInputChange}
-                    disabled={isLoading}
-                    className="form-input"
-                  >
-                    <option value="">Select role</option>
-                    <option value="EMPLOYEE">Employee</option>
-                    <option value="MANAGER">Manager</option>
-                    <option value="HR">HR</option>
-                    <option value="ADMIN">Admin</option>
-                  </select>
-                  {errors.role && (
-                    <p className="text-sm text-red-600">{errors.role}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="department" className="text-sm font-medium">
-                    Department
-                  </Label>
-                  <select
-                    id="department"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    disabled={isLoading}
-                    className="form-input"
-                  >
-                    <option value="">Select department</option>
-                    <option value="engineering">Engineering</option>
-                    <option value="sales">Sales</option>
-                    <option value="marketing">Marketing</option>
-                    <option value="hr">Human Resources</option>
-                    <option value="finance">Finance</option>
-                    <option value="operations">Operations</option>
-                  </select>
-                  {errors.department && (
-                    <p className="text-sm text-red-600">{errors.department}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="text-sm font-medium flex items-center gap-2"
-                >
-                  <Shield className="w-4 h-4" />
-                  Password
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a strong password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="form-input pr-10"
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-11 w-11"
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={isLoading}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
+                {/* Name fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm font-medium">
+                      First Name
+                    </Label>
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      placeholder="John"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      disabled={isLoading}
+                    />
+                    {errors.firstName && (
+                      <p className="text-sm text-red-600">{errors.firstName}</p>
                     )}
-                  </Button>
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-red-600">{errors.password}</p>
-                )}
-              </div>
+                  </div>
 
-              <div className="space-y-2">
-                <Label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-medium"
-                >
-                  Confirm Password
-                </Label>
-                <div className="relative">
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm font-medium">
+                      Last Name
+                    </Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      disabled={isLoading}
+                    />
+                    {errors.lastName && (
+                      <p className="text-sm text-red-600">{errors.lastName}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-medium flex items-center gap-2"
+                  >
+                    <Mail className="w-4 h-4" />
+                    Email Address
+                  </Label>
                   <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="john.doe@company.com"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    className="form-input pr-10"
+                    className="form-input"
                     disabled={isLoading}
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-11 w-11"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    disabled={isLoading}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </Button>
+                  {errors.email && (
+                    <p className="text-sm text-red-600">{errors.email}</p>
+                  )}
                 </div>
-                {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
 
-              <div className="flex items-start space-x-2">
-                <input
-                  type="checkbox"
-                  id="acceptTerms"
-                  checked={formData.acceptTerms}
-                  onChange={handleCheckboxChange}
+                {/* Role and Department */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="role" className="text-sm font-medium">
+                      Role
+                    </Label>
+                    <select
+                      id="role"
+                      name="role"
+                      value={formData.role}
+                      onChange={handleInputChange}
+                      disabled={isLoading}
+                      className="form-input"
+                    >
+                      <option value="">Select role</option>
+                      <option value="EMPLOYEE">Employee</option>
+                      <option value="MANAGER">Manager</option>
+                      <option value="HR">HR</option>
+                      <option value="ADMIN">Admin</option>
+                    </select>
+                    {errors.role && (
+                      <p className="text-sm text-red-600">{errors.role}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="department" className="text-sm font-medium">
+                      Department
+                    </Label>
+                    <select
+                      id="department"
+                      name="department"
+                      value={formData.department}
+                      onChange={handleInputChange}
+                      disabled={isLoading}
+                      className="form-input"
+                    >
+                      <option value="">Select department</option>
+                      <option value="engineering">Engineering</option>
+                      <option value="sales">Sales</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="hr">Human Resources</option>
+                      <option value="finance">Finance</option>
+                      <option value="operations">Operations</option>
+                    </select>
+                    {errors.department && (
+                      <p className="text-sm text-red-600">
+                        {errors.department}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="password"
+                    className="text-sm font-medium flex items-center gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a strong password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="form-input pr-10"
+                      disabled={isLoading}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-11 w-11"
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-red-600">{errors.password}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="confirmPassword"
+                    className="text-sm font-medium"
+                  >
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className="form-input pr-10"
+                      disabled={isLoading}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-11 w-11"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      disabled={isLoading}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-red-600">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    checked={formData.acceptTerms}
+                    onChange={handleCheckboxChange}
+                    disabled={isLoading}
+                    className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <Label
+                    htmlFor="acceptTerms"
+                    className="text-sm font-normal leading-tight cursor-pointer"
+                  >
+                    I agree to the{" "}
+                    <Link
+                      href="/terms"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="/privacy"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Privacy Policy
+                    </Link>
+                  </Label>
+                </div>
+                {errors.acceptTerms && (
+                  <p className="text-sm text-red-600">{errors.acceptTerms}</p>
+                )}
+              </CardContent>
+
+              <CardFooter className="space-y-4">
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-medium btn-hover-primary"
                   disabled={isLoading}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <Label
-                  htmlFor="acceptTerms"
-                  className="text-sm font-normal leading-tight cursor-pointer"
                 >
-                  I agree to the{" "}
-                  <Link href="/terms" className="text-blue-600 hover:underline">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Creating account...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <UserPlus className="w-4 h-4" />
+                      Create Account
+                    </div>
+                  )}
+                </Button>
+
+                <div className="text-center text-sm text-gray-600">
+                  Already have an account?{" "}
                   <Link
-                    href="/privacy"
-                    className="text-blue-600 hover:underline"
+                    href="/login"
+                    className="text-blue-600 hover:underline font-medium"
                   >
-                    Privacy Policy
+                    Sign in
                   </Link>
-                </Label>
-              </div>
-              {errors.acceptTerms && (
-                <p className="text-sm text-red-600">{errors.acceptTerms}</p>
-              )}
-            </CardContent>
+                </div>
+              </CardFooter>
+            </form>
+          </Card>
 
-            <CardFooter className="space-y-4">
-              <Button
-                type="submit"
-                className="w-full h-12 text-base font-medium btn-hover-primary"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Creating account...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <UserPlus className="w-4 h-4" />
-                    Create Account
-                  </div>
-                )}
-              </Button>
-
-              <div className="text-center text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  href="/login"
-                  className="text-blue-600 hover:underline font-medium"
-                >
-                  Sign in
-                </Link>
-              </div>
-            </CardFooter>
-          </form>
-        </Card>
-
-        {/* Password requirements */}
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg relative z-10">
-          <p className="text-sm font-medium text-blue-800 mb-2">
-            Password Requirements:
-          </p>
-          <ul className="text-xs text-blue-700 space-y-1">
-            <li>• At least 8 characters long</li>
-            <li>• Contains uppercase and lowercase letters</li>
-            <li>• Contains at least one number</li>
-          </ul>
+          {/* Password requirements */}
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg relative z-10">
+            <p className="text-sm font-medium text-blue-800 mb-2">
+              Password Requirements:
+            </p>
+            <ul className="text-xs text-blue-700 space-y-1">
+              <li>• At least 8 characters long</li>
+              <li>• Contains uppercase and lowercase letters</li>
+              <li>• Contains at least one number</li>
+            </ul>
+          </div>
         </div>
       </div>
-      </div>
-
     </div>
   );
 }
