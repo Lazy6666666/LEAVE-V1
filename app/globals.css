@@ -131,6 +131,8 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 0.5em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Links */
@@ -154,6 +156,33 @@ a:hover {
 }
 
 /* =================================================================
+   RESPONSIVE TEXT UTILITIES
+   ================================================================= */
+
+.break-words {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+}
+
+.hyphens-auto {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =================================================================
    PROFESSIONAL COMPONENT SYSTEM
    ================================================================= */
 
@@ -165,6 +194,8 @@ a:hover {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   /* Professional Button System */
@@ -281,16 +312,6 @@ a:hover {
     right: 0;
     bottom: 0;
     background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-  }
-
-  /* Ensure proper text flow in all sections */
-  .text-container {
-    max-width: 100%;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-    position: relative;
-    z-index: 1;
   }
 
   /* Fix container layouts */
@@ -449,6 +470,14 @@ a:hover {
 
   h2 {
     font-size: var(--font-size-2xl);
+  }
+}
+
+/* Ensure minimum touch target sizes on mobile */
+@media (max-width: 768px) {
+  button, a[role="button"], input[type="button"], input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
